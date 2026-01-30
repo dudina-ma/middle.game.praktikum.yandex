@@ -4,3 +4,19 @@ node_modules/
 .vscode
 dist
 tmp
+
+# TypeScript build artifacts
+*.tsbuildinfo
+
+# Compiled JS / typings 
+*.js
+*.d.ts
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
