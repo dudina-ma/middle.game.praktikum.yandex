@@ -8,9 +8,9 @@ tmp
 # TypeScript build artifacts
 *.tsbuildinfo
 
-# Compiled JS / typings 
-*.js
-*.d.ts
+# Client server runtime artifacts
+packages/client/server/
+packages/client/tsconfig.server.tsbuildinfo
 
 # Logs
 npm-debug.log*
