@@ -1,34 +1,73 @@
 import { Link } from 'react-router-dom'
-import styles from './Header.module.css'
+import styled from 'styled-components'
+
+const StyledHeader = styled.header`
+  background-color: cornsilk;
+  display: flex;
+  justify-content: center;
+`
+
+const NavList = styled.nav``
+
+const List = styled.ul`
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+`
+
+const ListItem = styled.li`
+  /* Можно добавить дополнительные стили для элементов списка */
+`
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+`
+
 const Header = () => {
   return (
-    <header className={styles.header}>
-      <nav className={styles.navList}>
-        <ul className={styles.list}>
-          <li className={styles.item}>
-            <Link to="/">Main</Link>
-          </li>
-          <li className={styles.item}>
-            <Link to="/login">Login</Link>
-          </li>
-          <li className={styles.item}>
-            <Link to="/sign-in">SignIn</Link>
-          </li>
-          <li className={styles.item}>
-            <Link to="/profile">Profile</Link>
-          </li>
-          <li className={styles.item}>
-            <Link to="/game">Game</Link>
-          </li>
-          <li className={styles.item}>
-            <Link to="/leaderboard">Leaderboard</Link>
-          </li>
-          <li className={styles.item}>
-            <Link to="/forum">Forum</Link>
-          </li>
-        </ul>
-      </nav>
-    </header>
+    <StyledHeader>
+      <NavList>
+        <List>
+          <ListItem>
+            <StyledLink to="/">Main</StyledLink>
+          </ListItem>
+          <ListItem>
+            <StyledLink to="/login">Login</StyledLink>
+          </ListItem>
+          <ListItem>
+            <StyledLink to="/login">SignIn</StyledLink>
+          </ListItem>
+          <ListItem>
+            <StyledLink to="/profile">Profile</StyledLink>
+          </ListItem>
+          <ListItem>
+            <StyledLink to="/game">Game</StyledLink>
+          </ListItem>
+          <ListItem>
+            <StyledLink to="/leaderboard">Leaderboard</StyledLink>
+          </ListItem>
+          <ListItem>
+            <StyledLink to="/forum">Forum</StyledLink>
+          </ListItem>
+        </List>
+      </NavList>
+    </StyledHeader>
   )
 }
+
 export default Header
