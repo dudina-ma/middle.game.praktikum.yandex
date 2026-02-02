@@ -1,6 +1,24 @@
 node_modules/
 .env
 .idea
-.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 dist
 tmp
+
+# TypeScript build artifacts
+*.tsbuildinfo
+
+# Client server runtime artifacts
+packages/client/server/
+packages/client/tsconfig.server.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db

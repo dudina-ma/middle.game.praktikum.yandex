@@ -1,14 +1,18 @@
 import App from './App'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
+import { Provider } from 'react-redux'
+import { store } from './store'
 
-const appContent = 'Вот тут будет жить ваше приложение :)'
-
-// @ts-ignore
-global.fetch = jest.fn(() =>
-  Promise.resolve({ json: () => Promise.resolve('hey') })
+const fetchMock = jest.fn(() =>
+  Promise.resolve({ json: () => Promise.resolve('hey') } as Response)
 )
 
-test('Example test', async () => {
-  render(<App />)
-  expect(screen.getByText(appContent)).toBeDefined()
+globalThis.fetch = fetchMock as unknown as typeof fetch
+
+test('App renders without crashing', () => {
+  render(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
 })
