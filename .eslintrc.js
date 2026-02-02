@@ -17,12 +17,4 @@ module.exports = {
   rules: {
     '@typescript-eslint/ban-ts-comment': 1,
   },
-  overrides: [
-    {
-      files: ['*.cjs'],
-      rules: {
-        '@typescript-eslint/no-require-imports': 'off',
-      },
-    },
-  ],
 }
