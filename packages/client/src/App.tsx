@@ -11,12 +11,7 @@ import Forum from './pages/Forum/Forum'
 import ForumTopic from './pages/ForumTopic/ForumTopic'
 import NotFound from './pages/NotFound/NotFound'
 
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/sign-in" element={<SignIn />} />
+
 
         <Route element={<Layout />}>
           <Route path="/" element={<Main />} />
