@@ -13,23 +13,25 @@ import NotFound from './pages/NotFound/NotFound'
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/sign-in" element={<SignIn />} />
+    <>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/sign-in" element={<SignIn />} />
 
-        <Route element={<Layout />}>
-          <Route path="/" element={<Main />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/game" element={<Game />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/forum" element={<Forum />} />
-          <Route path="/forum/:topicId" element={<ForumTopic />} />
-        </Route>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Main />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/game" element={<Game />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/forum" element={<Forum />} />
+            <Route path="/forum/:topicId" element={<ForumTopic />} />
+          </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </>
   )
 }
 
