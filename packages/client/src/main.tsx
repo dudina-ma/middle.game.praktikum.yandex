@@ -1,10 +1,9 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './store'
 import { routes } from './routes'
-import App from './App'
+
 const router = createBrowserRouter(routes)
 
 const rootElement = document.getElementById('root') as HTMLElement
@@ -31,7 +30,7 @@ if (hasSSRContent && hasInitialState) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <Provider store={store}>
-      <App />
+      <RouterProvider router={router} />
     </Provider>
   )
 }
