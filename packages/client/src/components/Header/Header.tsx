@@ -5,6 +5,7 @@ const StyledHeader = styled.header`
   background-color: cornsilk;
   display: flex;
   justify-content: center;
+  height: 3rem;
 `
 
 const NavList = styled.nav``
@@ -50,7 +51,7 @@ const Header = () => {
             <StyledLink to="/login">Login</StyledLink>
           </ListItem>
           <ListItem>
-            <StyledLink to="/login">SignIn</StyledLink>
+            <StyledLink to="/sign-in">SignIn</StyledLink>
           </ListItem>
           <ListItem>
             <StyledLink to="/profile">Profile</StyledLink>
