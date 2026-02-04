@@ -22,13 +22,15 @@ export type PageInitArgs = {
 
 // Общие заглушки
 export const createStubFetchData = (pageName: string) => {
-  return async (): Promise<void> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return async (pageArgs: PageInitArgs): Promise<void> => {
     console.log(`Stub fetchData called for ${pageName} page`)
     return Promise.resolve()
   }
 }
 
-export const emptyFetchData = async (): Promise<void> => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const emptyFetchData = async (pageArgs: PageInitArgs): Promise<void> => {
   return Promise.resolve()
 }
 
@@ -43,7 +45,6 @@ export const routes = [
     Component: SignIn,
     fetchData: createStubFetchData('SignIn'),
   },
-
   {
     path: '/',
     Component: Layout,
