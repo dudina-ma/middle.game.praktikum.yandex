@@ -27,9 +27,10 @@ type PasswordChangeFormValues = {
   confirmPassword: string
 }
 
+type ProfilePageMode = 'showProfileData' | 'editProfileData' | 'changePassword'
+
 export const Profile = () => {
-  const [isEditData, setIsEditData] = useState(false)
-  const [isEditPassword, setIsEditPassword] = useState(false)
+  const [mode, setMode] = useState<ProfilePageMode>('showProfileData')
   const { data: user, isLoading } = useGetUserQuery()
   const [updateAvatar, { isLoading: isUpdatingAvatar }] =
     useUpdateAvatarMutation()
@@ -55,19 +56,19 @@ export const Profile = () => {
   }
 
   const handleEditData = () => {
-    setIsEditData(true)
+    setMode('editProfileData')
   }
 
   const handleCancelEditData = () => {
-    setIsEditData(false)
+    setMode('showProfileData')
   }
 
   const handleEditPassword = () => {
-    setIsEditPassword(true)
+    setMode('changePassword')
   }
 
   const handleCancelPasswordChange = () => {
-    setIsEditPassword(false)
+    setMode('showProfileData')
   }
 
   const onFinish: FormProps<User>['onFinish'] = async (values: User) => {
@@ -82,7 +83,7 @@ export const Profile = () => {
       }
       await updateProfile(updateData).unwrap()
       message.success('Профиль успешно обновлен')
-      setIsEditData(false)
+      setMode('showProfileData')
     } catch (error) {
       const errorMessage = getErrorMessage(error)
       message.error(errorMessage)
@@ -98,7 +99,7 @@ export const Profile = () => {
         .unwrap()
         .then(() => {
           message.success('Пароль успешно изменен')
-          setIsEditPassword(false)
+          setMode('showProfileData')
         })
         .catch(error => {
           const errorMessage = getErrorMessage(error)
@@ -127,7 +128,7 @@ export const Profile = () => {
         onAvatarDelete={onAvatarDelete}
       />
 
-      {isEditPassword ? (
+      {mode === 'changePassword' ? (
         <PasswordChangeForm
           onFinish={onPasswordChangeFinish}
           onFinishFailed={onPasswordChangeFinishFailed}
@@ -138,14 +139,14 @@ export const Profile = () => {
         <>
           <ProfileForm
             user={user}
-            isReadOnly={!isEditData}
+            isReadOnly={mode === 'showProfileData'}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             onCancel={handleCancelEditData}
             isLoading={isUpdatingProfile}
           />
 
-          {!isEditData && !isEditPassword && (
+          {mode === 'showProfileData' && (
             <>
               <div className={styles.editButtonContainer}>
                 <Button type="primary" ghost={true} onClick={handleEditData}>
