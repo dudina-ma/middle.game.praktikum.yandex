@@ -13,8 +13,8 @@ import {
   useUpdateAvatarMutation,
   useUpdateProfileMutation,
   useChangePasswordMutation,
-  UpdateProfileRequest,
 } from '../../api/userApi'
+import { UpdateProfileRequest } from '../../api/user.schema'
 import { getErrorMessage } from '../../utils/errorUtils'
 
 const onFinishFailed: FormProps<User>['onFinishFailed'] = errorInfo => {
