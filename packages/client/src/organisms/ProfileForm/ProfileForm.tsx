@@ -8,6 +8,7 @@ type ProfileFormProps = {
   isReadOnly: boolean
   onFinish: FormProps<User>['onFinish']
   onFinishFailed: FormProps<User>['onFinishFailed']
+  onCancel?: () => void
 }
 
 export const ProfileForm = ({
@@ -15,12 +16,12 @@ export const ProfileForm = ({
   isReadOnly,
   onFinish,
   onFinishFailed,
+  onCancel,
 }: ProfileFormProps) => {
   return (
     <Form
       name="profile-page"
-      labelCol={{ span: 4 }}
-      wrapperCol={{ span: 20 }}
+      layout="vertical"
       className={styles.form}
       initialValues={user}
       onFinish={onFinish}
@@ -123,8 +124,13 @@ export const ProfileForm = ({
       </Form.Item> */}
 
       {!isReadOnly && (
-        <Form.Item label={null} wrapperCol={{ offset: 0, span: 24 }}>
-          <div className={styles.saveButtonWrapper}>
+        <Form.Item>
+          <div className={styles.buttonWrapper}>
+            {onCancel && (
+              <Button onClick={onCancel} style={{ marginRight: 8 }}>
+                Отмена
+              </Button>
+            )}
             <Button type="primary" htmlType="submit">
               Сохранить
             </Button>

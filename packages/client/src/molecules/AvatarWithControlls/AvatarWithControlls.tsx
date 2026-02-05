@@ -25,7 +25,7 @@ export const AvatarWithControlls = ({
 
   return (
     <div className={styles.container}>
-      <Avatar size={200} src={avatarUrl} />
+      <Avatar size={100} src={avatarUrl} />
       <div className={styles.actions}>
         <Upload
           beforeUpload={() => false}

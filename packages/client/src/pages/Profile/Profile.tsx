@@ -3,6 +3,7 @@ import { Button } from 'antd'
 import { useState } from 'react'
 import { AvatarWithControlls } from '../../molecules/AvatarWithControlls/AvatarWithControlls'
 import { ProfileForm } from '../../organisms/ProfileForm/ProfileForm'
+import { PasswordChangeForm } from '../../organisms/PasswordChangeForm/PasswordChangeForm'
 import styles from './Profile.module.css'
 import { usePage } from '../../hooks/usePage'
 import { PageInitArgs } from '../../routes'
@@ -11,6 +12,7 @@ import { useGetUserQuery } from '../../api/authApi'
 import {
   useUpdateAvatarMutation,
   useUpdateProfileMutation,
+  useChangePasswordMutation,
   UpdateProfileRequest,
 } from '../../api/userApi'
 
@@ -18,13 +20,22 @@ const onFinishFailed: FormProps<User>['onFinishFailed'] = errorInfo => {
   console.log('Failed:', errorInfo)
 }
 
+type PasswordChangeFormValues = {
+  oldPassword: string
+  newPassword: string
+  confirmPassword: string
+}
+
 export const Profile = () => {
   const [isEditData, setIsEditData] = useState(false)
+  const [isEditPassword, setIsEditPassword] = useState(false)
   const { data: user, isLoading } = useGetUserQuery()
   const [updateAvatar, { isLoading: isUpdatingAvatar }] =
     useUpdateAvatarMutation()
   const [updateProfile, { isLoading: isUpdatingProfile }] =
     useUpdateProfileMutation()
+  const [changePassword, { isLoading: isChangingPassword }] =
+    useChangePasswordMutation()
 
   usePage({ initPage: initProfilePage })
 
@@ -44,6 +55,18 @@ export const Profile = () => {
     setIsEditData(true)
   }
 
+  const handleCancelEditData = () => {
+    setIsEditData(false)
+  }
+
+  const handleEditPassword = () => {
+    setIsEditPassword(true)
+  }
+
+  const handleCancelPasswordChange = () => {
+    setIsEditPassword(false)
+  }
+
   const onFinish: FormProps<User>['onFinish'] = async (values: User) => {
     try {
       const updateData: UpdateProfileRequest = {
@@ -61,6 +84,26 @@ export const Profile = () => {
     }
   }
 
+  const onPasswordChangeFinish: FormProps<PasswordChangeFormValues>['onFinish'] =
+    (values: PasswordChangeFormValues) => {
+      changePassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      })
+        .unwrap()
+        .then(() => {
+          setIsEditPassword(false)
+        })
+        .catch(error => {
+          console.error('Failed to change password:', error)
+        })
+    }
+
+  const onPasswordChangeFinishFailed: FormProps<PasswordChangeFormValues>['onFinishFailed'] =
+    errorInfo => {
+      console.log('Password change failed:', errorInfo)
+    }
+
   if (isLoading || !user) {
     return null
   }
@@ -73,28 +116,39 @@ export const Profile = () => {
         onAvatarDelete={onAvatarDelete}
       />
 
-      <ProfileForm
-        user={user}
-        isReadOnly={!isEditData}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-      />
-
-      {!isEditData && (
+      {isEditPassword ? (
+        <PasswordChangeForm
+          onFinish={onPasswordChangeFinish}
+          onFinishFailed={onPasswordChangeFinishFailed}
+          onCancel={handleCancelPasswordChange}
+        />
+      ) : (
         <>
-          <div className={styles.editButtonContainer}>
-            <Button type="primary" ghost={true} onClick={handleEditData}>
-              Изменить данные
-            </Button>
-          </div>
-          <div className={styles.editButtonContainer}>
-            <Button
-              type="primary"
-              ghost={true}
-              onClick={() => console.log('Изменить пароль')}>
-              Изменить пароль
-            </Button>
-          </div>
+          <ProfileForm
+            user={user}
+            isReadOnly={!isEditData}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            onCancel={handleCancelEditData}
+          />
+
+          {!isEditData && !isEditPassword && (
+            <>
+              <div className={styles.editButtonContainer}>
+                <Button type="primary" ghost={true} onClick={handleEditData}>
+                  Изменить данные
+                </Button>
+              </div>
+              <div className={styles.editButtonContainer}>
+                <Button
+                  type="primary"
+                  ghost={true}
+                  onClick={handleEditPassword}>
+                  Изменить пароль
+                </Button>
+              </div>
+            </>
+          )}
         </>
       )}
     </div>

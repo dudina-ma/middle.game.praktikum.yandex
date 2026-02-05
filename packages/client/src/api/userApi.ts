@@ -12,6 +12,11 @@ export type UpdateProfileRequest = {
   phone: string
 }
 
+export type ChangePasswordRequest = {
+  oldPassword: string
+  newPassword: string
+}
+
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({
@@ -40,7 +45,22 @@ export const userApi = createApi({
       }),
       invalidatesTags: ['User'],
     }),
+    changePassword: builder.mutation<void, ChangePasswordRequest>({
+      query: body => ({
+        url: '/user/password',
+        method: 'PUT',
+        body,
+        responseHandler: async response => {
+          const text = await response.text()
+          return text === 'OK' ? undefined : text
+        },
+      }),
+    }),
   }),
 })
 
-export const { useUpdateAvatarMutation, useUpdateProfileMutation } = userApi
+export const {
+  useUpdateAvatarMutation,
+  useUpdateProfileMutation,
+  useChangePasswordMutation,
+} = userApi
