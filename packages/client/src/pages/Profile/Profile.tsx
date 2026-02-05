@@ -91,20 +91,18 @@ export const Profile = () => {
   }
 
   const onPasswordChangeFinish: FormProps<PasswordChangeFormValues>['onFinish'] =
-    (values: PasswordChangeFormValues) => {
-      changePassword({
-        oldPassword: values.oldPassword,
-        newPassword: values.newPassword,
-      })
-        .unwrap()
-        .then(() => {
-          message.success('Пароль успешно изменен')
-          setMode('showProfileData')
-        })
-        .catch(error => {
-          const errorMessage = getErrorMessage(error)
-          message.error(errorMessage)
-        })
+    async (values: PasswordChangeFormValues) => {
+      try {
+        await changePassword({
+          oldPassword: values.oldPassword,
+          newPassword: values.newPassword,
+        }).unwrap()
+        message.success('Пароль успешно изменен')
+        setMode('showProfileData')
+      } catch (error) {
+        const errorMessage = getErrorMessage(error)
+        message.error(errorMessage)
+      }
     }
 
   const onPasswordChangeFinishFailed: FormProps<PasswordChangeFormValues>['onFinishFailed'] =
@@ -136,34 +134,25 @@ export const Profile = () => {
           isLoading={isChangingPassword}
         />
       ) : (
-        <>
-          <ProfileForm
-            user={user}
-            isReadOnly={mode === 'showProfileData'}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            onCancel={handleCancelEditData}
-            isLoading={isUpdatingProfile}
-          />
+        <ProfileForm
+          user={user}
+          isReadOnly={mode === 'showProfileData'}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          onCancel={handleCancelEditData}
+          isLoading={isUpdatingProfile}
+        />
+      )}
 
-          {mode === 'showProfileData' && (
-            <>
-              <div className={styles.editButtonContainer}>
-                <Button type="primary" ghost={true} onClick={handleEditData}>
-                  Изменить данные
-                </Button>
-              </div>
-              <div className={styles.editButtonContainer}>
-                <Button
-                  type="primary"
-                  ghost={true}
-                  onClick={handleEditPassword}>
-                  Изменить пароль
-                </Button>
-              </div>
-            </>
-          )}
-        </>
+      {mode === 'showProfileData' && (
+        <div className={styles.editButtonContainer}>
+          <Button type="primary" ghost={true} onClick={handleEditData}>
+            Изменить данные
+          </Button>
+          <Button type="primary" ghost={true} onClick={handleEditPassword}>
+            Изменить пароль
+          </Button>
+        </div>
       )}
     </div>
   )

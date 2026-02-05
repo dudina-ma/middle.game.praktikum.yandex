@@ -112,19 +112,6 @@ export const ProfileForm = ({
         <Input readOnly={isReadOnly} />
       </Form.Item>
 
-      {/* <Form.Item<User>
-        label="Пароль"
-        name="password"
-        rules={[
-          { required: true, message: 'Пароль обязателен для заполнения' },
-          { min: 8, message: 'Пароль должен быть минимум 8 символов' },
-          { max: 40, message: 'Пароль должен быть максимум 40 символов' },
-          { pattern: /^(?=.*[A-Z])(?=.*\d).+$/, message: 'Пароль должен содержать хотя бы одну заглавную букву и цифру' },
-        ]}
-      >
-        <Input.Password readOnly={isReadOnly} />
-      </Form.Item> */}
-
       {!isReadOnly && (
         <Form.Item>
           <div className={styles.buttonWrapper}>

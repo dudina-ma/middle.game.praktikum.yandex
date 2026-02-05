@@ -40,6 +40,13 @@ export const PasswordChangeForm = ({
             required: true,
             message: 'Старый пароль обязателен для заполнения',
           },
+          { min: 8, message: 'Пароль должен быть минимум 8 символов' },
+          { max: 40, message: 'Пароль должен быть максимум 40 символов' },
+          {
+            pattern: /^(?=.*[A-Z])(?=.*\d).+$/,
+            message:
+              'Пароль должен содержать хотя бы одну заглавную букву и цифру',
+          },
         ]}>
         <Input.Password />
       </Form.Item>
