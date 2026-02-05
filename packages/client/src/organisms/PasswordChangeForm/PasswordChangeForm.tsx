@@ -12,12 +12,14 @@ type PasswordChangeFormProps = {
   onFinish: FormProps<PasswordChangeFormValues>['onFinish']
   onFinishFailed: FormProps<PasswordChangeFormValues>['onFinishFailed']
   onCancel?: () => void
+  isLoading?: boolean
 }
 
 export const PasswordChangeForm = ({
   onFinish,
   onFinishFailed,
   onCancel,
+  isLoading = false,
 }: PasswordChangeFormProps) => {
   const [form] = Form.useForm<PasswordChangeFormValues>()
 
@@ -85,7 +87,7 @@ export const PasswordChangeForm = ({
             Отмена
           </Button>
         )}
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={isLoading}>
           Сохранить
         </Button>
       </div>

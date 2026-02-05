@@ -9,6 +9,7 @@ type ProfileFormProps = {
   onFinish: FormProps<User>['onFinish']
   onFinishFailed: FormProps<User>['onFinishFailed']
   onCancel?: () => void
+  isLoading?: boolean
 }
 
 export const ProfileForm = ({
@@ -17,6 +18,7 @@ export const ProfileForm = ({
   onFinish,
   onFinishFailed,
   onCancel,
+  isLoading = false,
 }: ProfileFormProps) => {
   return (
     <Form
@@ -131,7 +133,7 @@ export const ProfileForm = ({
                 Отмена
               </Button>
             )}
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               Сохранить
             </Button>
           </div>

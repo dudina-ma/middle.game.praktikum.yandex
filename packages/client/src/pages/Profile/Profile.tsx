@@ -1,5 +1,5 @@
 import type { FormProps } from 'antd'
-import { Button, message } from 'antd'
+import { Button, message, Spin } from 'antd'
 import { useState } from 'react'
 import { AvatarWithControlls } from '../../molecules/AvatarWithControlls/AvatarWithControlls'
 import { ProfileForm } from '../../organisms/ProfileForm/ProfileForm'
@@ -112,7 +112,11 @@ export const Profile = () => {
     }
 
   if (isLoading || !user) {
-    return null
+    return (
+      <div className={styles.container}>
+        <Spin size="large" tip="Загрузка..." />
+      </div>
+    )
   }
 
   return (
@@ -128,6 +132,7 @@ export const Profile = () => {
           onFinish={onPasswordChangeFinish}
           onFinishFailed={onPasswordChangeFinishFailed}
           onCancel={handleCancelPasswordChange}
+          isLoading={isChangingPassword}
         />
       ) : (
         <>
@@ -137,6 +142,7 @@ export const Profile = () => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             onCancel={handleCancelEditData}
+            isLoading={isUpdatingProfile}
           />
 
           {!isEditData && !isEditPassword && (
