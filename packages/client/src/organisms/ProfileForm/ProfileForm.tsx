@@ -1,0 +1,136 @@
+import type { FormProps } from 'antd'
+import { Button, Form, Input } from 'antd'
+import { User } from '../../slices/userSlice'
+import styles from './ProfileForm.module.css'
+
+type ProfileFormProps = {
+  user: User
+  isReadOnly: boolean
+  onFinish: FormProps<User>['onFinish']
+  onFinishFailed: FormProps<User>['onFinishFailed']
+}
+
+export const ProfileForm = ({
+  user,
+  isReadOnly,
+  onFinish,
+  onFinishFailed,
+}: ProfileFormProps) => {
+  return (
+    <Form
+      name="profile-page"
+      labelCol={{ span: 4 }}
+      wrapperCol={{ span: 20 }}
+      className={styles.form}
+      initialValues={user}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      autoComplete="off">
+      <Form.Item<User>
+        label="Имя"
+        name="first_name"
+        rules={[
+          { required: true, message: 'Имя обязательно для заполнения' },
+          {
+            pattern: /^[А-ЯЁA-Z][а-яёa-z]*(?:-[а-яёa-z]+)*$/,
+            message:
+              'Имя должно начинаться с заглавной буквы, содержать только буквы и дефис (не в начале/конце)',
+          },
+        ]}>
+        <Input readOnly={isReadOnly} />
+      </Form.Item>
+
+      <Form.Item<User>
+        label="Фамилия"
+        name="second_name"
+        rules={[
+          { required: true, message: 'Фамилия обязательна для заполнения' },
+          {
+            pattern: /^[А-ЯЁA-Z][а-яёa-z]*(?:-[а-яёa-z]+)*$/,
+            message:
+              'Фамилия должна начинаться с заглавной буквы, содержать только буквы и дефис (не в начале/конце)',
+          },
+        ]}>
+        <Input readOnly={isReadOnly} />
+      </Form.Item>
+
+      <Form.Item<User>
+        label="Никнейм"
+        name="display_name"
+        rules={[
+          { required: true, message: 'Никнейм обязателен для заполнения' },
+          { min: 3, message: 'Никнейм должен быть минимум 3 символа' },
+          { max: 20, message: 'Никнейм должен быть максимум 20 символов' },
+          {
+            pattern: /^(?=.*[a-zA-Z])[a-zA-Z0-9_-]+$/,
+            message:
+              'Никнейм может содержать только латинские буквы, цифры, дефис и подчёркивание, и должен содержать хотя бы одну букву',
+          },
+        ]}>
+        <Input readOnly={isReadOnly} />
+      </Form.Item>
+
+      <Form.Item<User>
+        label="Email"
+        name="email"
+        rules={[
+          { required: true, message: 'Email обязателен для заполнения' },
+          {
+            pattern: /^[a-zA-Z0-9-]+@[a-zA-Z0-9-]+\.[a-zA-Z]+(\.[a-zA-Z]+)*$/,
+            message:
+              'Email должен быть в формате example@mail.com, после точки должны быть латинские буквы',
+          },
+        ]}>
+        <Input readOnly={isReadOnly} />
+      </Form.Item>
+
+      <Form.Item<User>
+        label="Телефон"
+        name="phone"
+        normalize={value => value?.replace(/[^\d+]/g, '')}
+        rules={[
+          { required: true, message: 'Телефон обязателен для заполнения' },
+          {
+            validator: (_: unknown, value: string) => {
+              if (!value) return Promise.resolve()
+              const normalized = value.replace(/[^\d+]/g, '')
+              const phoneRegex = /^\+?\d{10,15}$/
+              if (!phoneRegex.test(normalized)) {
+                return Promise.reject(
+                  new Error(
+                    'Телефон должен быть от 10 до 15 цифр и может начинаться с +'
+                  )
+                )
+              }
+              return Promise.resolve()
+            },
+          },
+        ]}>
+        <Input readOnly={isReadOnly} />
+      </Form.Item>
+
+      {/* <Form.Item<User>
+        label="Пароль"
+        name="password"
+        rules={[
+          { required: true, message: 'Пароль обязателен для заполнения' },
+          { min: 8, message: 'Пароль должен быть минимум 8 символов' },
+          { max: 40, message: 'Пароль должен быть максимум 40 символов' },
+          { pattern: /^(?=.*[A-Z])(?=.*\d).+$/, message: 'Пароль должен содержать хотя бы одну заглавную букву и цифру' },
+        ]}
+      >
+        <Input.Password readOnly={isReadOnly} />
+      </Form.Item> */}
+
+      {!isReadOnly && (
+        <Form.Item label={null} wrapperCol={{ offset: 0, span: 24 }}>
+          <div className={styles.saveButtonWrapper}>
+            <Button type="primary" htmlType="submit">
+              Сохранить
+            </Button>
+          </div>
+        </Form.Item>
+      )}
+    </Form>
+  )
+}
