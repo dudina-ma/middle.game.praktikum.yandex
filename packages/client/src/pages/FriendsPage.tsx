@@ -7,14 +7,17 @@ import {
   selectFriends,
   selectIsLoadingFriends,
 } from '../slices/friendsSlice'
-import { fetchUserThunk, selectUser } from '../slices/userSlice'
+import { selectUser } from '../slices/userSlice'
+import { useGetUserQuery } from '../api/authApi'
 import { PageInitArgs } from '../routes'
 import { usePage } from '../hooks/usePage'
 
 export const FriendsPage = () => {
   const friends = useSelector(selectFriends)
   const isLoading = useSelector(selectIsLoadingFriends)
-  const user = useSelector(selectUser)
+  const { data: user, isLoading: isLoadingUser } = useGetUserQuery()
+  const userFromSelector = useSelector(selectUser)
+  const displayUser = user || userFromSelector
 
   usePage({ initPage: initFriendsPage })
   return (
@@ -28,11 +31,13 @@ export const FriendsPage = () => {
         />
       </Helmet>
       <Header />
-      {user ? (
+      {isLoadingUser ? (
+        <h3>Загрузка информации о пользователе...</h3>
+      ) : displayUser ? (
         <>
           <h3>Информация о пользователе:</h3>{' '}
           <p>
-            {user.name} {user.secondName}
+            {displayUser.first_name} {displayUser.second_name}
           </p>
         </>
       ) : (
@@ -53,10 +58,11 @@ export const FriendsPage = () => {
   )
 }
 
-export const initFriendsPage = ({ dispatch, state }: PageInitArgs) => {
+export const initFriendsPage = async ({ dispatch, state }: PageInitArgs) => {
   const queue: Array<Promise<unknown>> = [dispatch(fetchFriendsThunk())]
   if (!selectUser(state)) {
-    queue.push(dispatch(fetchUserThunk()))
+    const { authApi } = await import('../api/authApi')
+    queue.push(dispatch(authApi.endpoints.getUser.initiate()))
   }
   return Promise.all(queue)
 }
