@@ -3,6 +3,15 @@ import { User } from './types'
 
 const API_BASE_URL = 'https://ya-praktikum.tech/api/v2'
 
+export type UpdateProfileRequest = {
+  first_name: string
+  second_name: string
+  display_name: string
+  login: string
+  email: string
+  phone: string
+}
+
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({
@@ -23,7 +32,15 @@ export const userApi = createApi({
       },
       invalidatesTags: ['User'],
     }),
+    updateProfile: builder.mutation<User, UpdateProfileRequest>({
+      query: body => ({
+        url: '/user/profile',
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: ['User'],
+    }),
   }),
 })
 
-export const { useUpdateAvatarMutation } = userApi
+export const { useUpdateAvatarMutation, useUpdateProfileMutation } = userApi

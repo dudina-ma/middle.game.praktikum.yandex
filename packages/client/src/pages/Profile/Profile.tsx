@@ -8,21 +8,23 @@ import { usePage } from '../../hooks/usePage'
 import { PageInitArgs } from '../../routes'
 import { User, selectUser } from '../../slices/userSlice'
 import { useGetUserQuery } from '../../api/authApi'
-import { useUpdateAvatarMutation } from '../../api/userApi'
-
-const onFinish: FormProps<User>['onFinish'] = values => {
-  console.log('Success:', values)
-}
+import {
+  useUpdateAvatarMutation,
+  useUpdateProfileMutation,
+  UpdateProfileRequest,
+} from '../../api/userApi'
 
 const onFinishFailed: FormProps<User>['onFinishFailed'] = errorInfo => {
   console.log('Failed:', errorInfo)
 }
 
 export const Profile = () => {
-  const [isReadOnly, setIsReadOnly] = useState(true)
+  const [isEditData, setIsEditData] = useState(false)
   const { data: user, isLoading } = useGetUserQuery()
   const [updateAvatar, { isLoading: isUpdatingAvatar }] =
     useUpdateAvatarMutation()
+  const [updateProfile, { isLoading: isUpdatingProfile }] =
+    useUpdateProfileMutation()
 
   usePage({ initPage: initProfilePage })
 
@@ -38,6 +40,27 @@ export const Profile = () => {
     console.log('onAvatarDelete')
   }
 
+  const handleEditData = () => {
+    setIsEditData(true)
+  }
+
+  const onFinish: FormProps<User>['onFinish'] = async (values: User) => {
+    try {
+      const updateData: UpdateProfileRequest = {
+        first_name: values.first_name,
+        second_name: values.second_name,
+        display_name: values.display_name,
+        login: values.login,
+        email: values.email,
+        phone: values.phone,
+      }
+      await updateProfile(updateData).unwrap()
+      setIsEditData(false)
+    } catch (error) {
+      console.error('Failed to update profile:', error)
+    }
+  }
+
   if (isLoading || !user) {
     return null
   }
@@ -50,21 +73,30 @@ export const Profile = () => {
         onAvatarDelete={onAvatarDelete}
       />
 
-      <div className={styles.editButtonContainer}>
-        <Button
-          type="primary"
-          ghost={true}
-          onClick={() => setIsReadOnly(false)}>
-          Редактировать
-        </Button>
-      </div>
-
       <ProfileForm
         user={user}
-        isReadOnly={isReadOnly}
+        isReadOnly={!isEditData}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       />
+
+      {!isEditData && (
+        <>
+          <div className={styles.editButtonContainer}>
+            <Button type="primary" ghost={true} onClick={handleEditData}>
+              Изменить данные
+            </Button>
+          </div>
+          <div className={styles.editButtonContainer}>
+            <Button
+              type="primary"
+              ghost={true}
+              onClick={() => console.log('Изменить пароль')}>
+              Изменить пароль
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   )
 }
