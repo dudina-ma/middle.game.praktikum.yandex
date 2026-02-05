@@ -1,5 +1,5 @@
 import type { FormProps } from 'antd'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import { useState } from 'react'
 import { AvatarWithControlls } from '../../molecules/AvatarWithControlls/AvatarWithControlls'
 import { ProfileForm } from '../../organisms/ProfileForm/ProfileForm'
@@ -15,6 +15,7 @@ import {
   useChangePasswordMutation,
   UpdateProfileRequest,
 } from '../../api/userApi'
+import { getErrorMessage } from '../../utils/errorUtils'
 
 const onFinishFailed: FormProps<User>['onFinishFailed'] = errorInfo => {
   console.log('Failed:', errorInfo)
@@ -42,8 +43,10 @@ export const Profile = () => {
   const onAvatarChange = async (file: File) => {
     try {
       await updateAvatar(file).unwrap()
+      message.success('Аватар успешно обновлен')
     } catch (error) {
-      console.error('Failed to update avatar:', error)
+      const errorMessage = getErrorMessage(error)
+      message.error(errorMessage)
     }
   }
 
@@ -78,9 +81,11 @@ export const Profile = () => {
         phone: values.phone,
       }
       await updateProfile(updateData).unwrap()
+      message.success('Профиль успешно обновлен')
       setIsEditData(false)
     } catch (error) {
-      console.error('Failed to update profile:', error)
+      const errorMessage = getErrorMessage(error)
+      message.error(errorMessage)
     }
   }
 
@@ -92,10 +97,12 @@ export const Profile = () => {
       })
         .unwrap()
         .then(() => {
+          message.success('Пароль успешно изменен')
           setIsEditPassword(false)
         })
         .catch(error => {
-          console.error('Failed to change password:', error)
+          const errorMessage = getErrorMessage(error)
+          message.error(errorMessage)
         })
     }
 
