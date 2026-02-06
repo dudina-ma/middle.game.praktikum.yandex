@@ -32,8 +32,7 @@ type ProfilePageMode = 'showProfileData' | 'editProfileData' | 'changePassword'
 export const Profile = () => {
   const [mode, setMode] = useState<ProfilePageMode>('showProfileData')
   const { data: user, isLoading, isUninitialized } = useGetUserQuery()
-  const [updateAvatar, { isLoading: isUpdatingAvatar }] =
-    useUpdateAvatarMutation()
+  const [updateAvatar] = useUpdateAvatarMutation()
   const [updateProfile, { isLoading: isUpdatingProfile }] =
     useUpdateProfileMutation()
   const [changePassword, { isLoading: isChangingPassword }] =
@@ -126,11 +125,6 @@ export const Profile = () => {
 
   const isShowProfileDataMode = useMemo(
     () => mode === 'showProfileData',
-    [mode]
-  )
-
-  const isEditProfileDataMode = useMemo(
-    () => mode === 'editProfileData',
     [mode]
   )
 

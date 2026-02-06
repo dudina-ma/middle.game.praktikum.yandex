@@ -1,7 +1,5 @@
 import styled from 'styled-components'
 import { Helmet } from 'react-helmet'
-
-import { useSelector } from '../store'
 import { selectUser } from '../slices/userSlice'
 import { useGetUserQuery } from '../api/authApi'
 import Header from '../components/Header/Header'
