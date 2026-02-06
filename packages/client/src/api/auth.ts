@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { User } from './types'
 import { SignInRequest, SignUpRequest } from './auth.schema'
+import { AUTH_URL } from './consts'
 
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://ya-praktikum.tech/api/v2/auth/',
+    baseUrl: AUTH_URL,
     credentials: 'include',
   }),
   endpoints: build => ({
