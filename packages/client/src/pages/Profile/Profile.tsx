@@ -54,10 +54,6 @@ export const Profile = () => {
     [updateAvatar]
   )
 
-  const onAvatarDelete = useCallback(async () => {
-    console.log('onAvatarDelete')
-  }, [])
-
   const handleEditData = () => {
     setMode('editProfileData')
   }
@@ -155,7 +151,6 @@ export const Profile = () => {
       <AvatarWithControlls
         avatarUrl={user.avatar}
         onAvatarChange={onAvatarChange}
-        onAvatarDelete={onAvatarDelete}
       />
 
       {isChangePasswordMode ? (
