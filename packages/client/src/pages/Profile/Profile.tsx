@@ -1,6 +1,6 @@
 import type { FormProps } from 'antd'
 import { Button, message, Spin } from 'antd'
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { AvatarWithControlls } from '../../molecules/AvatarWithControlls/AvatarWithControlls'
 import { ProfileForm } from '../../organisms/ProfileForm/ProfileForm'
 import { PasswordChangeForm } from '../../organisms/PasswordChangeForm/PasswordChangeForm'
@@ -31,7 +31,7 @@ type ProfilePageMode = 'showProfileData' | 'editProfileData' | 'changePassword'
 
 export const Profile = () => {
   const [mode, setMode] = useState<ProfilePageMode>('showProfileData')
-  const { data: user, isLoading } = useGetUserQuery()
+  const { data: user, isLoading, isUninitialized } = useGetUserQuery()
   const [updateAvatar, { isLoading: isUpdatingAvatar }] =
     useUpdateAvatarMutation()
   const [updateProfile, { isLoading: isUpdatingProfile }] =
@@ -41,81 +41,113 @@ export const Profile = () => {
 
   usePage({ initPage: initProfilePage })
 
-  const onAvatarChange = async (file: File) => {
-    try {
-      await updateAvatar(file).unwrap()
-      message.success('Аватар успешно обновлен')
-    } catch (error) {
-      const errorMessage = getErrorMessage(error)
-      message.error(errorMessage)
-    }
-  }
+  const onAvatarChange = useCallback(
+    async (file: File) => {
+      try {
+        await updateAvatar(file).unwrap()
+        message.success('Аватар успешно обновлен')
+      } catch (error) {
+        const errorMessage = getErrorMessage(error)
+        message.error(errorMessage)
+      }
+    },
+    [updateAvatar]
+  )
 
-  const onAvatarDelete = async () => {
+  const onAvatarDelete = useCallback(async () => {
     console.log('onAvatarDelete')
-  }
+  }, [])
 
   const handleEditData = () => {
     setMode('editProfileData')
   }
 
-  const handleCancelEditData = () => {
+  const handleCancelEditData = useCallback(() => {
     setMode('showProfileData')
-  }
+  }, [])
 
   const handleEditPassword = () => {
     setMode('changePassword')
   }
 
-  const handleCancelPasswordChange = () => {
+  const handleCancelPasswordChange = useCallback(() => {
     setMode('showProfileData')
-  }
+  }, [])
 
-  const onFinish: FormProps<User>['onFinish'] = async (values: User) => {
-    try {
-      const updateData: UpdateProfileRequest = {
-        first_name: values.first_name,
-        second_name: values.second_name,
-        display_name: values.display_name,
-        login: values.login,
-        email: values.email,
-        phone: values.phone,
-      }
-      await updateProfile(updateData).unwrap()
-      message.success('Профиль успешно обновлен')
-      setMode('showProfileData')
-    } catch (error) {
-      const errorMessage = getErrorMessage(error)
-      message.error(errorMessage)
-    }
-  }
-
-  const onPasswordChangeFinish: FormProps<PasswordChangeFormValues>['onFinish'] =
-    async (values: PasswordChangeFormValues) => {
+  const onFinish: FormProps<User>['onFinish'] = useCallback(
+    async (values: User) => {
       try {
-        await changePassword({
-          oldPassword: values.oldPassword,
-          newPassword: values.newPassword,
-        }).unwrap()
-        message.success('Пароль успешно изменен')
+        const updateData: UpdateProfileRequest = {
+          first_name: values.first_name,
+          second_name: values.second_name,
+          display_name: values.display_name,
+          login: values.login,
+          email: values.email,
+          phone: values.phone,
+        }
+        await updateProfile(updateData).unwrap()
+        message.success('Профиль успешно обновлен')
         setMode('showProfileData')
       } catch (error) {
         const errorMessage = getErrorMessage(error)
         message.error(errorMessage)
       }
-    }
+    },
+    [updateProfile]
+  )
+
+  const onPasswordChangeFinish: FormProps<PasswordChangeFormValues>['onFinish'] =
+    useCallback(
+      async (values: PasswordChangeFormValues) => {
+        try {
+          await changePassword({
+            oldPassword: values.oldPassword,
+            newPassword: values.newPassword,
+          }).unwrap()
+          message.success('Пароль успешно изменен')
+          setMode('showProfileData')
+        } catch (error) {
+          const errorMessage = getErrorMessage(error)
+          message.error(errorMessage)
+        }
+      },
+      [changePassword]
+    )
 
   const onPasswordChangeFinishFailed: FormProps<PasswordChangeFormValues>['onFinishFailed'] =
-    errorInfo => {
-      console.log('Password change failed:', errorInfo)
-    }
+    useCallback(
+      (
+        errorInfo: Parameters<
+          NonNullable<FormProps<PasswordChangeFormValues>['onFinishFailed']>
+        >[0]
+      ) => {
+        console.log('Password change failed:', errorInfo)
+      },
+      []
+    )
 
-  if (isLoading || !user) {
+  const isChangePasswordMode = useMemo(() => mode === 'changePassword', [mode])
+
+  const isShowProfileDataMode = useMemo(
+    () => mode === 'showProfileData',
+    [mode]
+  )
+
+  const isEditProfileDataMode = useMemo(
+    () => mode === 'editProfileData',
+    [mode]
+  )
+
+  if (isLoading || isUninitialized) {
     return (
       <div className={styles.container}>
         <Spin size="large" tip="Загрузка..." />
       </div>
     )
+  }
+
+  if (!user) {
+    throw new Error('Пользователь не найден')
   }
 
   return (
@@ -126,7 +158,7 @@ export const Profile = () => {
         onAvatarDelete={onAvatarDelete}
       />
 
-      {mode === 'changePassword' ? (
+      {isChangePasswordMode ? (
         <PasswordChangeForm
           onFinish={onPasswordChangeFinish}
           onFinishFailed={onPasswordChangeFinishFailed}
@@ -136,7 +168,7 @@ export const Profile = () => {
       ) : (
         <ProfileForm
           user={user}
-          isReadOnly={mode === 'showProfileData'}
+          isReadOnly={isShowProfileDataMode}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           onCancel={handleCancelEditData}
@@ -144,7 +176,7 @@ export const Profile = () => {
         />
       )}
 
-      {mode === 'showProfileData' && (
+      {isShowProfileDataMode && (
         <div className={styles.editButtonContainer}>
           <Button type="primary" ghost={true} onClick={handleEditData}>
             Изменить данные

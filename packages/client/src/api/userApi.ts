@@ -1,8 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { User } from './types'
 import { UpdateProfileRequest, ChangePasswordRequest } from './user.schema'
-
-const API_BASE_URL = 'https://ya-praktikum.tech/api/v2'
+import { API_BASE_URL } from './constants'
 
 export const userApi = createApi({
   reducerPath: 'userApi',

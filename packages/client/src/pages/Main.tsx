@@ -10,8 +10,6 @@ import { PageInitArgs } from '../routes'
 
 export const MainPage = () => {
   const { data: user, isLoading } = useGetUserQuery()
-  const userFromSelector = useSelector(selectUser)
-  const displayUser = user || userFromSelector
 
   usePage({ initPage: initMainPage })
   return (
@@ -33,10 +31,10 @@ export const MainPage = () => {
       </Link>
       {isLoading ? (
         <p>Загрузка...</p>
-      ) : displayUser ? (
+      ) : user ? (
         <div>
-          <p>{displayUser.first_name}</p>
-          <p>{displayUser.second_name}</p>
+          <p>{user.first_name}</p>
+          <p>{user.second_name}</p>
         </div>
       ) : (
         <p>Пользователь не найден!</p>

@@ -4,24 +4,41 @@ type RTKQueryError =
   | FetchBaseQueryError
   | { status: string | number; data?: unknown; message?: string }
 
+const isJson = (str: string): boolean => {
+  const trimmed = str.trim()
+  return (
+    (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+    (trimmed.startsWith('[') && trimmed.endsWith(']'))
+  )
+}
+
+const isRTKQueryError = (error: unknown): error is RTKQueryError => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    ('status' in error || 'data' in error)
+  )
+}
+
+const isErrorWithMessage = (error: unknown): error is { message: string } => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof (error as { message: unknown }).message === 'string'
+  )
+}
+
 export const getErrorMessage = (error: unknown): string => {
   if (!error) {
     return 'Произошла неизвестная ошибка'
   }
 
-  if (
-    typeof error === 'object' &&
-    error !== null &&
-    ('status' in error || 'data' in error)
-  ) {
-    const rtkError = error as RTKQueryError
+  if (isRTKQueryError(error)) {
+    const rtkError = error
 
     if ('data' in rtkError && typeof rtkError.data === 'string') {
-      const trimmed = rtkError.data.trim()
-      if (
-        (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
-        (trimmed.startsWith('[') && trimmed.endsWith(']'))
-      ) {
+      if (isJson(rtkError.data)) {
         try {
           const parsed = JSON.parse(rtkError.data as string) as Record<
             string,
@@ -91,13 +108,8 @@ export const getErrorMessage = (error: unknown): string => {
     }
   }
 
-  if (
-    typeof error === 'object' &&
-    error !== null &&
-    'message' in error &&
-    typeof (error as { message: string }).message === 'string'
-  ) {
-    return (error as { message: string }).message
+  if (isErrorWithMessage(error)) {
+    return error.message
   }
 
   if (error instanceof Error) {

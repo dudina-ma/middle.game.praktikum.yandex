@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { User } from './types'
-
-const API_BASE_URL = 'https://ya-praktikum.tech/api/v2'
+import { API_BASE_URL } from './constants'
 
 const userInfo: User = {
   id: 1,
