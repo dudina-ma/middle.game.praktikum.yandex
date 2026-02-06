@@ -8,7 +8,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     if (isError) navigate('/login')
-  }, [user, isError])
+  }, [isError])
 
   return user
 }
