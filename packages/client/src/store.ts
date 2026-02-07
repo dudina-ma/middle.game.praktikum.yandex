@@ -1,7 +1,7 @@
 import {
-  TypedUseSelectorHook,
   useDispatch as useDispatchBase,
   useSelector as useSelectorBase,
+  TypedUseSelectorHook,
   useStore as useStoreBase,
 } from 'react-redux'
 import { combineReducers } from 'redux'
@@ -10,7 +10,6 @@ import { configureStore } from '@reduxjs/toolkit'
 import friendsReducer from './slices/friendsSlice'
 import ssrReducer from './slices/ssrSlice'
 import userReducer from './slices/userSlice'
-import { authApi } from './api/auth'
 
 // Глобально декларируем в window наш ключик
 // и задаем ему тип такой же как у стейта в сторе
@@ -24,13 +23,10 @@ export const reducer = combineReducers({
   friends: friendsReducer,
   ssr: ssrReducer,
   user: userReducer,
-  [authApi.reducerPath]: authApi.reducer,
 })
 
 export const store = configureStore({
   reducer,
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(authApi.middleware),
   preloadedState:
     typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
 })
