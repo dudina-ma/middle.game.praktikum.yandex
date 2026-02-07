@@ -10,16 +10,17 @@ import {
   StaticRouterProvider,
 } from 'react-router-dom/server'
 import { matchRoutes } from 'react-router-dom'
+import { configureStore } from '@reduxjs/toolkit'
 
 import {
   createContext,
   createFetchRequest,
   createUrl,
 } from './entry-server.utils'
+import { reducer } from './store'
 import { routes } from './routes'
 import './index.css'
 import { setPageHasBeenInitializedOnServer } from './slices/ssrSlice'
-import { store } from './store'
 
 export const render = async (req: ExpressRequest) => {
   const { query, dataRoutes } = createStaticHandler(routes)
@@ -29,6 +30,10 @@ export const render = async (req: ExpressRequest) => {
   if (context instanceof Response) {
     throw context
   }
+
+  const store = configureStore({
+    reducer,
+  })
 
   const url = createUrl(req)
 
