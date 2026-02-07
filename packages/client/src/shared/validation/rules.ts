@@ -1,4 +1,6 @@
-export const nameRules = [
+import { Rule } from 'antd/es/form'
+
+export const nameRules: Rule[] = [
   {
     required: true,
     message: 'Введите имя',
@@ -10,18 +12,27 @@ export const nameRules = [
   },
 ]
 
-export const loginRules = [
+export const loginRules: Rule[] = [
   {
     required: true,
     message: 'Введите логин',
   },
   {
-    pattern: /^(?=.*[a-zA-Z])[a-zA-Z0-9_-]{3,20}$/,
-    message: 'От 3 до 20 символов, латиница, цифры допустимы, но не только они',
+    pattern: /^(?=.*[a-zA-Z])[a-zA-Z0-9_-]+$/,
+    message:
+      'Логин только латиница, может содержать цифры, дефис и нижнее подчёркивание',
+  },
+  {
+    min: 3,
+    message: 'Логин должен быть минимум 3 символов',
+  },
+  {
+    max: 20,
+    message: 'Логин должен быть максимум 20 символов',
   },
 ]
 
-export const emailRules = [
+export const emailRules: Rule[] = [
   {
     required: true,
     message: 'Введите email',
@@ -32,18 +43,26 @@ export const emailRules = [
   },
 ]
 
-export const passwordRules = [
+export const passwordRules: Rule[] = [
   {
     required: true,
     message: 'Пожалуйста, введите пароль!',
   },
   {
-    pattern: /^(?=.*[A-Z])(?=.*\d).{8,40}$/,
+    pattern: /^(?=.*[A-Z])(?=.*\d).*/,
     message: 'Пароль должен содержать заглавную букву и цифру',
+  },
+  {
+    min: 8,
+    message: 'Пароль должен быть минимум 8 символов',
+  },
+  {
+    max: 40,
+    message: 'Пароль должен быть максимум 40 символов',
   },
 ]
 
-export const phoneRules = [
+export const phoneRules: Rule[] = [
   {
     required: true,
     message: 'Введите номер телефона',
