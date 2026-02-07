@@ -7,11 +7,12 @@
     "preview": "node server/index.js",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "jest ./"
+    "test": "jest ./",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
-    "@reduxjs/toolkit": "^1.9.5",
+    "@reduxjs/toolkit": "^2.11.2",
     "@types/react-helmet": "^6.1.7",
     "antd": "^6.2.2",
     "cookie-parser": "^1.4.6",
@@ -34,8 +35,8 @@
     "@types/jest": "^28.1.8",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
-    "@typescript-eslint/eslint-plugin": "^5.35.1",
-    "@typescript-eslint/parser": "^5.35.1",
+    "@typescript-eslint/eslint-plugin": "^5.33.2",
+    "@typescript-eslint/parser": "^5.35.2",
     "@vitejs/plugin-react": "^2.0.1",
     "eslint": "^8.23.0",
     "jest": "^28",
