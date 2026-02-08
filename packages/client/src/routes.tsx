@@ -9,6 +9,9 @@ import Leaderboard from './pages/Leaderboard/Leaderboard'
 import Forum from './pages/Forum/Forum'
 import ForumTopic from './pages/ForumTopic/ForumTopic'
 import NotFound from './pages/NotFound/NotFound'
+import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
+
+const createErrorElement = () => <RouterErrorAdapter />
 
 export type PageInitContext = {
   clientToken?: string
@@ -38,16 +41,19 @@ export const routes = [
   {
     path: '/login',
     Component: Login,
+    errorElement: createErrorElement(),
     fetchData: createStubFetchData('Login'),
   },
   {
     path: '/sign-in',
     Component: SignIn,
+    errorElement: createErrorElement(),
     fetchData: createStubFetchData('SignIn'),
   },
   {
     path: '/',
     Component: Layout,
+    errorElement: createErrorElement(),
     children: [
       {
         index: true,
@@ -86,6 +92,7 @@ export const routes = [
   {
     path: '*',
     Component: NotFound,
+    errorElement: createErrorElement(),
     fetchData: emptyFetchData,
   },
 ]
