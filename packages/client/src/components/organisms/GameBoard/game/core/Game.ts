@@ -4,7 +4,8 @@ import { Board } from '../components/Board'
 import { GameController } from './GameController'
 import type { GAME_CONFIG } from '../GameConfig'
 import { store } from './Store'
-import type { Bullet } from '../components/Bullet'
+import { Bullet } from '../components/Bullet'
+// import type { Bullet } from '../components/Bullet'
 
 export class Game {
   private canvas: HTMLCanvasElement
@@ -17,6 +18,8 @@ export class Game {
   private lastTime = 0
   private gameController: GameController
   private effects: Bullet[] = []
+  private isRender = true
+  private frame = 0
 
   constructor(canvas: HTMLCanvasElement, config: typeof GAME_CONFIG) {
     this.interval = 1000 / config.FPS
@@ -44,7 +47,6 @@ export class Game {
       colors: { ...config.colors, ship: config.colors.empty },
     })
 
-    this.initBackgrounds()
     this.gameController = new GameController(
       this.playerBoard,
       this.enemyBoard,
@@ -53,19 +55,9 @@ export class Game {
     this.gameController.init()
   }
 
-  private initBackgrounds() {
-    this.backgrounds = [
-      new Background({
-        ctx: this.ctx,
-        position: { x: 0, y: 0 },
-        size: { x: 900, y: 900 },
-        speed: 0,
-        color: 'royalblue',
-      }),
-    ]
-  }
   public destroy() {
     this.gameController.destroy()
+    this.isRender = false
   }
 
   addEffect(effect: Bullet) {
@@ -77,14 +69,12 @@ export class Game {
     const deltaTime = currentTime - this.lastTime
 
     if (deltaTime > this.interval) {
-      const { playerBoard, enemyBoard } = store.getStore()
-
       this.lastTime = currentTime - (deltaTime % this.interval)
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-      this.backgrounds.forEach(bg => bg.render())
+      // this.backgrounds.forEach(bg => bg.render())
       this.messages.render()
-      this.playerBoard.render(playerBoard)
-      this.enemyBoard.render(enemyBoard)
+      this.playerBoard.render()
+      this.enemyBoard.render()
 
       this.effects = this.effects.filter(effect => {
         effect.render()

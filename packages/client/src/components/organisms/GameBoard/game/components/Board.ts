@@ -1,4 +1,5 @@
-import { type cellType } from '../core/Store'
+import { GameStore } from './../core/Store'
+import { store, type cellType } from '../core/Store'
 import { GAME_CONFIG } from '../GameConfig'
 import { BaseElement, type IBaseElement } from './Object'
 
@@ -24,6 +25,7 @@ export class Board extends BaseElement {
     this.boardType = boardType
     this.colors = colors
     this.size = this.calculateSize()
+    store.on('update', this.setBoard)
   }
 
   calculateSize() {
@@ -33,8 +35,12 @@ export class Board extends BaseElement {
     }
   }
 
-  render(board: cellType[][]) {
-    board.forEach((el, row) => {
+  private setBoard = ({ enemyBoard, playerBoard }: GameStore) => {
+    this.board = this.boardType === 'enemy' ? enemyBoard : playerBoard
+  }
+
+  render() {
+    this.board.forEach((el, row) => {
       el.forEach((cell, column) => {
         this.ctx.fillStyle = this.colors[cell]
         this.ctx.fillRect(

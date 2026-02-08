@@ -9,11 +9,13 @@ export class Bullet extends BaseElement {
   private progress = 0
   private speed = 0.02
   private end: coordsType
+  private start: coordsType
   public onComplete: (() => void) | null
 
   constructor(props: bulletProps) {
     super(props)
     const { end, onComplite } = props
+    this.start = { ...props.position }
     this.end = end
     this.onComplete = onComplite || null
   }

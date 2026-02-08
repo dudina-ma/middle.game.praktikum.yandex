@@ -6,7 +6,7 @@ export const fireShot = (
   board: cellType[][]
 ): { board: cellType[][]; result: 'hit' | 'miss' | 'null' } => {
   const { x, y } = cellCoords
-
+  board = board.map(row => [...row])
   const cellState = board[y][x]
 
   if (cellState === 'ship') {
