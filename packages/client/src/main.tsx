@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './store'
 import { routes } from './routes'
+import './index.css'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 
 const router = createBrowserRouter(routes)
