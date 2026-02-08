@@ -3,7 +3,8 @@ import { Result, Button } from 'antd'
 import styles from './style.module.css'
 
 interface Props {
-  children: ReactNode
+  children?: ReactNode
+  error?: Error | null
 }
 
 interface State {
@@ -14,7 +15,17 @@ interface State {
 class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    this.state = { hasError: false, error: null }
+    const hasError = !!props.error
+    this.state = { hasError, error: props.error || null }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.error !== this.props.error) {
+      this.setState({
+        hasError: !!this.props.error,
+        error: this.props.error || null,
+      })
+    }
   }
 
   static getDerivedStateFromError(error: Error): State {
@@ -62,7 +73,7 @@ class ErrorBoundary extends Component<Props, State> {
       )
     }
 
-    return this.props.children
+    return this.props.children || null
   }
 }
 
