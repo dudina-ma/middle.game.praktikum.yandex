@@ -4,6 +4,8 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import { routes } from './routes'
 import './index.css'
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
+
 const router = createBrowserRouter(routes)
 
 const rootElement = document.getElementById('root') as HTMLElement
@@ -20,17 +22,21 @@ if (hasSSRContent && hasInitialState) {
 
   ReactDOM.hydrateRoot(
     rootElement,
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </ErrorBoundary>
   )
 } else {
   // SPA режим - используем createRoot
 
   const root = ReactDOM.createRoot(rootElement)
   root.render(
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </ErrorBoundary>
   )
 }
