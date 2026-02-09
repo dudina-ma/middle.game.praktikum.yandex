@@ -2,22 +2,41 @@ import { memo } from 'react'
 import { Avatar, Button, Upload } from 'antd'
 import type { UploadProps } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import styles from './AvatarWithControlls.module.css'
+import styles from './AvatarWithControls.module.css'
 
-type AvatarWithControllsProps = {
+const MAX_SIZE = 5 * 1024 * 1024 // 5MB
+const ALLOWED_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+]
+
+type AvatarWithControlsProps = {
   avatarUrl?: string
   onAvatarChange?: (file: File) => void
 }
 
-export const AvatarWithControlls = memo(
-  ({ avatarUrl, onAvatarChange }: AvatarWithControllsProps) => {
+export const AvatarWithControls = memo(
+  ({ avatarUrl, onAvatarChange }: AvatarWithControlsProps) => {
     const handleChange: UploadProps['onChange'] = info => {
       const { file } = info
       const fileToUse = file instanceof File ? file : file.originFileObj
 
-      if (fileToUse) {
-        onAvatarChange?.(fileToUse)
+      if (!fileToUse) {
+        return
       }
+
+      if (fileToUse.size > MAX_SIZE) {
+        return
+      }
+
+      if (!ALLOWED_TYPES.includes(fileToUse.type)) {
+        return
+      }
+
+      onAvatarChange?.(fileToUse)
     }
 
     return (

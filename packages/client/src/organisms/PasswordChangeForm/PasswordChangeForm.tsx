@@ -42,13 +42,6 @@ export const PasswordChangeForm = memo(
               required: true,
               message: 'Старый пароль обязателен для заполнения',
             },
-            { min: 8, message: 'Пароль должен быть минимум 8 символов' },
-            { max: 40, message: 'Пароль должен быть максимум 40 символов' },
-            {
-              pattern: /^(?=.*[A-Z])(?=.*\d).+$/,
-              message:
-                'Пароль должен содержать хотя бы одну заглавную букву и цифру',
-            },
           ]}>
           <Input.Password />
         </Form.Item>
@@ -56,6 +49,7 @@ export const PasswordChangeForm = memo(
         <Form.Item<PasswordChangeFormValues>
           label="Новый пароль"
           name="newPassword"
+          dependencies={['oldPassword']}
           rules={[
             {
               required: true,
@@ -68,6 +62,16 @@ export const PasswordChangeForm = memo(
               message:
                 'Пароль должен содержать хотя бы одну заглавную букву и цифру',
             },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('oldPassword') !== value) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(
+                  new Error('Новый пароль должен отличаться от старого')
+                )
+              },
+            }),
           ]}>
           <Input.Password />
         </Form.Item>

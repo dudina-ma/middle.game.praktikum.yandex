@@ -25,7 +25,7 @@ export const authApi = createApi({
       queryFn: async () => {
         return { data: userInfo }
       },
-      providesTags: ['User'],
+      providesTags: [{ type: 'User', id: 'PROFILE' }],
     }),
   }),
 })

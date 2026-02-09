@@ -1,7 +1,7 @@
 import type { FormProps } from 'antd'
 import { Button, message, Spin } from 'antd'
-import { useState, useMemo, useCallback } from 'react'
-import { AvatarWithControlls } from '../../molecules/AvatarWithControlls/AvatarWithControlls'
+import { useState, useCallback } from 'react'
+import { AvatarWithControls } from '../../molecules/AvatarWithControls/AvatarWithControls'
 import { ProfileForm } from '../../organisms/ProfileForm/ProfileForm'
 import { PasswordChangeForm } from '../../organisms/PasswordChangeForm/PasswordChangeForm'
 import styles from './Profile.module.css'
@@ -121,12 +121,8 @@ export const Profile = () => {
       []
     )
 
-  const isChangePasswordMode = useMemo(() => mode === 'changePassword', [mode])
-
-  const isShowProfileDataMode = useMemo(
-    () => mode === 'showProfileData',
-    [mode]
-  )
+  const isChangePasswordMode = mode === 'changePassword'
+  const isShowProfileDataMode = mode === 'showProfileData'
 
   if (isLoading || isUninitialized) {
     return (
@@ -142,7 +138,7 @@ export const Profile = () => {
 
   return (
     <div className={styles.container}>
-      <AvatarWithControlls
+      <AvatarWithControls
         avatarUrl={user.avatar}
         onAvatarChange={onAvatarChange}
       />

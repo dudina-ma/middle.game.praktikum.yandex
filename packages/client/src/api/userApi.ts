@@ -21,7 +21,9 @@ export const userApi = createApi({
           body: formData,
         }
       },
-      invalidatesTags: ['User'],
+      invalidatesTags: (_result, _error, _arg) => [
+        { type: 'User', id: 'PROFILE' },
+      ],
     }),
     updateProfile: builder.mutation<User, UpdateProfileRequest>({
       query: body => ({
@@ -29,7 +31,9 @@ export const userApi = createApi({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: (_result, _error, _arg) => [
+        { type: 'User', id: 'PROFILE' },
+      ],
     }),
     changePassword: builder.mutation<void, ChangePasswordRequest>({
       query: body => ({
@@ -37,8 +41,9 @@ export const userApi = createApi({
         method: 'PUT',
         body,
         responseHandler: async response => {
-          const text = await response.text()
-          return text === 'OK' ? undefined : text
+          if (!response.ok) {
+            throw new Error(await response.text())
+          }
         },
       }),
     }),
