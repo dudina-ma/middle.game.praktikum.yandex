@@ -5,11 +5,13 @@ import { GameController } from './GameController'
 import type { GAME_CONFIG } from '../GameConfig'
 import { store } from './Store'
 import { Bullet } from '../components/Bullet'
+import { BaseObject } from 'styled-components/dist/types'
 // import type { Bullet } from '../components/Bullet'
 
 export class Game {
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
+  private rendered: BaseObject[]
   private backgrounds: Background[] = []
   private messages: Messages
   private playerBoard: Board
@@ -32,6 +34,8 @@ export class Game {
       position: config.MESSAGES_POSITION,
     })
     const { playerBoard, enemyBoard } = store.getStore()
+    this.rendered = []
+
     this.playerBoard = new Board({
       position: config.PLAYER_BOARD_POSITION,
       ctx: this.ctx,
@@ -56,6 +60,7 @@ export class Game {
   }
 
   public destroy() {
+    cancelAnimationFrame(this.frame)
     this.gameController.destroy()
     this.isRender = false
   }
@@ -65,7 +70,7 @@ export class Game {
   }
 
   public render(currentTime = 0) {
-    requestAnimationFrame(time => this.render(time))
+    this.frame = requestAnimationFrame(time => this.render(time))
     const deltaTime = currentTime - this.lastTime
 
     if (deltaTime > this.interval) {

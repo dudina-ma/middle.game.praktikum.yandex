@@ -36,6 +36,7 @@ class Store extends EventBus<TEventBus> {
     currentTurn: 'PLAYER',
     message: `Поставьте корабль длинной 4 на поле`,
   }
+
   getStore() {
     return this.store
   }
