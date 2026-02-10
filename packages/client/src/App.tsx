@@ -1,16 +1,16 @@
-import { useSelector } from './store'
-
-import { selectUser } from './slices/userSlice'
+import { useGetUserQuery } from './api/authApi'
 
 const App = () => {
-  const user = useSelector(selectUser)
+  const { data: user, isLoading } = useGetUserQuery()
 
   return (
     <div>
-      {user ? (
+      {isLoading ? (
+        <p>Загрузка...</p>
+      ) : user ? (
         <div>
-          <p>{user.name}</p>
-          <p>{user.secondName}</p>
+          <p>{user.first_name}</p>
+          <p>{user.second_name}</p>
         </div>
       ) : (
         <p>Пользователь не найден!</p>

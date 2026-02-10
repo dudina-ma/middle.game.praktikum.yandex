@@ -9,8 +9,8 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import friendsReducer from './slices/friendsSlice'
 import ssrReducer from './slices/ssrSlice'
-import userReducer from './slices/userSlice'
-import { authApi } from './api/auth'
+import { userApi } from './api/userApi'
+import { authApi } from './api/authApi'
 
 // Глобально декларируем в window наш ключик
 // и задаем ему тип такой же как у стейта в сторе
@@ -23,14 +23,14 @@ declare global {
 export const reducer = combineReducers({
   friends: friendsReducer,
   ssr: ssrReducer,
-  user: userReducer,
+  [userApi.reducerPath]: userApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
 })
 
 export const store = configureStore({
   reducer,
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(authApi.middleware),
+    getDefaultMiddleware().concat(userApi.middleware, authApi.middleware),
   preloadedState:
     typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
 })
