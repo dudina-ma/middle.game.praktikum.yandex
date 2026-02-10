@@ -1,4 +1,4 @@
-import { Button, Card, Input, Popover, Space, Typography } from 'antd'
+import { Button, Input, Popover, Space, Typography } from 'antd'
 import { SendOutlined, SmileOutlined } from '@ant-design/icons'
 import { CommentItem } from '../../model/types'
 import styles from './CommentComposer.module.css'
@@ -30,24 +30,28 @@ const CommentComposer = ({
       <Title level={5} className={styles.title}>
         Новый комментарий
       </Title>
-      <div className={styles.replyContainer}>
+
+      <div className={styles.field}>
         {replyToComment && (
-          <Card size="small" className={styles.replyCard}>
-            <Space className={styles.replyRow}>
-              <Text>Ответ пользователю: {replyToComment.author}</Text>
-              <Button size="small" onClick={onCancelReply}>
-                Отменить
-              </Button>
-            </Space>
-          </Card>
+          <div className={styles.replyBanner}>
+            <Text className={styles.replyText}>
+              Ответ пользователю: <b>{replyToComment.author}</b>
+            </Text>
+            <Button size="small" onClick={onCancelReply}>
+              Отменить
+            </Button>
+          </div>
         )}
+
+        <TextArea
+          className={replyToComment ? styles.textareaWithReply : undefined}
+          rows={4}
+          placeholder="Напишите комментарий..."
+          value={newComment}
+          onChange={event => onChange(event.target.value)}
+        />
       </div>
-      <TextArea
-        rows={3}
-        placeholder="Напишите комментарий..."
-        value={newComment}
-        onChange={event => onChange(event.target.value)}
-      />
+
       <Space className={styles.actions}>
         <Popover
           placement="bottomLeft"
@@ -65,6 +69,7 @@ const CommentComposer = ({
           }>
           <Button icon={<SmileOutlined />}>Эмодзи</Button>
         </Popover>
+
         <Button
           type="primary"
           icon={<SendOutlined />}
