@@ -1,9 +1,16 @@
+import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
+import Layout from './components/Layout/Layout'
+import ForumPage from './pages/ForumPage'
+import Game from './pages/Game/Game'
+import Leaderboard from './pages/Leaderboard/Leaderboard'
+import Login from './pages/Login/Login'
+import Main from './pages/Main/Main'
+import NotFound from './pages/NotFound/NotFound'
+import { Profile, initProfilePage } from './pages/Profile/Profile'
+import SignIn from './pages/SignIn/SignIn'
 import { AppDispatch, RootState } from './store'
 
-import { initMainPage, MainPage } from './pages/Main'
-import { initFriendsPage, FriendsPage } from './pages/FriendsPage'
-import { initNotFoundPage, NotFoundPage } from './pages/NotFound'
-import ForumPage from './pages/ForumPage'
+const createErrorElement = () => <RouterErrorAdapter />
 
 export type PageInitContext = {
   clientToken?: string
@@ -15,27 +22,76 @@ export type PageInitArgs = {
   ctx: PageInitContext
 }
 
-export const initForumPage = (_: PageInitArgs) => Promise.resolve()
+// Общие заглушки
+export const createStubFetchData = (pageName: string) => {
+  return async (_pageArgs: PageInitArgs): Promise<void> => {
+    console.log(`Stub fetchData called for ${pageName} page`)
+    return Promise.resolve()
+  }
+}
+
+export const emptyFetchData = async (
+  _pageArgs: PageInitArgs
+): Promise<void> => {
+  return Promise.resolve()
+}
 
 export const routes = [
   {
+    path: '/login',
+    Component: Login,
+    errorElement: createErrorElement(),
+    fetchData: createStubFetchData('Login'),
+  },
+  {
+    path: '/sign-in',
+    Component: SignIn,
+    errorElement: createErrorElement(),
+    fetchData: createStubFetchData('SignIn'),
+  },
+  {
     path: '/',
-    Component: MainPage,
-    fetchData: initMainPage,
+    Component: Layout,
+    errorElement: createErrorElement(),
+    children: [
+      {
+        index: true,
+        Component: Main,
+        fetchData: createStubFetchData('Main'),
+      },
+      {
+        path: 'profile',
+        Component: Profile,
+        fetchData: createStubFetchData('Profile'),
+      },
+      {
+        path: 'game',
+        Component: Game,
+        fetchData: createStubFetchData('Game'),
+      },
+      {
+        path: 'leaderboard',
+        Component: Leaderboard,
+        fetchData: createStubFetchData('Leaderboard'),
+      },
+      {
+        path: 'forum',
+        Component: ForumPage,
+        fetchData: createStubFetchData('Forum'),
+      },
+    ],
+    fetchData: createStubFetchData('Layout'),
   },
-  {
-    path: '/forum',
-    Component: ForumPage,
-    fetchData: initForumPage,
-  },
-  {
-    path: '/friends',
-    Component: FriendsPage,
-    fetchData: initFriendsPage,
-  },
+
   {
     path: '*',
-    Component: NotFoundPage,
-    fetchData: initNotFoundPage,
+    Component: NotFound,
+    errorElement: createErrorElement(),
+    fetchData: emptyFetchData,
+  },
+  {
+    path: '/profile',
+    Component: Profile,
+    fetchData: initProfilePage,
   },
 ]

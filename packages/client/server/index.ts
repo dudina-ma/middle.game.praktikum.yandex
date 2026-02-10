@@ -13,11 +13,13 @@ import cookieParser from 'cookie-parser'
 const port = process.env.PORT || 80
 const clientPath = path.join(__dirname, '..')
 const isDev = process.env.NODE_ENV === 'development'
+const NO_SSR = process.env.NO_SSR === 'true' // Флаг для отключения SSR
 
 async function createServer() {
   const app = express()
 
   app.use(cookieParser())
+
   let vite: ViteDevServer | undefined
   if (isDev) {
     vite = await createViteServer({
@@ -37,23 +39,51 @@ async function createServer() {
     const url = req.originalUrl
 
     try {
-      // Получаем файл client/index.html который мы правили ранее
-      // Создаём переменные
-      let render: (
-        req: ExpressRequest
-      ) => Promise<{ html: string; initialState: unknown; helmet: HelmetData; styleTags: string }>
+      // Если SSR отключен - отдаём базовый HTML для SPA
+      if (NO_SSR) {
+        let template: string
+
+        if (vite) {
+          template = await fs.readFile(
+            path.resolve(clientPath, 'index.html'),
+            'utf-8'
+          )
+          template = await vite.transformIndexHtml(url, template)
+        } else {
+          template = await fs.readFile(
+            path.join(clientPath, 'dist/client/index.html'),
+            'utf-8'
+          )
+        }
+
+        // Отдаём HTML без SSR данных
+        const html = template
+          .replace('<!--ssr-styles-->', '')
+          .replace('<!--ssr-helmet-->', '')
+          .replace('<!--ssr-outlet-->', '')
+          .replace('<!--ssr-initial-state-->', '')
+
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
+        return
+      }
+
+      // Оригинальный SSR код...
+      let render: (req: ExpressRequest) => Promise<{
+        html: string
+        initialState: unknown
+        helmet: HelmetData
+        styleTags: string
+      }>
       let template: string
+
       if (vite) {
         template = await fs.readFile(
           path.resolve(clientPath, 'index.html'),
           'utf-8'
         )
 
-        // Применяем встроенные HTML-преобразования vite и плагинов
         template = await vite.transformIndexHtml(url, template)
 
-        // Загружаем модуль клиента, который писали выше,
-        // он будет рендерить HTML-код
         render = (
           await vite.ssrLoadModule(
             path.join(clientPath, 'src/entry-server.tsx')
@@ -65,23 +95,27 @@ async function createServer() {
           'utf-8'
         )
 
-        // Получаем путь до сбилдженого модуля клиента, чтобы не тащить средства сборки клиента на сервер
         const pathToServer = path.join(
           clientPath,
           'dist/server/entry-server.js'
         )
 
-        // Импортируем этот модуль и вызываем с инишл стейтом
         render = (await import(pathToServer)).render
       }
 
-      // Получаем HTML-строку из JSX
-      const { html: appHtml, initialState, helmet, styleTags } = await render(req)
+      const {
+        html: appHtml,
+        initialState,
+        helmet,
+        styleTags,
+      } = await render(req)
 
-      // Заменяем комментарий на сгенерированную HTML-строку
       const html = template
         .replace('<!--ssr-styles-->', styleTags)
-        .replace(`<!--ssr-helmet-->`, `${helmet.meta.toString()} ${helmet.title.toString()} ${helmet.link.toString()}`)
+        .replace(
+          `<!--ssr-helmet-->`,
+          `${helmet.meta.toString()} ${helmet.title.toString()} ${helmet.link.toString()}`
+        )
         .replace(`<!--ssr-outlet-->`, appHtml)
         .replace(
           `<!--ssr-initial-state-->`,
@@ -90,16 +124,18 @@ async function createServer() {
           })}</script>`
         )
 
-      // Завершаем запрос и отдаём HTML-страницу
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (e) {
-      vite.ssrFixStacktrace(e as Error)
+      if (vite) {
+        vite.ssrFixStacktrace(e as Error)
+      }
       next(e)
     }
   })
 
   app.listen(port, () => {
-    console.log(`Client is listening on port: ${port}`)
+    console.log(`Server is listening on port: ${port}`)
+    console.log(`SSR mode: ${NO_SSR ? 'DISABLED (SPA mode)' : 'ENABLED'}`)
   })
 }
 
