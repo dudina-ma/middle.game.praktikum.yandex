@@ -26,42 +26,38 @@ const StartGame = () => {
 
   if (showTips) {
     return (
-      <div className={styles.backgroundContainer}>
-        <div className={styles.contentWrapper}>
-          <Flex vertical gap="large" align="center">
-            <div className={styles.resultIcon}>📚</div>
+      <Flex vertical gap="large" align="center">
+        <div className={styles.resultIcon}>📚</div>
 
-            <Title level={1} className={styles.winTitle}>
-              Как играть?
-            </Title>
+        <Title level={1} className={styles.winTitle}>
+          Как играть?
+        </Title>
 
-            <div className={styles.tipsContainer}>
-              {tips.map((tip, index) => (
-                <div key={index} className={styles.tipItem}>
-                  <Text className={styles.description}>{tip}</Text>
-                </div>
-              ))}
+        <div className={styles.tipsContainer}>
+          {tips.map(tip => (
+            <div key={tip} className={styles.tipItem}>
+              <Text className={styles.description}>{tip}</Text>
             </div>
-
-            <div className={styles.buttonsContainer}>
-              <Button
-                type="primary"
-                onClick={handleStart}
-                size="large"
-                className={styles.restartButton}>
-                🚀 Начать игру
-              </Button>
-
-              <Button
-                onClick={() => setShowTips(false)}
-                size="large"
-                className={styles.menuButton}>
-                ↩️ Назад
-              </Button>
-            </div>
-          </Flex>
+          ))}
         </div>
-      </div>
+
+        <div>
+          <Button
+            type="primary"
+            onClick={handleStart}
+            size="large"
+            className={styles.restartButton}>
+            🚀 Начать игру
+          </Button>
+
+          <Button
+            onClick={() => setShowTips(false)}
+            size="large"
+            className={styles.menuButton}>
+            ↩️ Назад
+          </Button>
+        </div>
+      </Flex>
     )
   }
 
@@ -71,25 +67,21 @@ const StartGame = () => {
         <Flex vertical gap="large" align="center">
           <div className={styles.resultIcon}>⚓🌊</div>
 
-          <Title level={1} className={styles.winTitle}>
-            Морской Бой
-          </Title>
+          <Title level={1}>Морской Бой</Title>
 
-          <Text className={styles.winText}>
-            Готовы к захватывающей морской битве?
-          </Text>
+          <Text>Готовы к захватывающей морской битве?</Text>
 
-          <Text className={styles.description}>
+          <Text>
             Стратегическая игра, где вам предстоит потопить флот противника,
             угадывая расположение его корабли на игровом поле. Проявите
             тактическое мышление и удачу!
           </Text>
 
-          <div className={styles.buttonsContainer}>
+          <div>
             <Button
               type="primary"
-              onClick={handleStart}
               size="large"
+              onClick={handleStart}
               className={styles.restartButton}>
               ⚓ Начать игру
             </Button>
@@ -102,9 +94,7 @@ const StartGame = () => {
             </Button>
           </div>
 
-          <Text className={styles.footerText}>
-            Соберите друзей и устройте настоящую морскую баталию!
-          </Text>
+          <Text>Соберите друзей и устройте настоящую морскую баталию!</Text>
         </Flex>
       </div>
     </div>

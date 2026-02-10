@@ -1,13 +1,13 @@
-import EndGame from '../../components/EndGame/EndGame'
-import StartGame from '../../components/StartGame/StartGame'
+import EndGame from '../../components/GameMenu/EndGame'
+import StartGame from '../../components/GameMenu/StartGame'
 import { useState } from 'react'
 const Game = () => {
   const [gameOver] = useState(false)
-
+  const [runGame] = useState(false)
   return (
     <div>
-      {<StartGame />}
-      {gameOver && <EndGame />}
+      {!gameOver && !runGame && <StartGame />}
+      {gameOver && !runGame && <EndGame />}
     </div>
   )
 }
