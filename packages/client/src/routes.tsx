@@ -9,6 +9,7 @@ import Leaderboard from './pages/Leaderboard/Leaderboard'
 import Forum from './pages/Forum/Forum'
 import ForumTopic from './pages/ForumTopic/ForumTopic'
 import NotFound from './pages/NotFound/NotFound'
+import ServerError from './pages/ServerError/ServerError'
 import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
 
 const createErrorElement = () => <RouterErrorAdapter />
@@ -84,6 +85,11 @@ export const routes = [
         path: 'forum/:topicId',
         Component: ForumTopic,
         fetchData: createStubFetchData('ForumTopic'),
+      },
+      {
+        path: 'server-error',
+        Component: ServerError,
+        fetchData: createStubFetchData('ServerError'),
       },
     ],
     fetchData: createStubFetchData('Layout'),
