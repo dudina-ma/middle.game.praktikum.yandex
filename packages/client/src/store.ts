@@ -11,6 +11,7 @@ import friendsReducer from './slices/friendsSlice'
 import ssrReducer from './slices/ssrSlice'
 import { userApi } from './api/userApi'
 import { authApi } from './api/authApi'
+import { leaderboardApi } from './api/leaderboard'
 
 // Глобально декларируем в window наш ключик
 // и задаем ему тип такой же как у стейта в сторе
@@ -25,12 +26,17 @@ export const reducer = combineReducers({
   ssr: ssrReducer,
   [userApi.reducerPath]: userApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
+  [leaderboardApi.reducerPath]: leaderboardApi.reducer,
 })
 
 export const store = configureStore({
   reducer,
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(userApi.middleware, authApi.middleware),
+    getDefaultMiddleware().concat(
+      userApi.middleware,
+      authApi.middleware,
+      leaderboardApi.middleware
+    ),
   preloadedState:
     typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
 })
