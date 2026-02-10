@@ -1,0 +1,38 @@
+.contentWrapper {
+  padding-top: 1rem;
+}
+.tipsContainer {
+  background: rgba(248, 249, 250, 0.8);
+  border-radius: 0.6rem;
+  padding: 1.2rem;
+  width: 100%;
+  max-width: 35rem;
+  border: 0.06rem solid #e9ecef;
+}
+
+.tipItem {
+  padding: 0.6rem 0;
+  border-bottom: 0.0625rem dashed #dee2e6;
+}
+
+.tipItem:last-child {
+  border-bottom: none;
+}
+.buttonsContainer {
+  display: flex;
+  gap: 1rem;
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.resultIcon {
+  font-size: 5rem;
+  animation: float 3s ease-in-out infinite;
+}
