@@ -1,0 +1,29 @@
+.composer {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+.title {
+  margin: 0 0 8px;
+}
+
+.replyContainer {
+  min-height: 0;
+}
+
+.replyCard {
+  margin-bottom: 12px;
+}
+
+.replyRow {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.actions {
+  margin-top: 0;
+  width: 100%;
+  justify-content: space-between;
+}
