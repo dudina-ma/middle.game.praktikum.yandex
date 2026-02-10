@@ -9,9 +9,12 @@
   margin: 0 0 8px;
 }
 
+/* Важно: список занимает всё доступное место и скроллится внутри */
 .list {
+  --comment-row-height: 96px;
   flex: 1;
   min-height: 0;
+  max-height: calc(var(--comment-row-height) * 3);
   overflow-y: auto;
   padding-right: 8px;
 }
@@ -19,10 +22,10 @@
 .item {
   align-items: flex-start;
   gap: 8px;
+  min-height: var(--comment-row-height);
   padding-left: 0;
   background: transparent;
   border: none;
-  border-bottom: none;
   border-radius: 8px;
 }
 
@@ -50,10 +53,6 @@
 
 .avatarReply {
   background: #ffd666;
-}
-
-.content {
-  margin-bottom: 0;
 }
 
 .empty {

@@ -1,11 +1,13 @@
 .page {
-  min-height: 100vh;
-  height: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+
+  /* НЕ фиксируем высоту через calc */
   padding: 24px;
+
+  /* чтобы не было горизонтального скролла на зуме */
+  min-width: 0;
 }
 
 @media (max-width: 767px) {
@@ -20,19 +22,20 @@
 
 .contentRow {
   flex: 1;
-  min-height: 0;
+  min-height: 0; /* ключевое для flex-скроллов */
   margin-top: 16px;
   align-items: stretch;
 }
 
 .leftCol,
 .rightCol {
-  min-width: 0;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  min-width: 0;
 }
 
+/* карточки должны уметь сжиматься */
 .leftCol > :global(.ant-card),
 .rightCol > :global(.ant-card) {
   flex: 1;

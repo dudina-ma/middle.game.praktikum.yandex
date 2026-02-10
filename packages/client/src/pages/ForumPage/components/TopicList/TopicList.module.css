@@ -12,9 +12,13 @@
   flex-direction: column;
   min-height: 0;
 }
+
+/* Важно: список занимает всё доступное место и скроллится внутри */
 .list {
+  --topic-row-height: 120px;
   flex: 1;
   min-height: 0;
+  max-height: calc(var(--topic-row-height) * 5);
   overflow-y: auto;
   padding-right: 8px;
 }
@@ -33,6 +37,7 @@
 .item {
   cursor: pointer;
   padding: 10px !important;
+  min-height: var(--topic-row-height);
   background: transparent;
   border-bottom: 1px solid #f0f0f0;
 }
@@ -73,6 +78,7 @@
 .item:hover {
   background: #f5f5f5;
 }
+
 .itemSelected:hover {
   background: #e6f4ff;
 }
