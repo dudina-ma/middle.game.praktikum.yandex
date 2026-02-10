@@ -1,4 +1,4 @@
-import type { coordsType } from '../components/Object'
+import type { coordsType } from '../components/shared/Sprite'
 import type { cellType } from '../core/Store'
 
 export const fireShot = (

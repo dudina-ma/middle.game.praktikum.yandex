@@ -1,25 +1,19 @@
 import { EnemyAI } from './../components/EnemyAI'
-import type { Board } from '../components/Board'
-import type { coordsType } from '../components/Object'
+import type { coordsType } from '../components/shared/Sprite'
 import { checkClick, coordsToCell } from '../utils/clickUtils'
 import { fireShot } from '../utils/fireShot'
 import { validatePlacement } from '../utils/ValidateShip'
 import { store } from './Store'
 import { PhaseHandlers } from '../utils/PhaseHandlers'
-import type { Game } from './Game'
+import { GAME_CONFIG } from '../GameConfig'
 
 export class GameController {
-  store: typeof store
-  playerBoard: Board
-  enemyBoard: Board
-  enemyAI = new EnemyAI()
-  game: Game
+  config: typeof GAME_CONFIG
 
-  constructor(playerBoard: Board, enemyBoard: Board, game: Game) {
-    this.store = store
-    this.playerBoard = playerBoard
-    this.enemyBoard = enemyBoard
-    this.game = game
+  enemyAI = new EnemyAI()
+
+  constructor(config: typeof GAME_CONFIG) {
+    this.config = config
   }
   init = () => {
     document.addEventListener('mousedown', this.handleMouseDown)
@@ -27,10 +21,13 @@ export class GameController {
 
   private handleMouseDown = (e: MouseEvent) => {
     const { phase } = store.getStore()
+    const { ENEMY_BOARD_POSITION, PLAYER_BOARD_POSITION } =
+      this.config.BOARDS_POSITION
     const coords = { x: e.offsetX, y: e.offsetY }
-    const targetBoard = phase === 'SETUP' ? this.playerBoard : this.enemyBoard
-    if (!checkClick(coords, targetBoard)) return
-    const cell = coordsToCell(coords, targetBoard)
+    const boardCoords =
+      phase === 'SETUP' ? PLAYER_BOARD_POSITION : ENEMY_BOARD_POSITION
+    if (!checkClick(coords, boardCoords)) return
+    const cell = coordsToCell(coords, boardCoords)
     PhaseHandlers[phase]?.(cell, this)
   }
 

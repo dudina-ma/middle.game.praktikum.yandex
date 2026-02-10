@@ -6,9 +6,12 @@ export const GAME_CONFIG = {
   },
   FPS: 1,
   DIVIDER_W: 2,
-  PLAYER_BOARD_POSITION: { x: 40, y: 50 },
-  ENEMY_BOARD_POSITION: { x: 40, y: 320 },
   CELL_SIZE: { x: 20, y: 20 },
+  BOARDS_POSITION: {
+    PLAYER_BOARD_POSITION: { x: 40, y: 50, w: 220, h: 220 },
+    ENEMY_BOARD_POSITION: { x: 40, y: 320, w: 220, h: 220 },
+  },
+
   SHIPS_TO_PLACE: [4, 3, 3, 2, 2, 2, 1, 1, 1, 1],
   colors: {
     empty: 'rgba(51, 37, 206, 0.5)',

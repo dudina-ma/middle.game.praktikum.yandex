@@ -1,4 +1,4 @@
-import type { coordsType } from '../components/Object'
+import type { coordsType } from '../components/shared/Sprite'
 import type { GameController } from '../core/GameController'
 import { store } from '../core/Store'
 

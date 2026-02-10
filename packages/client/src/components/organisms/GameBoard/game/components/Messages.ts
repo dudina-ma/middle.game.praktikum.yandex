@@ -1,11 +1,11 @@
 import { store } from '../core/Store'
-import { BaseElement } from './Object'
+import { AbstractElement } from './shared/abstractComponents/AbstractElement'
 
-export class Messages extends BaseElement {
+export class Messages extends AbstractElement {
   render(): void {
     const { x, y } = this.position
     const { message } = store.getStore()
-    this.ctx.fillStyle = 'white'
+    this.ctx.fillStyle = 'red'
     this.ctx.font = '17px consolas'
     this.ctx.fillText(message, x, y)
   }

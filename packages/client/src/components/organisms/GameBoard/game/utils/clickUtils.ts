@@ -1,18 +1,23 @@
-import type { Board } from '../components/Board'
-import type { BaseElement, coordsType } from '../components/Object'
+import type { coordsType } from '../components/shared/Sprite'
 
-export function checkClick(coords: coordsType, obj2: BaseElement): boolean {
+export function checkClick(
+  coords: coordsType,
+  boardCoords: { x: number; y: number; w: number; h: number }
+): boolean {
   return (
-    coords.x < obj2.position.x + obj2.size.x &&
-    coords.x > obj2.position.x &&
-    coords.y < obj2.position.y + obj2.size.y &&
-    coords.y > obj2.position.y
+    coords.x < boardCoords.x + boardCoords.w &&
+    coords.x > boardCoords.x &&
+    coords.y < boardCoords.y + boardCoords.h &&
+    coords.y > boardCoords.y
   )
 }
 
-export function coordsToCell({ x, y }: coordsType, board: Board) {
-  const { x: offcetX, y: offcetY } = board.position
-  const { x: BoardSizeX, y: BoardSizeY } = board.size
+export function coordsToCell(
+  { x, y }: coordsType,
+  boardCoords: { x: number; y: number; w: number; h: number }
+) {
+  const { x: offcetX, y: offcetY } = boardCoords
+  const { w: BoardSizeX, h: BoardSizeY } = boardCoords
   const cellSizeX = BoardSizeX / 10
   const cellSizeY = BoardSizeY / 10
 
