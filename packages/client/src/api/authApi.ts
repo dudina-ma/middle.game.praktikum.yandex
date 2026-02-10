@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { User } from './types'
-import { API_BASE_URL } from './constants'
+import { API_URL } from './consts'
 
 const userInfo: User = {
   id: 1,
@@ -16,7 +16,7 @@ const userInfo: User = {
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: API_BASE_URL,
+    baseUrl: API_URL,
     credentials: 'include',
   }),
   tagTypes: ['User'],
