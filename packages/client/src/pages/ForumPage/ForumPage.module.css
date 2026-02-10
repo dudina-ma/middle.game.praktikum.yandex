@@ -1,0 +1,40 @@
+.page {
+  min-height: 100vh;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 24px;
+}
+
+@media (max-width: 767px) {
+  .page {
+    padding: 16px;
+  }
+}
+
+.toolbar {
+  flex: 0 0 auto;
+}
+
+.contentRow {
+  flex: 1;
+  min-height: 0;
+  margin-top: 16px;
+  align-items: stretch;
+}
+
+.leftCol,
+.rightCol {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.leftCol > :global(.ant-card),
+.rightCol > :global(.ant-card) {
+  flex: 1;
+  min-height: 0;
+}
