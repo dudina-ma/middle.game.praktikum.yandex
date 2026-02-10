@@ -1,5 +1,6 @@
 import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
 import Layout from './components/Layout/Layout'
+import BadRequest from './pages/BadRequest/BadRequest'
 import ForumPage from './pages/ForumPage'
 import Game from './pages/Game/Game'
 import Leaderboard from './pages/Leaderboard/Leaderboard'
@@ -78,6 +79,11 @@ export const routes = [
         path: 'forum',
         Component: ForumPage,
         fetchData: createStubFetchData('Forum'),
+      },
+      {
+        path: 'bad-request',
+        Component: BadRequest,
+        fetchData: createStubFetchData('BadRequest'),
       },
     ],
     fetchData: createStubFetchData('Layout'),
