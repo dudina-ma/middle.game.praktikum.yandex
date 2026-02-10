@@ -10,7 +10,7 @@ export const authApi = createApi({
     credentials: 'include',
   }),
   endpoints: build => ({
-    getUser: build.query<User, null>({
+    getUser: build.query<User, void>({
       query: () => `user`,
     }),
     signUp: build.mutation<Pick<User, 'id'>, SignUpRequest>({
@@ -27,7 +27,7 @@ export const authApi = createApi({
         body,
       }),
     }),
-    logout: build.mutation<void, null>({
+    logout: build.mutation<void, void>({
       query: () => ({
         url: 'logout',
         method: 'POST',

@@ -4,7 +4,7 @@ import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
 import styled from 'styled-components'
 
-import { useAuth } from '../../hooks/useAuth'
+import { useAuthGuard } from '../../hooks/useAuthGuard'
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -17,11 +17,10 @@ const MainContent = styled.main`
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
 `
 
 const Layout: React.FC = () => {
-  useAuth()
+  useAuthGuard()
   return (
     <LayoutContainer>
       <Header />
