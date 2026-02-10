@@ -1,15 +1,15 @@
-import { AppDispatch, RootState } from './store'
+import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
 import Layout from './components/Layout/Layout'
-import Main from './pages/Main/Main'
-import Login from './pages/Login/Login'
-import SignIn from './pages/SignIn/SignIn'
-import { Profile, initProfilePage } from './pages/Profile/Profile'
+import BadRequest from './pages/BadRequest/BadRequest'
+import Forum from './pages/Forum/Forum'
 import Game from './pages/Game/Game'
 import Leaderboard from './pages/Leaderboard/Leaderboard'
-import Forum from './pages/Forum/Forum'
-import ForumTopic from './pages/ForumTopic/ForumTopic'
+import Login from './pages/Login/Login'
+import Main from './pages/Main/Main'
 import NotFound from './pages/NotFound/NotFound'
-import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
+import { Profile, initProfilePage } from './pages/Profile/Profile'
+import SignIn from './pages/SignIn/SignIn'
+import { AppDispatch, RootState } from './store'
 
 const createErrorElement = () => <RouterErrorAdapter />
 
@@ -81,9 +81,9 @@ export const routes = [
         fetchData: createStubFetchData('Forum'),
       },
       {
-        path: 'forum/:topicId',
-        Component: ForumTopic,
-        fetchData: createStubFetchData('ForumTopic'),
+        path: 'bad-request',
+        Component: BadRequest,
+        fetchData: createStubFetchData('BadRequest'),
       },
     ],
     fetchData: createStubFetchData('Layout'),
