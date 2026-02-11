@@ -1,14 +1,13 @@
 import styled from 'styled-components'
 import { Helmet } from 'react-helmet'
-
-import { useSelector } from '../store'
-import { fetchUserThunk, selectUser } from '../slices/userSlice'
-import Header from '../components/organisms/Header/Header'
+import { selectUser } from '../slices/userSlice'
+import { useGetUserQuery } from '../api/authApi'
+import Header from '../organisms/Header/Header'
 import { usePage } from '../hooks/usePage'
 import { PageInitArgs } from '../routes'
 
 export const MainPage = () => {
-  const user = useSelector(selectUser)
+  const { data: user, isLoading } = useGetUserQuery()
 
   usePage({ initPage: initMainPage })
   return (
@@ -28,10 +27,12 @@ export const MainPage = () => {
         </Icon>
         <Label>Hovering my parent changes my style!</Label>
       </Link>
-      {user ? (
+      {isLoading ? (
+        <p>Загрузка...</p>
+      ) : user ? (
         <div>
-          <p>{user.name}</p>
-          <p>{user.secondName}</p>
+          <p>{user.first_name}</p>
+          <p>{user.second_name}</p>
         </div>
       ) : (
         <p>Пользователь не найден!</p>
@@ -72,6 +73,7 @@ const Label = styled.span`
 
 export const initMainPage = async ({ dispatch, state }: PageInitArgs) => {
   if (!selectUser(state)) {
-    return dispatch(fetchUserThunk())
+    const { authApi } = await import('../api/authApi')
+    dispatch(authApi.endpoints.getUser.initiate())
   }
 }

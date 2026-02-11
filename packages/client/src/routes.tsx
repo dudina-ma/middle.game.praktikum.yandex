@@ -1,15 +1,15 @@
 import { AppDispatch, RootState } from './store'
-import Layout from './components/organisms/Layout/Layout'
+import Layout from './organisms/Layout/Layout'
 import Main from './pages/Main/Main'
 import Login from './pages/Login/Login'
 import SignIn from './pages/SignIn/SignIn'
-import Profile from './pages/Profile/Profile'
+import { Profile, initProfilePage } from './pages/Profile/Profile'
 import Game from './pages/Game/Game'
 import Leaderboard from './pages/Leaderboard/Leaderboard'
 import Forum from './pages/Forum/Forum'
 import ForumTopic from './pages/ForumTopic/ForumTopic'
 import NotFound from './pages/NotFound/NotFound'
-import { RouterErrorAdapter } from './components/organisms/ErrorBoundary/RouterErrorAdapter'
+import { RouterErrorAdapter } from './organisms/ErrorBoundary/RouterErrorAdapter'
 
 const createErrorElement = () => <RouterErrorAdapter />
 
@@ -94,5 +94,10 @@ export const routes = [
     Component: NotFound,
     errorElement: createErrorElement(),
     fetchData: emptyFetchData,
+  },
+  {
+    path: '/profile',
+    Component: Profile,
+    fetchData: initProfilePage,
   },
 ]
