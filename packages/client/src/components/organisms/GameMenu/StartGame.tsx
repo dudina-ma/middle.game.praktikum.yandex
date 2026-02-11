@@ -26,38 +26,42 @@ const StartGame = () => {
 
   if (showTips) {
     return (
-      <Flex vertical gap="large" align="center">
-        <div className={styles.resultIcon}>📚</div>
+      <div className={styles.backgroundContainer}>
+        <div className={styles.contentWrapper}>
+          <Flex vertical gap="large" align="center">
+            <div className={styles.resultIcon}>📚</div>
 
-        <Title level={1} className={styles.winTitle}>
-          Как играть?
-        </Title>
+            <Title level={1} className={styles.winTitle}>
+              Как играть?
+            </Title>
 
-        <div className={styles.tipsContainer}>
-          {tips.map(tip => (
-            <div key={tip} className={styles.tipItem}>
-              <Text className={styles.description}>{tip}</Text>
+            <div>
+              {tips.map(tip => (
+                <div key={tip}>
+                  <Text className={styles.description}>{tip}</Text>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div>
-          <Button
-            type="primary"
-            onClick={handleStart}
-            size="large"
-            className={styles.restartButton}>
-            🚀 Начать игру
-          </Button>
+            <div className={styles.buttonsContainer}>
+              <Button
+                type="primary"
+                onClick={handleStart}
+                size="large"
+                className={styles.restartButton}>
+                🚀 Начать игру
+              </Button>
 
-          <Button
-            onClick={() => setShowTips(false)}
-            size="large"
-            className={styles.menuButton}>
-            ↩️ Назад
-          </Button>
+              <Button
+                onClick={() => setShowTips(false)}
+                size="large"
+                className={styles.menuButton}>
+                ↩️ Назад
+              </Button>
+            </div>
+          </Flex>
         </div>
-      </Flex>
+      </div>
     )
   }
 
@@ -77,7 +81,7 @@ const StartGame = () => {
             тактическое мышление и удачу!
           </Text>
 
-          <div>
+          <div className={styles.buttonsContainer}>
             <Button
               type="primary"
               size="large"

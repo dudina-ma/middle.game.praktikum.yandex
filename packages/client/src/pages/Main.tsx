@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet'
 
 import { useSelector } from '../store'
 import { fetchUserThunk, selectUser } from '../slices/userSlice'
-import Header from '../components/Header/Header'
+import Header from '../components/organisms/Header/Header'
 import { usePage } from '../hooks/usePage'
 import { PageInitArgs } from '../routes'
 

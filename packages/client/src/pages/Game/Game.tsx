@@ -1,5 +1,5 @@
-import EndGame from '../../components/GameMenu/EndGame'
-import StartGame from '../../components/GameMenu/StartGame'
+import EndGame from '../../components/organisms/GameMenu/EndGame'
+import StartGame from '../../components/organisms/GameMenu/StartGame'
 import { useState } from 'react'
 const Game = () => {
   const [gameOver] = useState(false)
