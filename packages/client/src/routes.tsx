@@ -3,12 +3,15 @@ import Layout from './components/Layout/Layout'
 import Main from './pages/Main/Main'
 import Login from './pages/Login/Login'
 import SignIn from './pages/SignIn/SignIn'
-import Profile from './pages/Profile/Profile'
+import { Profile, initProfilePage } from './pages/Profile/Profile'
 import Game from './pages/Game/Game'
 import Leaderboard from './pages/Leaderboard/Leaderboard'
 import Forum from './pages/Forum/Forum'
 import ForumTopic from './pages/ForumTopic/ForumTopic'
 import NotFound from './pages/NotFound/NotFound'
+import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
+
+const createErrorElement = () => <RouterErrorAdapter />
 
 export type PageInitContext = {
   clientToken?: string
@@ -22,13 +25,15 @@ export type PageInitArgs = {
 
 // Общие заглушки
 export const createStubFetchData = (pageName: string) => {
-  return async (): Promise<void> => {
+  return async (_pageArgs: PageInitArgs): Promise<void> => {
     console.log(`Stub fetchData called for ${pageName} page`)
     return Promise.resolve()
   }
 }
 
-export const emptyFetchData = async (): Promise<void> => {
+export const emptyFetchData = async (
+  _pageArgs: PageInitArgs
+): Promise<void> => {
   return Promise.resolve()
 }
 
@@ -36,17 +41,19 @@ export const routes = [
   {
     path: '/login',
     Component: Login,
+    errorElement: createErrorElement(),
     fetchData: createStubFetchData('Login'),
   },
   {
     path: '/sign-in',
     Component: SignIn,
+    errorElement: createErrorElement(),
     fetchData: createStubFetchData('SignIn'),
   },
-
   {
     path: '/',
     Component: Layout,
+    errorElement: createErrorElement(),
     children: [
       {
         index: true,
@@ -85,6 +92,12 @@ export const routes = [
   {
     path: '*',
     Component: NotFound,
+    errorElement: createErrorElement(),
     fetchData: emptyFetchData,
+  },
+  {
+    path: '/profile',
+    Component: Profile,
+    fetchData: initProfilePage,
   },
 ]
