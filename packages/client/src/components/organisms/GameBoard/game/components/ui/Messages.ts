@@ -1,5 +1,5 @@
-import { store } from '../core/Store'
-import { AbstractElement } from './shared/abstractComponents/AbstractElement'
+import { store } from '../../core/Store'
+import { AbstractElement } from './shared/AbstractElement'
 
 export class Messages extends AbstractElement {
   render(): void {

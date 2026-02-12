@@ -1,4 +1,4 @@
-import { abstractController } from '../components/shared/abstractComponents/AbstractController'
+import { abstractController } from '../components/ui/shared/AbstractController'
 
 export class Inputs extends abstractController {
   constructor() {

@@ -1,7 +1,4 @@
-import {
-  AbstractElement,
-  IAbstractElement,
-} from './abstractComponents/AbstractElement'
+import { AbstractElement, IAbstractElement } from './AbstractElement'
 
 export type coordsType = {
   x: number

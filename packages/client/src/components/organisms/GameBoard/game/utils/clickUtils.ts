@@ -1,4 +1,4 @@
-import type { coordsType } from '../components/shared/Sprite'
+import type { coordsType } from '../components/ui/shared/Sprite'
 
 export function checkClick(
   coords: coordsType,

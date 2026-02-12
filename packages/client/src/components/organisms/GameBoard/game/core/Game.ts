@@ -1,9 +1,16 @@
-import { Messages } from '../components/Messages'
-import { Board } from '../components/Board'
+import { Messages } from '../components/ui/Messages'
+import { Board } from '../components/ui/Board'
 import { GameController } from './GameController'
 import type { GAME_CONFIG } from '../GameConfig'
-import { GameStore, store as Gstore } from './Store'
-import { AbstractElement } from '../components/shared/abstractComponents/AbstractElement'
+import { IGameStore, store as Gstore, cellType } from './Store'
+import { AbstractElement } from '../components/ui/shared/AbstractElement'
+
+export type onFinishData = {
+  result: 'win' | 'lose'
+  score: number
+}
+
+export type TonFinish = (data: onFinishData) => unknown | void
 
 export class Game {
   private canvas: HTMLCanvasElement
@@ -14,11 +21,17 @@ export class Game {
   private gameController: GameController
   private frame = 0
   private store = Gstore.getStore()
+  private onFinish: TonFinish
 
-  constructor(canvas: HTMLCanvasElement, config: typeof GAME_CONFIG) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    config: typeof GAME_CONFIG,
+    onFinish: TonFinish
+  ) {
     this.interval = 1000 / config.FPS
     this.canvas = canvas
     this.ctx = canvas.getContext('2d')!
+    this.onFinish = onFinish
     this.canvas.width = config.CANVAS_SIZE.x
     this.canvas.height = config.CANVAS_SIZE.y
     this.rendered = [
@@ -47,16 +60,23 @@ export class Game {
 
     Gstore.on('update', this.update)
 
-    this.gameController = new GameController(config)
+    this.gameController = new GameController(config, this.canvas)
     this.gameController.init()
   }
 
-  update = (store: GameStore) => {
-    console.log(store.enemyBoard)
-
+  private update = (store: IGameStore) => {
     this.rendered.forEach(el => {
       el.update(store)
     })
+  }
+
+  private finishGame(data: onFinishData) {
+    this.destroy()
+    this.onFinish(data)
+  }
+
+  private checkWinner(playerBoard: cellType[][], enemyBoard: cellType[][]) {
+    ;('')
   }
 
   public destroy() {

@@ -1,4 +1,4 @@
-import { GameStore } from '../../../core/Store'
+import { IGameStore } from '../../../core/Store'
 import { GAME_CONFIG } from '../../../GameConfig'
 
 export type coordsType = {
@@ -10,7 +10,7 @@ export interface IAbstractElement {
   position: coordsType
   ctx: CanvasRenderingContext2D
   size?: coordsType
-  store: GameStore
+  store: IGameStore
   config: typeof GAME_CONFIG
 }
 
@@ -23,7 +23,7 @@ export class AbstractElement {
     this.ctx = ctx
   }
 
-  update(store: GameStore): unknown {
+  update(store: IGameStore): unknown {
     return false
   }
 
