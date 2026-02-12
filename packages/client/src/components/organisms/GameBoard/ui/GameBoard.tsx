@@ -1,12 +1,18 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { GAME_CONFIG } from '../../Game/GameConfig'
 import { Game, onFinishData } from '../../Game'
 
 export const GameBoard: React.FC = () => {
+  const [phase, setPhase] = useState<'game' | 'Победа' | 'Поражение'>('game')
+  const [score, setScore] = useState<number>(0)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const gameInstance = useRef<Game | null>(null)
+
   const onFinish = (data: onFinishData) => {
-    console.log(data)
+    const result = data.result === 'lose' ? 'Поражение' : 'Победа'
+    const score = data.score
+    setPhase(result)
+    setScore(score)
   }
 
   useEffect(() => {
@@ -25,7 +31,13 @@ export const GameBoard: React.FC = () => {
 
   return (
     <div>
-      <canvas ref={canvasRef} />
+      {phase === 'game' ? (
+        <canvas ref={canvasRef} />
+      ) : (
+        <h1>
+          {phase}! ходов {score}
+        </h1>
+      )}
     </div>
   )
 }

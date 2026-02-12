@@ -19,6 +19,7 @@ export interface IGameStore {
   currentTurn: 'PLAYER' | 'ENEMY'
   shipsToPlace: number[]
   message: string
+  score: number
 }
 export type onFinishData = {
   result: 'win' | 'lose'

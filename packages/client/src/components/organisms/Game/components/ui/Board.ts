@@ -68,10 +68,13 @@ export class Board extends AbstractElement {
     }
   }
 
-  render() {
+  private drawBoard() {
     this.board.forEach((el, row) => {
       el.forEach((cell, column) => {
         this.ctx.fillStyle = this.colors[cell]
+        if (this.boardType === 'enemy' && cell === 'ship') {
+          this.ctx.fillStyle = this.colors.empty
+        }
         this.ctx.fillRect(
           this.position.x + (DIVIDER_W + CELL_SIZE.x) * column,
           this.position.y + (DIVIDER_W + CELL_SIZE.y) * row,
@@ -80,6 +83,10 @@ export class Board extends AbstractElement {
         )
       })
     })
+  }
+
+  render() {
+    this.drawBoard()
     if (this.boardType === 'player') {
       this.drawOverlay()
     }

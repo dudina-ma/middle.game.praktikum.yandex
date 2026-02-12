@@ -23,6 +23,7 @@ class Store extends EventBus<TEventBus> {
     selectedShip: null,
     currentTurn: 'PLAYER',
     message: `Поставьте корабль длинной 4 на поле`,
+    score: 0,
   }
 
   getStore() {

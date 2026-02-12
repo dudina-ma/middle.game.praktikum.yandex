@@ -1,12 +1,12 @@
 import { EnemyAI } from '../utils/EnemyAI'
-import type { coordsType } from '../components/ui/shared/Sprite'
 
 import { validatePlacement } from '../utils/ValidateShip'
 import { store } from './Store'
 import { PhaseHandlers } from '../utils/PhaseHandlers'
 import { GAME_CONFIG } from '../GameConfig'
-import { checkClick, coordsToCell } from '../utils/clickUtils'
-import { fireShot } from '../utils/fireShot'
+import { checkClick, coordsToCell } from '../utils/ClickUtils'
+import { fireShot } from '../utils/FireShot'
+import { coordsType } from './Types'
 
 export class GameController {
   config: typeof GAME_CONFIG
@@ -61,7 +61,6 @@ export class GameController {
     const cell = coordsToCell(coords, boardCoords)
     const currentShip = shipsToPlace[0]
     const direction = selectedShip?.direction || 'row'
-    console.log(direction)
 
     store.setStore({
       selectedShip: { coords: cell, length: currentShip, direction },
@@ -83,8 +82,9 @@ export class GameController {
 
   public playerHandler(cellCoords: coordsType) {
     const board = store.getStore().enemyBoard.map(row => [...row])
+    const score = store.getStore().score
     const { board: enemyBoard, result } = fireShot(cellCoords, board)
-    store.setStore({ enemyBoard })
+    store.setStore({ enemyBoard, score: score + 1 })
     if (result === 'miss') {
       store.setStore({ currentTurn: 'ENEMY', message: 'Ход противника' })
       this.enemyHandler()

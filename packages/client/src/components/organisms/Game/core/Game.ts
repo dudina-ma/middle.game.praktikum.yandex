@@ -62,11 +62,14 @@ export class Game {
   }
 
   private update = (store: IGameStore) => {
-    const { playerBoard, enemyBoard } = store
+    const { playerBoard, enemyBoard, phase } = store
     this.rendered.forEach(el => {
       el.update(store)
     })
-    this.checkWinner(playerBoard, enemyBoard)
+
+    if (phase === 'BATTLE') {
+      this.checkWinner(playerBoard, enemyBoard)
+    }
   }
 
   private finishGame(data: onFinishData) {
@@ -75,11 +78,12 @@ export class Game {
   }
 
   private checkWinner(playerBoard: cellType[][], enemyBoard: cellType[][]) {
+    const { score } = this.store
     if (!CheckShipsOnBoard(playerBoard)) {
-      this.finishGame({ result: 'lose', score: 321 })
+      this.finishGame({ result: 'lose', score: 0 })
     }
     if (!CheckShipsOnBoard(enemyBoard)) {
-      this.finishGame({ result: 'win', score: 321 })
+      this.finishGame({ result: 'win', score })
     }
   }
 
