@@ -6,7 +6,7 @@ export class Inputs extends abstractController {
     document.addEventListener('mousedown', this.handleMouseDown)
   }
 
-  private handleMouseDown = (e: MouseEvent) => {
+  private handleMouseDown = (_e: MouseEvent) => {
     // const { phase } = store.getStore()
     // const { ENEMY_BOARD_POSITION, PLAYER_BOARD_POSITION } =
     //   this.config.BOARDS_POSITION

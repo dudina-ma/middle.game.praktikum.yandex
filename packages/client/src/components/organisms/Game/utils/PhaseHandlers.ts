@@ -12,7 +12,4 @@ export const PhaseHandlers = {
       controller.playerHandler(coords)
     }
   },
-  RESULT: (coords: coordsType, controller: GameController) => {
-    ;('')
-  },
 }

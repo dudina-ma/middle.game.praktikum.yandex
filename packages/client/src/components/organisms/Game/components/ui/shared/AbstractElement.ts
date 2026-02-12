@@ -18,7 +18,7 @@ export class AbstractElement {
     this.ctx = ctx
   }
 
-  update(store: IGameStore): unknown {
+  update(_store: IGameStore): unknown {
     return false
   }
 

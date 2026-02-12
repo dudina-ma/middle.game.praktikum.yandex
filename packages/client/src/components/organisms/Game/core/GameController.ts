@@ -23,7 +23,7 @@ export class GameController {
     this.ctx.addEventListener('contextmenu', this.contextmenuHandler)
   }
 
-  private contextmenuHandler(e: PointerEvent) {
+  private contextmenuHandler(e: Event) {
     e.preventDefault()
   }
 

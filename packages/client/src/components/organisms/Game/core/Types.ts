@@ -1,4 +1,4 @@
-export type GamePhase = 'SETUP' | 'BATTLE' | 'RESULT'
+export type GamePhase = 'SETUP' | 'BATTLE'
 export type cellType = 'empty' | 'ship' | 'miss' | 'hited'
 export type selectedShip = {
   coords: coordsType
