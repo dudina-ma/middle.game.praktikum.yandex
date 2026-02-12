@@ -1,4 +1,11 @@
+import { SignInForm } from '../../organisms/SignInForm/SignInForm'
+import { AuthPageContainer } from '../../atoms'
+
 const SignIn = () => {
-  return <div>{'SignIn'}</div>
+  return (
+    <AuthPageContainer>
+      <SignInForm />
+    </AuthPageContainer>
+  )
 }
 export default SignIn
