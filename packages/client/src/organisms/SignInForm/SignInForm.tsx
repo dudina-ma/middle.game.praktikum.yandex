@@ -1,6 +1,7 @@
 import { Button, Form, Input, Typography } from 'antd'
 import { SignInRequest } from '../../api/auth.schema'
 import { useSignInForm } from './useSignInForm'
+import { loginRules, passwordRules } from '../../shared/validation/rules'
 
 const { Link } = Typography
 
@@ -9,11 +10,11 @@ export const SignInForm = () => {
 
   return (
     <Form<SignInRequest> name="signin" onFinish={onFinish} autoComplete="off">
-      <Form.Item name="login">
+      <Form.Item name="login" rules={loginRules}>
         <Input placeholder="Логин" allowClear />
       </Form.Item>
 
-      <Form.Item name="password">
+      <Form.Item name="password" rules={passwordRules}>
         <Input.Password placeholder="Пароль" />
       </Form.Item>
 

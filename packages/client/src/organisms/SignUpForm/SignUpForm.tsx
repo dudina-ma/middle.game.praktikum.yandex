@@ -1,5 +1,13 @@
 import { Button, Form, Input, Typography } from 'antd'
 import { useSignUpForm } from './useSignUpForm'
+import {
+  emailRules,
+  firstNameRules,
+  loginRules,
+  passwordRules,
+  phoneRules,
+  secondNameRules,
+} from '../../shared/validation/rules'
 
 const { Link } = Typography
 
@@ -12,27 +20,27 @@ export const SignUpForm = () => {
       layout="vertical"
       onFinish={onFinish}
       autoComplete="off">
-      <Form.Item name="first_name">
+      <Form.Item name="first_name" rules={firstNameRules}>
         <Input placeholder="Имя" />
       </Form.Item>
 
-      <Form.Item name="second_name">
+      <Form.Item name="second_name" rules={secondNameRules}>
         <Input placeholder="Фамилия" />
       </Form.Item>
 
-      <Form.Item name="login">
+      <Form.Item name="login" rules={loginRules}>
         <Input placeholder="Логин" />
       </Form.Item>
 
-      <Form.Item name="email">
+      <Form.Item name="email" rules={emailRules}>
         <Input placeholder="Email" />
       </Form.Item>
 
-      <Form.Item name="password">
+      <Form.Item name="password" rules={passwordRules}>
         <Input.Password placeholder="Пароль" />
       </Form.Item>
 
-      <Form.Item name="phone">
+      <Form.Item name="phone" rules={phoneRules}>
         <Input placeholder="Телефон" />
       </Form.Item>
 
