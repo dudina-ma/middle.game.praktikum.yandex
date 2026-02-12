@@ -1,11 +1,11 @@
-import { SignInForm } from '../../organisms'
 import { AuthPageContainer } from '../../atoms'
+import { SignUpForm } from '../../organisms'
 
-const SignIn = () => {
+const SignUp = () => {
   return (
     <AuthPageContainer>
-      <SignInForm />
+      <SignUpForm />
     </AuthPageContainer>
   )
 }
-export default SignIn
+export default SignUp
