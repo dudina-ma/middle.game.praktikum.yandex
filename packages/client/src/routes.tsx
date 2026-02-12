@@ -52,6 +52,12 @@ export const routes = [
     fetchData: createStubFetchData('SignIn'),
   },
   {
+    path: '/server-error',
+    Component: ServerError,
+    errorElement: createErrorElement(),
+    fetchData: createStubFetchData('ServerError'),
+  },
+  {
     path: '/',
     Component: Layout,
     errorElement: createErrorElement(),
@@ -85,11 +91,6 @@ export const routes = [
         path: 'forum/:topicId',
         Component: ForumTopic,
         fetchData: createStubFetchData('ForumTopic'),
-      },
-      {
-        path: 'server-error',
-        Component: ServerError,
-        fetchData: createStubFetchData('ServerError'),
       },
     ],
     fetchData: createStubFetchData('Layout'),
