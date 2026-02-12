@@ -2,7 +2,7 @@ import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import type { SerializedError } from '@reduxjs/toolkit'
 
 export function isFetchBaseQueryError(
-  error: FetchBaseQueryError | SerializedError | undefined
+  error: unknown
 ): error is FetchBaseQueryError {
   return typeof error === 'object' && error != null && 'status' in error
 }
