@@ -1,6 +1,5 @@
-import type { cellType } from '../core/Store'
+import { cellType, coordsType } from '../core/Types'
 import { getRandomInt } from './Math'
-import type { coordsType } from '../components/ui/shared/Sprite'
 
 export class EnemyAI {
   getNextShot(_?: cellType[][]): coordsType {

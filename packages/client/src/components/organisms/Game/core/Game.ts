@@ -2,13 +2,10 @@ import { Messages } from '../components/ui/Messages'
 import { Board } from '../components/ui/Board'
 import { GameController } from './GameController'
 import type { GAME_CONFIG } from '../GameConfig'
-import { IGameStore, store as Gstore, cellType } from './Store'
+import { store as Gstore } from './Store'
 import { AbstractElement } from '../components/ui/shared/AbstractElement'
-
-export type onFinishData = {
-  result: 'win' | 'lose'
-  score: number
-}
+import { cellType, IGameStore, onFinishData } from './Types'
+import { CheckShipsOnBoard } from '../utils/CheckShipsOnBoard'
 
 export type TonFinish = (data: onFinishData) => unknown | void
 
@@ -65,9 +62,11 @@ export class Game {
   }
 
   private update = (store: IGameStore) => {
+    const { playerBoard, enemyBoard } = store
     this.rendered.forEach(el => {
       el.update(store)
     })
+    this.checkWinner(playerBoard, enemyBoard)
   }
 
   private finishGame(data: onFinishData) {
@@ -76,7 +75,12 @@ export class Game {
   }
 
   private checkWinner(playerBoard: cellType[][], enemyBoard: cellType[][]) {
-    ;('')
+    if (!CheckShipsOnBoard(playerBoard)) {
+      this.finishGame({ result: 'lose', score: 321 })
+    }
+    if (!CheckShipsOnBoard(enemyBoard)) {
+      this.finishGame({ result: 'win', score: 321 })
+    }
   }
 
   public destroy() {

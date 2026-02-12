@@ -1,5 +1,4 @@
-import { IGameStore, selectedShip } from '../../core/Store'
-import { type cellType } from '../../core/Store'
+import { cellType, IGameStore, selectedShip } from '../../core/Types'
 import { GAME_CONFIG } from '../../GameConfig'
 import { validatePlacement } from '../../utils/ValidateShip'
 import { AbstractElement, IAbstractElement } from './shared/AbstractElement'

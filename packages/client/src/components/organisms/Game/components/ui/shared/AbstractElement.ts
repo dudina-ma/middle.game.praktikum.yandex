@@ -1,10 +1,5 @@
-import { IGameStore } from '../../../core/Store'
+import { coordsType, IGameStore } from '../../../core/Types'
 import { GAME_CONFIG } from '../../../GameConfig'
-
-export type coordsType = {
-  x: number
-  y: number
-}
 
 export interface IAbstractElement {
   position: coordsType

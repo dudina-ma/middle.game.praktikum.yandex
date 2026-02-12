@@ -1,6 +1,6 @@
-import type { coordsType } from '../components/ui/shared/Sprite'
 import type { GameController } from '../core/GameController'
 import { store } from '../core/Store'
+import { coordsType } from '../core/Types'
 
 export const PhaseHandlers = {
   SETUP: (coords: coordsType, controller: GameController) => {

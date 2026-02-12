@@ -1,9 +1,5 @@
+import { coordsType } from '../../../core/Types'
 import { AbstractElement, IAbstractElement } from './AbstractElement'
-
-export type coordsType = {
-  x: number
-  y: number
-}
 
 export interface ISprite extends IAbstractElement {
   imageSrc?: string

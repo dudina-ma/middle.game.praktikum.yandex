@@ -1,24 +1,6 @@
-import { coordsType } from '../components/ui/shared/Sprite'
-import { createEnemyShips } from '../utils/createEnemyShips'
+import { createEnemyShips } from '../utils/CreateEnemyShips'
 import { EventBus } from '../utils/EventBus'
-
-export type GamePhase = 'SETUP' | 'BATTLE' | 'RESULT'
-export type cellType = 'empty' | 'ship' | 'miss' | 'hited'
-export type selectedShip = {
-  coords: coordsType
-  length: number
-  direction: 'row' | 'column'
-}
-
-export interface IGameStore {
-  phase: GamePhase
-  playerBoard: cellType[][]
-  enemyBoard: cellType[][]
-  selectedShip: selectedShip | null
-  currentTurn: 'PLAYER' | 'ENEMY'
-  shipsToPlace: number[]
-  message: string
-}
+import { IGameStore } from './Types'
 
 export const STORE_EVENTS = {
   STORE_UPDATE: 'update',

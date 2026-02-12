@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { Game, type onFinishData } from '../game/core/Game'
-import { GAME_CONFIG } from '../game/GameConfig'
+import { GAME_CONFIG } from '../../Game/GameConfig'
+import { Game, onFinishData } from '../../Game'
 
 export const GameBoard: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
