@@ -1,4 +1,4 @@
-import { SignInForm } from '../../organisms/SignInForm/SignInForm'
+import { SignInForm } from '../../organisms'
 import { AuthPageContainer } from '../../atoms'
 
 const SignIn = () => {

@@ -1,5 +1,5 @@
 import { AuthPageContainer } from '../../atoms'
-import { SignUpForm } from '../../organisms/SignUpForm/SignUpForm'
+import { SignUpForm } from '../../organisms'
 
 const SignUp = () => {
   return (
