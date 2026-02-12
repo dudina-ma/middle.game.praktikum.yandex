@@ -11,7 +11,7 @@ import {
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import styles from './ForumToolbar.module.css'
-import { segmentOptions, SegmentValue } from '../../model/types'
+import { segmentOptions, SegmentValue } from '../../../model/types'
 
 const { Title } = Typography
 const { Search } = Input

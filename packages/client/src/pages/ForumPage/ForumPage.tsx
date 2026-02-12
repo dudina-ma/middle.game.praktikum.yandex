@@ -8,12 +8,14 @@ import {
   topics,
 } from './model/mock'
 import { CommentItem, SegmentValue } from './model/types'
-import CommentComposer from './components/CommentComposer'
-import CommentsList from './components/CommentsList'
-import CreateTopicModal from './components/CreateTopicModal'
-import ForumToolbar from './components/ForumToolbar'
-import TopicDetails from './components/TopicDetails'
-import TopicList from './components/TopicList'
+import {
+  CommentComposer,
+  CommentsList,
+  CreateTopicModal,
+  ForumToolbar,
+  TopicDetails,
+  TopicList,
+} from './ui'
 import styles from './ForumPage.module.css'
 
 const ForumPage = () => {

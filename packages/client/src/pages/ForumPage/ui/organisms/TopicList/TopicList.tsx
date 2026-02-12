@@ -1,5 +1,5 @@
 import { Badge, Card, List, Space, Tag, Typography } from 'antd'
-import { Topic } from '../../model/types'
+import { Topic } from '../../../model/types'
 import styles from './TopicList.module.css'
 
 const { Text } = Typography

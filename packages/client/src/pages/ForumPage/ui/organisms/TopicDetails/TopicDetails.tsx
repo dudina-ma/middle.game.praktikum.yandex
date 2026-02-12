@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Button, Card, Divider, Space, Tag, Typography } from 'antd'
 import { MessageOutlined, ShareAltOutlined } from '@ant-design/icons'
-import { Topic } from '../../model/types'
+import { Topic } from '../../../model/types'
 import styles from './TopicDetails.module.css'
 
 const { Paragraph, Text } = Typography

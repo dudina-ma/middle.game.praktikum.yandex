@@ -1,6 +1,6 @@
 import { Button, Input, Popover, Space, Typography } from 'antd'
 import { SendOutlined, SmileOutlined } from '@ant-design/icons'
-import { CommentItem } from '../../model/types'
+import { CommentItem } from '../../../model/types'
 import styles from './CommentComposer.module.css'
 
 const { TextArea } = Input
