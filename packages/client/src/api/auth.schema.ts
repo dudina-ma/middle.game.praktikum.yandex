@@ -1,8 +1,8 @@
 import { User } from './types'
 
-export type SignUpRequest = Omit<User, 'id' | 'avatar'>
+export type SignUpRequest = Omit<User, 'id' | 'avatar' | 'display_name'>
 
 export type SignInRequest = {
-  email: string
+  login: string
   password: string
 }

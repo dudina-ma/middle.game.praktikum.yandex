@@ -3,8 +3,9 @@ import { User } from './types'
 import { SignInRequest, SignUpRequest } from './auth.schema'
 import { AUTH_URL } from './consts'
 
-export const authApi = createApi({
-  reducerPath: 'authApi',
+export const authApiPracticum = createApi({
+  // Временно поставлю другой reducer path, в дальнейшем поправлю
+  reducerPath: 'authApi/practicum',
   baseQuery: fetchBaseQuery({
     baseUrl: AUTH_URL,
     credentials: 'include',
@@ -17,6 +18,7 @@ export const authApi = createApi({
       query: body => ({
         url: 'signup',
         method: 'POST',
+        responseHandler: 'text',
         body,
       }),
     }),
@@ -24,6 +26,7 @@ export const authApi = createApi({
       query: body => ({
         url: 'signin',
         method: 'POST',
+        responseHandler: 'text',
         body,
       }),
     }),
@@ -41,4 +44,4 @@ export const {
   useLogoutMutation,
   useSignUpMutation,
   useSignInMutation,
-} = authApi
+} = authApiPracticum
