@@ -1,8 +1,9 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Table, Spin, Typography, Button } from 'antd'
+import { Table, Spin, Typography, Button, Result } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useGetLeaderboardQuery } from '../../api/leaderboard'
 import { LeaderboardEntry } from '../../api/leaderboard.types'
+import { getErrorMessage } from '../../utils/errorUtils'
 
 const { Title } = Typography
 
@@ -44,7 +45,7 @@ const Leaderboard = () => {
   const [cursor, setCursor] = useState(0)
   const [allEntries, setAllEntries] = useState<LeaderboardEntry[]>([])
 
-  const { data, isLoading } = useGetLeaderboardQuery({
+  const { data, isLoading, error, isError, refetch } = useGetLeaderboardQuery({
     teamName: TEAM_NAME,
     ratingFieldName: 'score',
     cursor,
@@ -72,17 +73,43 @@ const Leaderboard = () => {
     setCursor(prev => prev + LIMIT)
   }
 
-  const tableData = useMemo(
-    () =>
-      allEntries.map((entry, index) => ({
-        ...entry,
-        key: `${entry.data.user_id}-${index}`,
-        place: index + 1,
-      })),
-    [allEntries]
-  )
+  const handleRetry = () => {
+    setCursor(0)
+    setAllEntries([])
+    refetch()
+  }
+
+  const tableData = useMemo(() => {
+    const sortedEntries = [...allEntries].sort(
+      (a, b) => b.data.score - a.data.score
+    )
+
+    return sortedEntries.map((entry, index) => ({
+      ...entry,
+      key: `${entry.data.user_id}-${index}`,
+      place: index + 1,
+    }))
+  }, [allEntries])
 
   const hasMore = data?.data && data.data.length === LIMIT
+
+  if (isError && allEntries.length === 0) {
+    return (
+      <div style={{ padding: '20px' }}>
+        <Title level={1}>Таблица лидеров</Title>
+        <Result
+          status="error"
+          title="Ошибка загрузки данных"
+          subTitle={getErrorMessage(error)}
+          extra={[
+            <Button type="primary" key="retry" onClick={handleRetry}>
+              Повторить
+            </Button>,
+          ]}
+        />
+      </div>
+    )
+  }
 
   return (
     <div style={{ padding: '20px' }}>
