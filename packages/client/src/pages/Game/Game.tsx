@@ -5,14 +5,7 @@ import { useState } from 'react'
 
 const Game = () => {
   const [gameOver] = useState(false)
-  
-  return (
-    <Flex justify="center">
-      {gameOver?  <EndGame /> : <GameBoard />}
-      
-    </Flex>
-  )
 
-
+  return <Flex justify="center">{gameOver ? <EndGame /> : <GameBoard />}</Flex>
 }
 export default Game
