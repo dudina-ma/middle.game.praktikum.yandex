@@ -1,5 +1,5 @@
 import { AppDispatch, RootState } from './store'
-import Layout from './components/Layout/Layout'
+import Layout from './organisms/Layout/Layout'
 import Main from './pages/Main/Main'
 import SignIn from './pages/SignIn/SignIn'
 import { initProfilePage, Profile } from './pages/Profile/Profile'
@@ -8,7 +8,8 @@ import Leaderboard from './pages/Leaderboard/Leaderboard'
 import Forum from './pages/Forum/Forum'
 import ForumTopic from './pages/ForumTopic/ForumTopic'
 import NotFound from './pages/NotFound/NotFound'
-import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
+import RouterErrorAdapter from './organisms/ErrorBoundary/ErrorBoundary'
+
 import SignUp from './pages/SignUp/SignUp'
 
 const createErrorElement = () => <RouterErrorAdapter />
