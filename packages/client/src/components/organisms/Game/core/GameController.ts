@@ -11,7 +11,7 @@ import { coordsType } from './Types'
 export class GameController {
   config: typeof GAME_CONFIG
   ctx: HTMLCanvasElement
-  enemyAI = new EnemyAI()
+  enemyAI = EnemyAI
 
   constructor(config: typeof GAME_CONFIG, ctx: HTMLCanvasElement) {
     this.config = config
@@ -69,7 +69,7 @@ export class GameController {
 
   private async enemyHandler() {
     const board = store.getStore().playerBoard.map(row => [...row])
-    const coors = this.enemyAI.getNextShot()
+    const coors = this.enemyAI()
     await new Promise(res => setTimeout(res, 800))
     const { board: playerBoard, result } = fireShot(coors, board)
     store.setStore({ playerBoard })

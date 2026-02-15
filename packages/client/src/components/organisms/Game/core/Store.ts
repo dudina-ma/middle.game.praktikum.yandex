@@ -1,19 +1,20 @@
 import { createEnemyShips } from '../utils/CreateEnemyShips'
 import { EventBus } from '../utils/EventBus'
-import { IGameStore } from './Types'
+import { gameReducer } from './GameReducer'
+import { Action, IGameState } from './Types'
 
 export const STORE_EVENTS = {
   STORE_UPDATE: 'update',
 } as const
 
 type TEventBus = {
-  [STORE_EVENTS.STORE_UPDATE]: [state: IGameStore]
+  [STORE_EVENTS.STORE_UPDATE]: [state: IGameState]
 }
 
 const shipsToPlace = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
 
-class Store extends EventBus<TEventBus> {
-  private store: IGameStore = {
+export class Store extends EventBus<TEventBus> {
+  private state: IGameState = {
     shipsToPlace: shipsToPlace,
     phase: 'SETUP',
     playerBoard: Array(10)
@@ -27,10 +28,21 @@ class Store extends EventBus<TEventBus> {
   }
 
   getStore() {
-    return this.store
+    return this.state
   }
-  setStore(data: Partial<IGameStore>) {
-    Object.assign(this.store, data)
+
+  getState() {
+    return this.state
+  }
+
+  dispatch(action: Action) {
+    this.state = gameReducer(this.state, action)
+
+    this.emit('update', this.getStore())
+  }
+
+  setStore(data: Partial<IGameState>) {
+    Object.assign(this.state, data)
     this.emit('update', this.getStore())
   }
 }

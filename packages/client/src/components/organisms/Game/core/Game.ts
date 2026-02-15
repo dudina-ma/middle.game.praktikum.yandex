@@ -4,7 +4,7 @@ import { GameController } from './GameController'
 import type { GAME_CONFIG } from '../GameConfig'
 import { store as Gstore } from './Store'
 import { AbstractElement } from '../components/ui/shared/AbstractElement'
-import { cellType, IGameStore, onFinishData } from './Types'
+import { cellType, IGameState, onFinishData } from './Types'
 import { CheckShipsOnBoard } from '../utils/CheckShipsOnBoard'
 
 export type TonFinish = (data: onFinishData) => unknown | void
@@ -61,7 +61,7 @@ export class Game {
     this.gameController.init()
   }
 
-  private update = (store: IGameStore) => {
+  private update = (store: IGameState) => {
     const { playerBoard, enemyBoard, phase } = store
     this.rendered.forEach(el => {
       el.update(store)

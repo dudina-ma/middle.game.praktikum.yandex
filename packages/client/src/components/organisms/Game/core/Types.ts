@@ -11,7 +11,14 @@ export type coordsType = {
   y: number
 }
 
-export interface IGameStore {
+export type positionType = {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+
+export interface IGameState {
   phase: GamePhase
   playerBoard: cellType[][]
   enemyBoard: cellType[][]
@@ -25,3 +32,31 @@ export type onFinishData = {
   result: 'win' | 'lose'
   score: number
 }
+
+export type Action =
+  | { type: 'FIRE_SHOT'; target: 'player' | 'enemy'; x: number; y: number }
+  | {
+      type: 'PLACE_SHIP'
+      x: number
+      y: number
+      length: number
+      direction: 'row' | 'column'
+    }
+  | { type: 'SET_PHASE'; phase: GamePhase }
+  | { type: 'SET_MESSAGE'; message: string }
+
+export type InputActions =
+  | {
+      type: 'LEFT_CLICK'
+      x: number
+      y: number
+      target: 'player' | 'enemy'
+    }
+  | {
+      type: 'RIGHT_CLICK'
+    }
+  | {
+      type: 'MOUSE_MOVE'
+      x: number
+      y: number
+    }
