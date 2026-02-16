@@ -9,6 +9,7 @@ import ForumPage from './pages/ForumPage'
 import NotFound from './pages/NotFound/NotFound'
 import ServerError from './pages/ServerError/ServerError'
 import SignUp from './pages/SignUp/SignUp'
+import BadRequest from './pages/BadRequest/BadRequest'
 import { RouterErrorAdapter } from './organisms/ErrorBoundary/RouterErrorAdapter'
 
 const createErrorElement = () => <RouterErrorAdapter />
@@ -55,6 +56,12 @@ export const routes = [
     Component: ServerError,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('ServerError'),
+  },
+  {
+    path: '/bad-request',
+    Component: BadRequest,
+    errorElement: createErrorElement(),
+    fetchData: createStubFetchData('BadRequest'),
   },
   {
     path: '/',
