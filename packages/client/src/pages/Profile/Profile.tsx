@@ -71,7 +71,6 @@ export const Profile = () => {
 
   const onFinish: FormProps<User>['onFinish'] = useCallback(
     async (values: User) => {
-      console.log('user')
       try {
         const updateData: UpdateProfileRequest = {
           first_name: values.first_name,
@@ -82,7 +81,6 @@ export const Profile = () => {
           phone: values.phone,
         }
 
-        console.log(updateData)
         await updateProfile(updateData).unwrap()
         message.success('Профиль успешно обновлен')
         setMode('showProfileData')
