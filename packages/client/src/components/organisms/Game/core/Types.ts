@@ -18,12 +18,14 @@ export type positionType = {
   h: number
 }
 
+export type PlayersType = 'PLAYER' | 'ENEMY'
+
 export interface IGameState {
   phase: GamePhase
   playerBoard: cellType[][]
   enemyBoard: cellType[][]
   selectedShip: selectedShip | null
-  currentTurn: 'PLAYER' | 'ENEMY'
+  currentTurn: PlayersType
   shipsToPlace: number[]
   message: string
   score: number
@@ -34,23 +36,18 @@ export type onFinishData = {
 }
 
 export type Action =
-  | { type: 'FIRE_SHOT'; target: 'player' | 'enemy'; x: number; y: number }
-  | {
-      type: 'PLACE_SHIP'
-      x: number
-      y: number
-      length: number
-      direction: 'row' | 'column'
-    }
+  | { type: 'FIRE_SHOT'; target: PlayersType; x: number; y: number }
+  | { type: 'PLACE_SHIP'; x: number; y: number }
   | { type: 'SET_PHASE'; phase: GamePhase }
   | { type: 'SET_MESSAGE'; message: string }
+  | { type: 'ROTATE_SHIP' }
 
 export type InputActions =
   | {
       type: 'LEFT_CLICK'
       x: number
       y: number
-      target: 'player' | 'enemy'
+      target: PlayersType
     }
   | {
       type: 'RIGHT_CLICK'

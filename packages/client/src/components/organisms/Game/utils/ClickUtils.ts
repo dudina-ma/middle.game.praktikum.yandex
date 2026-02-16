@@ -1,4 +1,4 @@
-import { coordsType, positionType } from '../core/Types'
+import { coordsType, PlayersType, positionType } from '../core/Types'
 
 export function checkClick(
   coords: coordsType,
@@ -32,11 +32,11 @@ export function checkBoardCell(
   PLAYER_BOARD_POSITION: positionType
 ) {
   const coords = { x: e.offsetX, y: e.offsetY }
-  let targetBoard: 'enemy' | 'player'
+  let targetBoard: PlayersType
   if (checkClick(coords, ENEMY_BOARD_POSITION)) {
-    targetBoard = 'enemy'
+    targetBoard = 'ENEMY'
   } else if (checkClick(coords, PLAYER_BOARD_POSITION)) {
-    targetBoard = 'player'
+    targetBoard = 'PLAYER'
   } else {
     return
   }

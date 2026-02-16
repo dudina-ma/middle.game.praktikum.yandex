@@ -1,10 +1,10 @@
+import { checkBoardCell, checkClick, coordsToCell } from '../utils/ClickUtils'
 import { GAME_CONFIG } from './../GameConfig'
 import { InputActions } from './Types'
 
 export class InputManager {
   constructor(
     private canvas: HTMLCanvasElement,
-    private onInput: (x: number, y: number) => void,
     private signal: AbortSignal,
     private callback: (action: InputActions) => void | unknown,
     private config: typeof GAME_CONFIG
@@ -25,20 +25,23 @@ export class InputManager {
       this.callback({ type: 'RIGHT_CLICK' })
       return
     }
+    const { ENEMY_BOARD_POSITION, PLAYER_BOARD_POSITION } =
+      this.config.BOARDS_POSITION
+    const res = checkBoardCell(e, ENEMY_BOARD_POSITION, PLAYER_BOARD_POSITION)
+    if (!res) return
+    const { x, y, targetBoard } = res
 
-    // const { ENEMY_BOARD_POSITION, PLAYER_BOARD_POSITION } =
-    //   this.config.BOARDS_POSITION
-    // const { x, y, targetBoard } = checkBoardCell(
-    //   e,
-    //   ENEMY_BOARD_POSITION,
-    //   PLAYER_BOARD_POSITION
-    // )
-    // this.callback({ type: 'LEFT_CLICK', x, y })
+    this.callback({ type: 'LEFT_CLICK', x, y, target: targetBoard })
   }
 
   private handleMouseMove = (e: MouseEvent) => {
-    const x = Math.floor(e.offsetX)
-    const y = Math.floor(e.offsetY)
-    this.onInput(x, y)
+    const { PLAYER_BOARD_POSITION } = this.config.BOARDS_POSITION
+    if (checkClick({ x: e.offsetX, y: e.offsetY }, PLAYER_BOARD_POSITION)) {
+      const { x, y } = coordsToCell(
+        { x: e.offsetX, y: e.offsetY },
+        PLAYER_BOARD_POSITION
+      )
+      this.callback({ type: 'MOUSE_MOVE', x, y })
+    }
   }
 }
