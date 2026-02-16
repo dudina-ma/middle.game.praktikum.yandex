@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { RoutesEnum } from '../../routes'
 
 const StyledHeader = styled.header`
   background-color: cornsilk;
@@ -45,27 +46,11 @@ const Header = () => {
     <StyledHeader>
       <NavList>
         <List>
-          <ListItem>
-            <StyledLink to="/">Main</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/login">Login</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/sign-in">SignIn</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/profile">Profile</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/game">Game</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/leaderboard">Leaderboard</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/forum">Forum</StyledLink>
-          </ListItem>
+          {Object.entries(RoutesEnum).map(([name, path]) => (
+            <ListItem key={name}>
+              <StyledLink to={path}>{name}</StyledLink>
+            </ListItem>
+          ))}
         </List>
       </NavList>
     </StyledHeader>

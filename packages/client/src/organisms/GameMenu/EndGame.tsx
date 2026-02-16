@@ -1,6 +1,7 @@
 import { Button, Flex, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import styles from './style.module.css'
+import { RoutesEnum } from '../../routes'
 
 const { Title, Text } = Typography
 
@@ -41,14 +42,14 @@ const EndGame = ({ result = 'win' }: GameOverScreenProps) => {
           <div>
             <Button
               type="primary"
-              onClick={() => navigate('/game')}
+              onClick={() => navigate(RoutesEnum.Game)}
               size="large"
               className={styles.restartButton}>
               🔄 Play again
             </Button>
 
             <Button
-              onClick={() => navigate('/')}
+              onClick={() => navigate(RoutesEnum.Main)}
               size="large"
               className={styles.menuButton}>
               🏠 Main menu

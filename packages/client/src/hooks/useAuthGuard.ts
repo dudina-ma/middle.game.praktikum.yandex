@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { isFetchBaseQueryError } from '../shared/redux/typeGuards'
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import type { SerializedError } from '@reduxjs/toolkit'
+import { RoutesEnum } from '../routes'
 
 export const isUnauthorized = (
   error: FetchBaseQueryError | SerializedError | undefined
@@ -23,7 +24,7 @@ export const useAuthGuard = () => {
     }
 
     if (error) {
-      navigate(isUnauthorized(error) ? '/login' : '/error-500')
+      navigate(isUnauthorized(error) ? RoutesEnum.SignIn : RoutesEnum.Error500)
     }
   }, [navigate, error, isLoading])
 

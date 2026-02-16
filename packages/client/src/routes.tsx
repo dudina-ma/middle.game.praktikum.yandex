@@ -2,7 +2,7 @@ import { AppDispatch, RootState } from './store'
 import Layout from './organisms/Layout/Layout'
 import Main from './pages/Main/Main'
 import SignIn from './pages/SignIn/SignIn'
-import { initProfilePage, Profile } from './pages/Profile/Profile'
+import { Profile } from './pages/Profile/Profile'
 import Game from './pages/Game/Game'
 import Leaderboard from './pages/Leaderboard/Leaderboard'
 import Forum from './pages/Forum/Forum'
@@ -38,21 +38,32 @@ export const emptyFetchData = async (
   return Promise.resolve()
 }
 
+export enum RoutesEnum {
+  Main = '/',
+  SignIn = '/login',
+  SignUp = '/register',
+  Profile = '/profile',
+  Game = '/game',
+  Leaderboard = '/leaderboard',
+  Forum = '/forum',
+  Error500 = '/error500',
+}
+
 export const routes = [
   {
-    path: '/login',
+    path: RoutesEnum.SignIn,
     Component: SignIn,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('Login'),
   },
   {
-    path: '/register',
+    path: RoutesEnum.SignUp,
     Component: SignUp,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('SignUp'),
   },
   {
-    path: '/',
+    path: RoutesEnum.Main,
     Component: Layout,
     errorElement: createErrorElement(),
     children: [
@@ -62,43 +73,37 @@ export const routes = [
         fetchData: createStubFetchData('Main'),
       },
       {
-        path: 'profile',
+        path: RoutesEnum.Profile,
         Component: Profile,
         fetchData: createStubFetchData('Profile'),
       },
       {
-        path: 'game',
+        path: RoutesEnum.Game,
         Component: Game,
         fetchData: createStubFetchData('Game'),
       },
       {
-        path: 'leaderboard',
+        path: RoutesEnum.Leaderboard,
         Component: Leaderboard,
         fetchData: createStubFetchData('Leaderboard'),
       },
       {
-        path: 'forum',
+        path: RoutesEnum.Forum,
         Component: Forum,
         fetchData: createStubFetchData('Forum'),
       },
       {
-        path: 'forum/:topicId',
+        path: `${RoutesEnum.Forum}/:topicId`,
         Component: ForumTopic,
         fetchData: createStubFetchData('ForumTopic'),
       },
     ],
     fetchData: createStubFetchData('Layout'),
   },
-
   {
     path: '*',
     Component: NotFound,
     errorElement: createErrorElement(),
     fetchData: emptyFetchData,
-  },
-  {
-    path: '/profile',
-    Component: Profile,
-    fetchData: initProfilePage,
   },
 ]
