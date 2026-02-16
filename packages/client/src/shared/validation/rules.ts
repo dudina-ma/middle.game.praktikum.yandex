@@ -75,7 +75,7 @@ export const newPasswordNonMatchRule: Rule = ({ getFieldValue }) => ({
   },
 })
 
-export const confirmPasswordMarchRule: Rule = ({ getFieldValue }) => ({
+export const confirmPasswordMatchRule: Rule = ({ getFieldValue }) => ({
   message: 'Пароли не совпадают',
   validator: async (_: unknown, confirmPassword: string) => {
     if (getFieldValue('newPassword') == confirmPassword) {
@@ -109,7 +109,7 @@ export const oldPasswordRules: Rule[] = [
 
 export const confirmPasswordRules: Rule[] = [
   ...passwordRules,
-  confirmPasswordMarchRule,
+  confirmPasswordMatchRule,
 ]
 
 export const newPasswordRules: Rule[] = [
