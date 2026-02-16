@@ -1,15 +1,17 @@
-import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
-import Layout from './components/Layout/Layout'
-import BadRequest from './pages/BadRequest/BadRequest'
-import Forum from './pages/Forum/Forum'
+import { AppDispatch, RootState } from './store'
+import Layout from './organisms/Layout/Layout'
+import Main from './pages/Main/Main'
+import SignIn from './pages/SignIn/SignIn'
+import { initProfilePage, Profile } from './pages/Profile/Profile'
 import Game from './pages/Game/Game'
 import Leaderboard from './pages/Leaderboard/Leaderboard'
-import Login from './pages/Login/Login'
-import Main from './pages/Main/Main'
+import Forum from './pages/Forum/Forum'
+import ForumTopic from './pages/ForumTopic/ForumTopic'
 import NotFound from './pages/NotFound/NotFound'
-import { Profile, initProfilePage } from './pages/Profile/Profile'
-import SignIn from './pages/SignIn/SignIn'
-import { AppDispatch, RootState } from './store'
+import ServerError from './pages/ServerError/ServerError'
+import SignUp from './pages/SignUp/SignUp'
+import BadRequest from './pages/BadRequest/BadRequest'
+import { RouterErrorAdapter } from './organisms/ErrorBoundary/RouterErrorAdapter'
 
 const createErrorElement = () => <RouterErrorAdapter />
 
@@ -23,7 +25,7 @@ export type PageInitArgs = {
   ctx: PageInitContext
 }
 
-// Общие заглушки
+// РћР±С‰РёРµ Р·Р°РіР»СѓС€РєРё
 export const createStubFetchData = (pageName: string) => {
   return async (_pageArgs: PageInitArgs): Promise<void> => {
     console.log(`Stub fetchData called for ${pageName} page`)
@@ -40,15 +42,21 @@ export const emptyFetchData = async (
 export const routes = [
   {
     path: '/login',
-    Component: Login,
+    Component: SignIn,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('Login'),
   },
   {
-    path: '/sign-in',
-    Component: SignIn,
+    path: '/register',
+    Component: SignUp,
     errorElement: createErrorElement(),
-    fetchData: createStubFetchData('SignIn'),
+    fetchData: createStubFetchData('SignUp'),
+  },
+  {
+    path: '/server-error',
+    Component: ServerError,
+    errorElement: createErrorElement(),
+    fetchData: createStubFetchData('ServerError'),
   },
   {
     path: '/',
@@ -79,6 +87,11 @@ export const routes = [
         path: 'forum',
         Component: Forum,
         fetchData: createStubFetchData('Forum'),
+      },
+      {
+        path: 'forum/:topicId',
+        Component: ForumTopic,
+        fetchData: createStubFetchData('ForumTopic'),
       },
       {
         path: 'bad-request',

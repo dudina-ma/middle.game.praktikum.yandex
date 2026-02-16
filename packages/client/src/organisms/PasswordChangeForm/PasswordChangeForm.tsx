@@ -2,6 +2,11 @@ import { memo } from 'react'
 import type { FormProps } from 'antd'
 import { Button, Form, Input } from 'antd'
 import styles from './PasswordChangeForm.module.css'
+import {
+  confirmPasswordRules,
+  newPasswordRules,
+  oldPasswordRules,
+} from '../../shared/validation/rules'
 
 type PasswordChangeFormValues = {
   oldPassword: string
@@ -37,12 +42,7 @@ export const PasswordChangeForm = memo(
         <Form.Item<PasswordChangeFormValues>
           label="Старый пароль"
           name="oldPassword"
-          rules={[
-            {
-              required: true,
-              message: 'Старый пароль обязателен для заполнения',
-            },
-          ]}>
+          rules={oldPasswordRules}>
           <Input.Password />
         </Form.Item>
 
@@ -50,29 +50,7 @@ export const PasswordChangeForm = memo(
           label="Новый пароль"
           name="newPassword"
           dependencies={['oldPassword']}
-          rules={[
-            {
-              required: true,
-              message: 'Новый пароль обязателен для заполнения',
-            },
-            { min: 8, message: 'Пароль должен быть минимум 8 символов' },
-            { max: 40, message: 'Пароль должен быть максимум 40 символов' },
-            {
-              pattern: /^(?=.*[A-Z])(?=.*\d).+$/,
-              message:
-                'Пароль должен содержать хотя бы одну заглавную букву и цифру',
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('oldPassword') !== value) {
-                  return Promise.resolve()
-                }
-                return Promise.reject(
-                  new Error('Новый пароль должен отличаться от старого')
-                )
-              },
-            }),
-          ]}>
+          rules={newPasswordRules}>
           <Input.Password />
         </Form.Item>
 
@@ -80,20 +58,7 @@ export const PasswordChangeForm = memo(
           label="Повторите пароль"
           name="confirmPassword"
           dependencies={['newPassword']}
-          rules={[
-            {
-              required: true,
-              message: 'Повторите новый пароль',
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('newPassword') === value) {
-                  return Promise.resolve()
-                }
-                return Promise.reject(new Error('Пароли не совпадают'))
-              },
-            }),
-          ]}>
+          rules={confirmPasswordRules}>
           <Input.Password />
         </Form.Item>
 

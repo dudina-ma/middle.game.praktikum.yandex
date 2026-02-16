@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { User } from './types'
 import { UpdateProfileRequest, ChangePasswordRequest } from './user.schema'
-import { API_BASE_URL } from './constants'
+import { API_URL } from './consts'
 
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: API_BASE_URL,
+    baseUrl: API_URL,
     credentials: 'include',
   }),
   tagTypes: ['User'],
