@@ -38,7 +38,7 @@ const EndGame = ({ result = 'win' }: GameOverScreenProps) => {
               : 'Не отчаивайтесь! Каждое поражение - это урок, который сделает вас сильнее в следующей битве.'}
           </Text>
 
-          <div className={styles.buttonsContainer}>
+          <div>
             <Button
               type="primary"
               onClick={() => navigate('/game')}
