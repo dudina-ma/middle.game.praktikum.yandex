@@ -1,16 +1,16 @@
 import { AppDispatch, RootState } from './store'
-import Layout from './components/Layout/Layout'
+import Layout from './organisms/Layout/Layout'
 import Main from './pages/Main/Main'
-import Login from './pages/Login/Login'
 import SignIn from './pages/SignIn/SignIn'
-import { Profile, initProfilePage } from './pages/Profile/Profile'
+import { initProfilePage, Profile } from './pages/Profile/Profile'
 import Game from './pages/Game/Game'
 import Leaderboard from './pages/Leaderboard/Leaderboard'
 import Forum from './pages/Forum/Forum'
 import ForumTopic from './pages/ForumTopic/ForumTopic'
 import NotFound from './pages/NotFound/NotFound'
 import ServerError from './pages/ServerError/ServerError'
-import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
+import SignUp from './pages/SignUp/SignUp'
+import { RouterErrorAdapter } from './organisms/ErrorBoundary/RouterErrorAdapter'
 
 const createErrorElement = () => <RouterErrorAdapter />
 
@@ -41,15 +41,15 @@ export const emptyFetchData = async (
 export const routes = [
   {
     path: '/login',
-    Component: Login,
+    Component: SignIn,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('Login'),
   },
   {
-    path: '/sign-in',
-    Component: SignIn,
+    path: '/register',
+    Component: SignUp,
     errorElement: createErrorElement(),
-    fetchData: createStubFetchData('SignIn'),
+    fetchData: createStubFetchData('SignUp'),
   },
   {
     path: '/server-error',
