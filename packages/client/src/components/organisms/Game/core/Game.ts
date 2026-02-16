@@ -1,11 +1,10 @@
 import { Messages } from '../components/ui/Messages'
 import { Board } from '../components/ui/Board'
-import { GameController } from './GameController'
 import type { GAME_CONFIG } from '../GameConfig'
-import { store as Gstore } from './Store'
+import { Store } from './Store'
 import { AbstractElement } from '../components/ui/shared/AbstractElement'
-import { cellType, IGameState, onFinishData } from './Types'
-import { CheckShipsOnBoard } from '../utils/CheckShipsOnBoard'
+import { IGameState, onFinishData } from './Types'
+import { GameController } from './GameController'
 
 export type TonFinish = (data: onFinishData) => unknown | void
 
@@ -17,8 +16,9 @@ export class Game {
   private lastTime = 0
   private gameController: GameController
   private frame = 0
-  private store = Gstore.getStore()
+  private store = new Store()
   private onFinish: TonFinish
+  private state: IGameState
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -31,19 +31,20 @@ export class Game {
     this.onFinish = onFinish
     this.canvas.width = config.CANVAS_SIZE.x
     this.canvas.height = config.CANVAS_SIZE.y
+    this.state = this.store.getState()
     this.rendered = [
       new Messages({
         ctx: this.ctx,
         position: config.MESSAGES_POSITION,
         config,
-        store: this.store,
+        store: this.state,
       }),
       new Board({
         position: config.BOARDS_POSITION.ENEMY_BOARD_POSITION,
         ctx: this.ctx,
         boardType: 'enemy',
         config,
-        store: this.store,
+        store: this.state,
       }),
 
       new Board({
@@ -51,45 +52,35 @@ export class Game {
         ctx: this.ctx,
         boardType: 'player',
         config,
-        store: this.store,
+        store: this.state,
       }),
     ]
 
-    Gstore.on('update', this.update)
+    this.store.on('update', this.update)
 
-    this.gameController = new GameController(config, this.canvas)
-    this.gameController.init()
+    this.gameController = new GameController(
+      this.store,
+      this.canvas,
+      config,
+      this.onFinish
+    )
   }
 
-  private update = (store: IGameState) => {
-    const { playerBoard, enemyBoard, phase } = store
+  private update = (state: IGameState) => {
     this.rendered.forEach(el => {
-      el.update(store)
+      el.update(state)
     })
-
-    if (phase === 'BATTLE') {
-      this.checkWinner(playerBoard, enemyBoard)
-    }
+    this.state = state
   }
 
-  private finishGame(data: onFinishData) {
+  private finishGame = (data: onFinishData) => {
     this.destroy()
     this.onFinish(data)
   }
 
-  private checkWinner(playerBoard: cellType[][], enemyBoard: cellType[][]) {
-    const { score } = this.store
-    if (!CheckShipsOnBoard(playerBoard)) {
-      this.finishGame({ result: 'lose', score: 0 })
-    }
-    if (!CheckShipsOnBoard(enemyBoard)) {
-      this.finishGame({ result: 'win', score })
-    }
-  }
-
   public destroy() {
     cancelAnimationFrame(this.frame)
-    Gstore.off('update', this.update)
+    this.store.off('update', this.update)
     this.gameController.destroy()
   }
 

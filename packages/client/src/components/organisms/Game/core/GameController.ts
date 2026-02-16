@@ -1,134 +1,70 @@
-import { EnemyAI } from '../utils/EnemyAI'
-
-import { validatePlacement } from '../utils/ValidateShip'
-import { store } from './Store'
-import { PhaseHandlers } from '../utils/PhaseHandlers'
+import { InputManager } from './InputManager'
+import { abstractController } from '../components/ui/shared/AbstractController'
+import { Store } from './Store'
 import { GAME_CONFIG } from '../GameConfig'
-import { checkClick, coordsToCell } from '../utils/ClickUtils'
-import { fireShot } from '../utils/FireShot'
-import { coordsType } from './Types'
+import { cellType, GamePhase, IGameState, InputActions } from './Types'
+import { ScenesScheme } from '../Scenes/ScenesScheme'
+import { CheckShipsOnBoard } from '../utils/CheckShipsOnBoard'
 
-export class GameController {
-  config: typeof GAME_CONFIG
-  ctx: HTMLCanvasElement
-  enemyAI = EnemyAI
-
-  constructor(config: typeof GAME_CONFIG, ctx: HTMLCanvasElement) {
-    this.config = config
-    this.ctx = ctx
+export class GameController extends abstractController {
+  private curentScene: abstractController
+  private inputManager: InputManager
+  private gamePhase: GamePhase
+  private state: IGameState
+  constructor(
+    private store: Store,
+    private canvas: HTMLCanvasElement,
+    private config: typeof GAME_CONFIG,
+    private finishGame:
+      | ((data: { score: number; result: 'win' | 'lose' }) => void | unknown)
+      | null
+  ) {
+    super()
+    this.inputManager = new InputManager(canvas, this.inputCallback, config)
+    this.state = this.store.getState()
+    this.gamePhase = this.state.phase
+    this.curentScene = new ScenesScheme[this.gamePhase](store)
+    this.store.on('update', this.update)
   }
-  init = () => {
-    this.ctx.addEventListener('mousedown', this.handleMouseDown)
-    this.ctx.addEventListener('mousemove', this.handleMouseMove)
-    this.ctx.addEventListener('contextmenu', this.contextmenuHandler)
-  }
 
-  private contextmenuHandler(e: Event) {
-    e.preventDefault()
-  }
-
-  private handleMouseDown = (e: MouseEvent) => {
-    if (e.button === 2) {
-      e.preventDefault()
-      this.rotateShip()
-      return
+  private update = (state: IGameState) => {
+    this.state = state
+    if (this.gamePhase !== state.phase) {
+      this.gamePhase = state.phase
+      this.curentScene.destroy()
+      this.curentScene = new ScenesScheme[this.gamePhase](this.store)
     }
-    const { phase } = store.getStore()
-    const { ENEMY_BOARD_POSITION, PLAYER_BOARD_POSITION } =
-      this.config.BOARDS_POSITION
-    const coords = { x: e.offsetX, y: e.offsetY }
-    const boardCoords =
-      phase === 'SETUP' ? PLAYER_BOARD_POSITION : ENEMY_BOARD_POSITION
-    if (!checkClick(coords, boardCoords)) return
-    const cell = coordsToCell(coords, boardCoords)
-    PhaseHandlers[phase]?.(cell, this)
-  }
-
-  rotateShip() {
-    const { selectedShip } = store.getStore()
-    if (selectedShip) {
-      const direction = selectedShip.direction === 'row' ? 'column' : 'row'
-      store.setStore({ selectedShip: { ...selectedShip, direction } })
+    this.phaseHandler(state)
+    if (this.gamePhase === 'BATTLE') {
+      this.checkWinner(state.playerBoard, state.enemyBoard)
     }
   }
 
-  private handleMouseMove = (e: MouseEvent) => {
-    const { shipsToPlace, selectedShip } = store.getStore()
-    const { PLAYER_BOARD_POSITION } = this.config.BOARDS_POSITION
-    const coords = { x: e.offsetX, y: e.offsetY }
-    const boardCoords = PLAYER_BOARD_POSITION
-    if (!checkClick(coords, boardCoords)) return
-    const cell = coordsToCell(coords, boardCoords)
-    const currentShip = shipsToPlace[0]
-    const direction = selectedShip?.direction || 'row'
-
-    store.setStore({
-      selectedShip: { coords: cell, length: currentShip, direction },
-    })
+  private inputCallback = (action: InputActions) => {
+    this.curentScene.inputHandler(action)
   }
 
-  private async enemyHandler() {
-    const board = store.getStore().playerBoard.map(row => [...row])
-    const coors = this.enemyAI()
-    await new Promise(res => setTimeout(res, 800))
-    const { board: playerBoard, result } = fireShot(coors, board)
-    store.setStore({ playerBoard })
-    if (result === 'hit' || result === 'null') {
-      this.enemyHandler()
-    } else if (result === 'miss') {
-      store.setStore({ currentTurn: 'PLAYER', message: 'Ваш ход' })
+  private phaseHandler(state: IGameState) {
+    const { shipsToPlace, phase } = state
+    if (phase === 'SETUP' && shipsToPlace.length === 0) {
+      this.store.dispatch({ type: 'SET_PHASE', phase: 'BATTLE' })
     }
   }
 
-  public playerHandler(cellCoords: coordsType) {
-    const board = store.getStore().enemyBoard.map(row => [...row])
-    const score = store.getStore().score
-    const { board: enemyBoard, result } = fireShot(cellCoords, board)
-    store.setStore({ enemyBoard, score: score + 1 })
-    if (result === 'miss') {
-      store.setStore({ currentTurn: 'ENEMY', message: 'Ход противника' })
-      this.enemyHandler()
-    }
+  destroy(): void {
+    this.store.off('update', this.update)
+    this.inputManager.destroy()
+    this.curentScene.destroy()
+    this.finishGame = null
   }
 
-  public placeShip = (cellCoords: coordsType) => {
-    const { x, y } = cellCoords
-
-    const { shipsToPlace, playerBoard, selectedShip } = store.getStore()
-    const currentShip = shipsToPlace[0]
-    const direction = selectedShip?.direction || 'row'
-
-    if (validatePlacement(playerBoard, x, y, currentShip, direction)) {
-      const newBoard = playerBoard.map(row => [...row])
-      const shipCoord = Array(currentShip)
-        .fill(0)
-        .map((_, i) => {
-          if (direction === 'row') {
-            return { x: x + i, y: y }
-          } else {
-            return { x: x, y: y + i }
-          }
-        })
-      shipCoord.forEach(({ x, y }) => {
-        newBoard[y][x] = 'ship'
-      })
-
-      const newShipsToPlace = [...shipsToPlace.slice(1, shipsToPlace.length)]
-      store.setStore({
-        playerBoard: newBoard,
-        shipsToPlace: newShipsToPlace,
-        message: `Поставьте корабль длинной ${newShipsToPlace[0]} на поле`,
-      })
-
-      if (newShipsToPlace.length === 0) {
-        store.setStore({ phase: 'BATTLE', message: 'Ваш ход' })
-      }
+  private checkWinner(playerBoard: cellType[][], enemyBoard: cellType[][]) {
+    const { score } = this.state
+    if (!CheckShipsOnBoard(playerBoard)) {
+      this.finishGame!({ result: 'lose', score: 999 })
     }
-  }
-
-  destroy = () => {
-    this.ctx.removeEventListener('mousedown', this.handleMouseDown)
-    this.ctx.removeEventListener('mousemove', this.handleMouseMove)
-    this.ctx.removeEventListener('contextmenu', this.contextmenuHandler)
+    if (!CheckShipsOnBoard(enemyBoard)) {
+      this.finishGame!({ result: 'win', score })
+    }
   }
 }

@@ -1,11 +1,9 @@
-import { IGameState, InputActions } from './../../../core/Types'
+import { InputActions } from './../../../core/Types'
 export class abstractController {
   init(_: unknown) {
     return false
   }
-  update(_state: IGameState) {
-    //
-  }
+
   inputHandler(_inputAction: InputActions) {
     //
   }

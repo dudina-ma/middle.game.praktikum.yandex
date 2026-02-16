@@ -21,14 +21,10 @@ export class Store extends EventBus<TEventBus> {
       .fill(0)
       .map(() => Array(10).fill('empty')),
     enemyBoard: createEnemyShips(shipsToPlace),
-    selectedShip: null,
+    selectedShip: { coords: { x: 0, y: 0 }, direction: 'row', length: 4 },
     currentTurn: 'PLAYER',
     message: `Поставьте корабль длинной 4 на поле`,
     score: 0,
-  }
-
-  getStore() {
-    return this.state
   }
 
   getState() {
@@ -38,13 +34,13 @@ export class Store extends EventBus<TEventBus> {
   dispatch(action: Action) {
     this.state = gameReducer(this.state, action)
 
-    this.emit('update', this.getStore())
+    this.emit('update', this.getState())
   }
 
-  setStore(data: Partial<IGameState>) {
-    Object.assign(this.state, data)
-    this.emit('update', this.getStore())
-  }
+  // setStore(data: Partial<IGameState>) {
+  //   Object.assign(this.state, data)
+  //   this.emit('update', this.getStore())
+  // }
 }
 
-export const store = new Store()
+// export const store = new Store()

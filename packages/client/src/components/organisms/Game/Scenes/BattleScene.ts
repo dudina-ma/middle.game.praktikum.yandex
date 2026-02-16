@@ -6,19 +6,28 @@ import { abstractController } from '../components/ui/shared/AbstractController'
 
 export class BattleScene extends abstractController {
   private aiThinking = false
-
-  constructor(private store: Store, private abortSignal: AbortSignal) {
+  private timeout: NodeJS.Timeout | null = null
+  private state: IGameState
+  private isDestroyed = false
+  constructor(private store: Store) {
     super()
+    this.state = store.getState()
+    store.on('update', this.update)
   }
 
-  update(state: IGameState) {
-    if (state.currentTurn === 'ENEMY' && !this.aiThinking) {
+  private update = (state: IGameState) => {
+    this.state = state
+    if (
+      state.currentTurn === 'ENEMY' &&
+      !this.aiThinking &&
+      !this.isDestroyed
+    ) {
       this.handleEnemyTurn()
     }
   }
 
   inputHandler(action: InputActions) {
-    if (action.type === 'LEFT_CLICK' && !this.aiThinking) {
+    if (action.type === 'LEFT_CLICK') {
       const { x, y } = action
       this.handlePlayerTurn({ x, y })
     }
@@ -27,27 +36,26 @@ export class BattleScene extends abstractController {
   private async handleEnemyTurn() {
     this.aiThinking = true
 
-    try {
-      await new Promise((res, rej) => {
-        const timeout = setTimeout(res, 800)
-        this.abortSignal.addEventListener('abort', () => {
-          clearTimeout(timeout)
-          rej(new Error('Aborted'))
-        })
-      })
+    await new Promise(res => {
+      this.timeout = setTimeout(res, 800)
+    })
+    this.aiThinking = false
+    const { x, y } = EnemyAI()
+    this.store.dispatch({ type: 'FIRE_SHOT', target: 'PLAYER', x, y })
+    this.aiThinking = false
+  }
 
-      const { x, y } = EnemyAI()
-
-      this.store.dispatch({ type: 'FIRE_SHOT', target: 'PLAYER', x, y })
-    } catch (e) {
-      // Игнорируем ошибку отмены
-    } finally {
-      this.aiThinking = false
+  private async handlePlayerTurn(coords: coordsType) {
+    if (this.state.currentTurn === 'PLAYER') {
+      const { x, y } = coords
+      this.store.dispatch({ type: 'FIRE_SHOT', target: 'ENEMY', x, y })
+      this.store.dispatch({ type: 'INCREMENT_SCORE' })
     }
   }
-  private async handlePlayerTurn(coords: coordsType) {
-    const { x, y } = coords
 
-    this.store.dispatch({ type: 'FIRE_SHOT', target: 'ENEMY', x, y })
+  destroy(): void {
+    if (this.timeout) clearTimeout(this.timeout)
+    this.isDestroyed = true
+    this.store.off('update', this.update)
   }
 }

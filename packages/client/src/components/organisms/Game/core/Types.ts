@@ -1,3 +1,5 @@
+import { abstractController } from '../components/ui/shared/AbstractController'
+
 export type GamePhase = 'SETUP' | 'BATTLE'
 export type cellType = 'empty' | 'ship' | 'miss' | 'hited'
 export type selectedShip = {
@@ -5,6 +7,8 @@ export type selectedShip = {
   length: number
   direction: 'row' | 'column'
 }
+
+export type ControllerConstructor = new (...args: any[]) => abstractController
 
 export type coordsType = {
   x: number
@@ -41,6 +45,8 @@ export type Action =
   | { type: 'SET_PHASE'; phase: GamePhase }
   | { type: 'SET_MESSAGE'; message: string }
   | { type: 'ROTATE_SHIP' }
+  | { type: 'UPDATE_SELECTED_SHIP'; x: number; y: number }
+  | { type: 'INCREMENT_SCORE' }
 
 export type InputActions =
   | {

@@ -32,15 +32,13 @@ export function checkBoardCell(
   PLAYER_BOARD_POSITION: positionType
 ) {
   const coords = { x: e.offsetX, y: e.offsetY }
-  let targetBoard: PlayersType
   if (checkClick(coords, ENEMY_BOARD_POSITION)) {
-    targetBoard = 'ENEMY'
+    const { x, y } = coordsToCell(coords, ENEMY_BOARD_POSITION)
+    return { x, y, targetBoard: 'ENEMY' as PlayersType }
   } else if (checkClick(coords, PLAYER_BOARD_POSITION)) {
-    targetBoard = 'PLAYER'
+    const { x, y } = coordsToCell(coords, PLAYER_BOARD_POSITION)
+    return { x, y, targetBoard: 'PLAYER' as PlayersType }
   } else {
     return
   }
-  const { x, y } = coordsToCell(coords, ENEMY_BOARD_POSITION)
-
-  return { x, y, targetBoard }
 }

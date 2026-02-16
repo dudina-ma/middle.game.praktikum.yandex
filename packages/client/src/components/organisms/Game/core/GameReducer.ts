@@ -1,73 +1,117 @@
+import { fireShot } from './../utils/FireShot'
 /* eslint-disable no-case-declarations */
-
 import { validatePlacement } from '../utils/ValidateShip'
-import { Action, IGameState } from './Types'
+import { Action, IGameState, cellType } from './Types'
+
+const cloneBoard = (board: cellType[][]): cellType[][] =>
+  board.map(row => [...row])
+
+const getShipCoordinates = (
+  x: number,
+  y: number,
+  length: number,
+  direction: 'row' | 'column'
+) => {
+  return Array.from({ length }, (_, i) => ({
+    x: direction === 'row' ? x + i : x,
+    y: direction === 'column' ? y + i : y,
+  }))
+}
+
+const handleFireShot = (
+  state: IGameState,
+  action: Extract<Action, { type: 'FIRE_SHOT' }>
+): IGameState => {
+  const boardKey = action.target === 'PLAYER' ? 'playerBoard' : 'enemyBoard'
+  const newBoard = cloneBoard(state[boardKey])
+  const { x, y } = action
+
+  const { board, result } = fireShot({ x, y }, newBoard)
+  let nextTurn = state.currentTurn
+  if (result !== 'hit') {
+    nextTurn = nextTurn === 'ENEMY' ? 'PLAYER' : 'ENEMY'
+  }
+  return {
+    ...state,
+    [boardKey]: board,
+    currentTurn: nextTurn,
+    message: nextTurn === 'ENEMY' ? 'Ход противника' : 'Ваш ход',
+  }
+}
+
+const handlePlaceShip = (
+  state: IGameState,
+  action: Extract<Action, { type: 'PLACE_SHIP' }>
+): IGameState => {
+  const { x, y } = action
+  const { shipsToPlace, playerBoard, selectedShip } = state
+  const currentShipLen = shipsToPlace[0]
+  const direction = selectedShip?.direction || 'row'
+
+  if (!validatePlacement(playerBoard, x, y, currentShipLen, direction)) {
+    return state
+  }
+
+  const newBoard = cloneBoard(playerBoard)
+  const coords = getShipCoordinates(x, y, currentShipLen, direction)
+
+  coords.forEach(({ x, y }) => {
+    newBoard[y][x] = 'ship'
+  })
+
+  const nextShips = shipsToPlace.slice(1)
+  const nextLen = nextShips[0] || 0
+
+  return {
+    ...state,
+    playerBoard: newBoard,
+    shipsToPlace: nextShips,
+    selectedShip: { ...selectedShip!, length: nextLen },
+    message:
+      nextShips.length > 0
+        ? `Поставьте корабль длиной ${nextLen} на поле`
+        : 'Все корабли расставлены',
+  }
+}
 
 export function gameReducer(state: IGameState, action: Action): IGameState {
-  const getNewBoard = (boardKey: 'playerBoard' | 'enemyBoard') =>
-    state[boardKey].map(row => [...row])
-
   switch (action.type) {
     case 'FIRE_SHOT':
-      const boardKey = action.target === 'PLAYER' ? 'playerBoard' : 'enemyBoard'
-      const newBoard = getNewBoard(boardKey)
-      const currentCell = newBoard[action.y][action.x]
-      if (currentCell === 'ship') newBoard[action.y][action.x] = 'hited'
-      else if (currentCell === 'empty') newBoard[action.y][action.x] = 'miss'
+      return handleFireShot(state, action)
 
-      return {
-        ...state,
-        [boardKey]: newBoard,
-        currentTurn:
-          action.target === 'ENEMY' && newBoard[action.y][action.x] === 'miss'
-            ? 'ENEMY'
-            : state.currentTurn,
-        message:
-          action.target === 'ENEMY' && newBoard[action.y][action.x] === 'miss'
-            ? 'Ход противника'
-            : state.message,
-      }
     case 'PLACE_SHIP':
-      const { x, y } = action
-      const { shipsToPlace, playerBoard, selectedShip } = state
-      const currentShip = shipsToPlace[0]
-      const direction = selectedShip?.direction || 'row'
+      return handlePlaceShip(state, action)
 
-      if (validatePlacement(playerBoard, x, y, currentShip, direction)) {
-        const newBoard = getNewBoard('playerBoard')
-        const shipCoord = Array(currentShip)
-          .fill(0)
-          .map((_, i) => {
-            if (direction === 'row') {
-              return { x: x + i, y: y }
-            } else {
-              return { x: x, y: y + i }
-            }
-          })
-        shipCoord.forEach(({ x, y }) => {
-          newBoard[y][x] = 'ship'
-        })
-
-        const newShipsToPlace = [...shipsToPlace.slice(1, shipsToPlace.length)]
-        return {
-          ...state,
-          playerBoard: newBoard,
-          shipsToPlace: newShipsToPlace,
-          message: `Поставьте корабль длинной ${newShipsToPlace[0]} на поле`,
-        }
-      }
-      return state
     case 'SET_PHASE':
+      return { ...state, phase: action.phase }
+
+    case 'ROTATE_SHIP':
+      if (!state.selectedShip) return state
       return {
         ...state,
-        phase: action.phase,
+        selectedShip: {
+          ...state.selectedShip,
+          direction: state.selectedShip.direction === 'row' ? 'column' : 'row',
+        },
       }
-    case 'ROTATE_SHIP':
-      if (selectedShip) {
-        const direction = selectedShip.direction === 'row' ? 'column' : 'row'
-        return { ...state, selectedShip: { ...selectedShip, direction } }
+
+    case 'UPDATE_SELECTED_SHIP':
+      if (!state.selectedShip) return state
+      return {
+        ...state,
+        selectedShip: {
+          ...state.selectedShip,
+          coords: { x: action.x, y: action.y },
+        },
       }
-      return state
+    case 'INCREMENT_SCORE':
+      console.log(state.score + 1)
+
+      return {
+        ...state,
+        score: state.score + 1,
+      }
+
     default:
       return state
   }
