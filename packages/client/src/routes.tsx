@@ -10,6 +10,7 @@ import ForumTopic from './pages/ForumTopic/ForumTopic'
 import NotFound from './pages/NotFound/NotFound'
 import ServerError from './pages/ServerError/ServerError'
 import SignUp from './pages/SignUp/SignUp'
+import BadRequest from './pages/BadRequest/BadRequest'
 import { RouterErrorAdapter } from './organisms/ErrorBoundary/RouterErrorAdapter'
 
 const createErrorElement = () => <RouterErrorAdapter />
@@ -24,7 +25,7 @@ export type PageInitArgs = {
   ctx: PageInitContext
 }
 
-// Общие заглушки
+// РћР±С‰РёРµ Р·Р°РіР»СѓС€РєРё
 export const createStubFetchData = (pageName: string) => {
   return async (_pageArgs: PageInitArgs): Promise<void> => {
     console.log(`Stub fetchData called for ${pageName} page`)
@@ -56,6 +57,12 @@ export const routes = [
     Component: ServerError,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('ServerError'),
+  },
+  {
+    path: '/bad-request',
+    Component: BadRequest,
+    errorElement: createErrorElement(),
+    fetchData: createStubFetchData('BadRequest'),
   },
   {
     path: '/',
