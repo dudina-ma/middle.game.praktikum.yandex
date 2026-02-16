@@ -1,16 +1,26 @@
 import { Button, Flex, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from '../../store'
+import { resetGame } from '../../slices/gameSlice'
 import styles from './style.module.css'
 
 const { Title, Text } = Typography
 
-interface GameOverScreenProps {
-  result?: 'win' | 'lose'
-}
-
-const EndGame = ({ result = 'win' }: GameOverScreenProps) => {
+const EndGame = () => {
   const navigate = useNavigate()
-  const isWin = result === 'win'
+  const dispatch = useDispatch()
+  const { phase, score } = useSelector(state => state.game)
+
+  const isWin = phase === 'victory'
+
+  const handlePlayAgain = () => {
+    dispatch(resetGame())
+  }
+
+  const handleMainMenu = () => {
+    dispatch(resetGame())
+    navigate('/')
+  }
 
   return (
     <div className={styles.backgroundContainer}>
@@ -25,6 +35,8 @@ const EndGame = ({ result = 'win' }: GameOverScreenProps) => {
             className={isWin ? styles.winTitle : styles.loseTitle}>
             {isWin ? 'Победа!' : 'Поражение'}
           </Title>
+
+          <Text className={styles.scoreText}>Ваш счёт: {score}</Text>
 
           <Text className={isWin ? styles.winText : styles.loseText}>
             {isWin
@@ -41,14 +53,14 @@ const EndGame = ({ result = 'win' }: GameOverScreenProps) => {
           <div>
             <Button
               type="primary"
-              onClick={() => navigate('/game')}
+              onClick={handlePlayAgain}
               size="large"
               className={styles.restartButton}>
               🔄 Play again
             </Button>
 
             <Button
-              onClick={() => navigate('/')}
+              onClick={handleMainMenu}
               size="large"
               className={styles.menuButton}>
               🏠 Main menu

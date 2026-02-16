@@ -1,17 +1,20 @@
+// src/pages/Game/index.tsx
 import EndGame from '../../organisms/GameMenu/EndGame'
 import StartGame from '../../organisms/GameMenu/StartGame'
-import { Flex } from 'antd'
 import { GameBoard } from '../../components/organisms/GameBoard/ui/GameBoard'
-import { useState } from 'react'
+import { Flex } from 'antd'
+import { useSelector } from '../../store'
+
 const Game = () => {
-  const [gameOver] = useState(false)
-  const [runGame] = useState(false)
+  const { phase } = useSelector(state => state.game)
+
   return (
     <Flex justify="center">
-      {!gameOver && !runGame && <StartGame />}
-      {!gameOver && runGame && <GameBoard />}
-      {gameOver && !runGame && <EndGame />}
+      {phase === 'start' && <StartGame />}
+      {phase === 'game' && <GameBoard />}
+      {(phase === 'victory' || phase === 'defeat') && <EndGame />}
     </Flex>
   )
 }
+
 export default Game

@@ -8,7 +8,7 @@ import Leaderboard from './pages/Leaderboard/Leaderboard'
 import Forum from './pages/Forum/Forum'
 import ForumTopic from './pages/ForumTopic/ForumTopic'
 import NotFound from './pages/NotFound/NotFound'
-import RouterErrorAdapter from './organisms/ErrorBoundary/ErrorBoundary'
+import RouterErrorAdapter from './components/ErrorBoundary/ErrorBoundary'
 
 import SignUp from './pages/SignUp/SignUp'
 

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import { routes } from './routes'
 import './index.css'
-import ErrorBoundary from './organisms/ErrorBoundary/ErrorBoundary'
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 
 const router = createBrowserRouter(routes)
 

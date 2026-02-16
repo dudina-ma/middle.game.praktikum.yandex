@@ -1,22 +1,27 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { GAME_CONFIG } from '../../Game/GameConfig'
 import { Game, onFinishData } from '../../Game'
+import { useDispatch, useSelector } from '../../../../store'
+import { finishGame } from '../../../../slices/gameSlice'
 
 export const GameBoard: React.FC = () => {
-  const [phase, setPhase] = useState<'game' | 'Победа' | 'Поражение'>('game')
-  const [score, setScore] = useState<number>(0)
+  const dispatch = useDispatch()
+  const { phase } = useSelector(state => state.game)
+
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const gameInstance = useRef<Game | null>(null)
 
   const onFinish = (data: onFinishData) => {
-    const result = data.result === 'lose' ? 'Поражение' : 'Победа'
-    const score = data.score
-    setPhase(result)
-    setScore(score)
+    dispatch(
+      finishGame({
+        result: data.result,
+        score: data.score,
+      })
+    )
   }
 
   useEffect(() => {
-    if (canvasRef.current && !gameInstance.current) {
+    if (canvasRef.current && !gameInstance.current && phase === 'game') {
       gameInstance.current = new Game(canvasRef.current, GAME_CONFIG, onFinish)
       gameInstance.current.render()
     }
@@ -27,17 +32,11 @@ export const GameBoard: React.FC = () => {
         gameInstance.current = null
       }
     }
-  }, [])
+  }, [phase])
 
   return (
     <div>
-      {phase === 'game' ? (
-        <canvas ref={canvasRef} />
-      ) : (
-        <h1>
-          {phase}! ходов {score}
-        </h1>
-      )}
+      <canvas ref={canvasRef} />
     </div>
   )
 }

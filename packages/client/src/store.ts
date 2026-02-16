@@ -9,6 +9,7 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import friendsReducer from './slices/friendsSlice'
 import ssrReducer from './slices/ssrSlice'
+import gameReducer from './slices/gameSlice'
 import { userApi } from './api/userApi'
 import { authApi } from './api/authApi'
 import { authApiPracticum } from './api/auth'
@@ -25,6 +26,7 @@ declare global {
 export const reducer = combineReducers({
   friends: friendsReducer,
   ssr: ssrReducer,
+  game: gameReducer,
   [userApi.reducerPath]: userApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [authApiPracticum.reducerPath]: authApiPracticum.reducer,
