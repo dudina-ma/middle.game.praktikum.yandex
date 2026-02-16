@@ -59,6 +59,12 @@ export const routes = [
     fetchData: createStubFetchData('ServerError'),
   },
   {
+    path: '/bad-request',
+    Component: BadRequest,
+    errorElement: createErrorElement(),
+    fetchData: createStubFetchData('BadRequest'),
+  },
+  {
     path: '/',
     Component: Layout,
     errorElement: createErrorElement(),
@@ -92,11 +98,6 @@ export const routes = [
         path: 'forum/:topicId',
         Component: ForumTopic,
         fetchData: createStubFetchData('ForumTopic'),
-      },
-      {
-        path: 'bad-request',
-        Component: BadRequest,
-        fetchData: createStubFetchData('BadRequest'),
       },
     ],
     fetchData: createStubFetchData('Layout'),
