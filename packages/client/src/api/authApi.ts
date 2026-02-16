@@ -1,33 +1,47 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { User } from './types'
-import { API_URL } from './consts'
-
-const userInfo: User = {
-  id: 1,
-  first_name: 'Иван',
-  second_name: 'Иванов',
-  display_name: 'ivan_user',
-  email: 'ivan@example.com',
-  phone: '+7 (999) 123-45-67',
-  login: 'ivan_user',
-  avatar: 'https://picsum.photos/150/150',
-}
+import { SignInRequest, SignUpRequest } from './auth.schema'
+import { AUTH_URL } from './consts'
 
 export const authApi = createApi({
-  reducerPath: 'authApi',
+  // Временно поставлю другой reducer path, в дальнейшем поправлю
+  reducerPath: 'authApi/practicum',
   baseQuery: fetchBaseQuery({
-    baseUrl: API_URL,
+    baseUrl: AUTH_URL,
     credentials: 'include',
   }),
-  tagTypes: ['User'],
-  endpoints: builder => ({
-    getUser: builder.query<User, void>({
-      queryFn: async () => {
-        return { data: userInfo }
-      },
-      providesTags: [{ type: 'User', id: 'PROFILE' }],
+  endpoints: build => ({
+    getUser: build.query<User, void>({
+      query: () => `user`,
+    }),
+    signUp: build.mutation<Pick<User, 'id'>, SignUpRequest>({
+      query: body => ({
+        url: 'signup',
+        method: 'POST',
+        responseHandler: 'text',
+        body,
+      }),
+    }),
+    signIn: build.mutation<void, SignInRequest>({
+      query: body => ({
+        url: 'signin',
+        method: 'POST',
+        responseHandler: 'text',
+        body,
+      }),
+    }),
+    logout: build.mutation<void, void>({
+      query: () => ({
+        url: 'logout',
+        method: 'POST',
+      }),
     }),
   }),
 })
 
-export const { useGetUserQuery } = authApi
+export const {
+  useGetUserQuery,
+  useLogoutMutation,
+  useSignUpMutation,
+  useSignInMutation,
+} = authApi

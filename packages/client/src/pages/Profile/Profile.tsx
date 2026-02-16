@@ -1,18 +1,18 @@
 import type { FormProps } from 'antd'
 import { Button, message, Spin } from 'antd'
-import { useState, useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { AvatarWithControls } from '../../molecules/AvatarWithControls/AvatarWithControls'
 import { ProfileForm } from '../../organisms/ProfileForm/ProfileForm'
 import { PasswordChangeForm } from '../../organisms/PasswordChangeForm/PasswordChangeForm'
 import styles from './Profile.module.css'
 import { usePage } from '../../hooks/usePage'
 import { PageInitArgs } from '../../routes'
-import { User, selectUser } from '../../slices/userSlice'
+import { selectUser, User } from '../../slices/userSlice'
 import { useGetUserQuery } from '../../api/authApi'
 import {
+  useChangePasswordMutation,
   useUpdateAvatarMutation,
   useUpdateProfileMutation,
-  useChangePasswordMutation,
 } from '../../api/userApi'
 import { UpdateProfileRequest } from '../../api/user.schema'
 import { getErrorMessage } from '../../utils/errorUtils'
@@ -71,6 +71,7 @@ export const Profile = () => {
 
   const onFinish: FormProps<User>['onFinish'] = useCallback(
     async (values: User) => {
+      console.log('user')
       try {
         const updateData: UpdateProfileRequest = {
           first_name: values.first_name,
@@ -80,6 +81,8 @@ export const Profile = () => {
           email: values.email,
           phone: values.phone,
         }
+
+        console.log(updateData)
         await updateProfile(updateData).unwrap()
         message.success('Профиль успешно обновлен')
         setMode('showProfileData')

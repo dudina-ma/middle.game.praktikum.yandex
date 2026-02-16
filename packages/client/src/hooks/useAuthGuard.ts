@@ -1,4 +1,4 @@
-import { useGetUserQuery } from '../api/auth'
+import { useGetUserQuery } from '../api/authApi'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { isFetchBaseQueryError } from '../shared/redux/typeGuards'
