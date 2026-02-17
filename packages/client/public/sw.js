@@ -44,7 +44,7 @@ self.addEventListener('fetch', event => {
                 .catch(() =>
                     caches.match(event.request).then(cached =>
                         cached || new Response(
-                            '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Офлайн</title></head><body><p>Нет подключения к интернету. Откройте страницу снова, когда сеть будет доступна.</p></body></html>',
+                            '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Офлайн</title></head><body><p>Нет соединения с интернетом. Часть приложения доступна офлайн — откройте страницу снова, когда сеть будет доступна, чтобы подгрузить актуальные данные.</p></body></html>',
                             { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/html; charset=utf-8' } }
                         )
                     )

@@ -5,6 +5,7 @@ import { store } from './store'
 import { routes } from './routes'
 import './index.css'
 import ErrorBoundary from './organisms/ErrorBoundary/ErrorBoundary'
+import { OfflineBanner } from './organisms/OfflineBanner/OfflineBanner'
 
 const router = createBrowserRouter(routes)
 
@@ -24,6 +25,7 @@ if (hasSSRContent && hasInitialState) {
     rootElement,
     <ErrorBoundary>
       <Provider store={store}>
+        <OfflineBanner />
         <RouterProvider router={router} />
       </Provider>
     </ErrorBoundary>
@@ -35,6 +37,7 @@ if (hasSSRContent && hasInitialState) {
   root.render(
     <ErrorBoundary>
       <Provider store={store}>
+        <OfflineBanner />
         <RouterProvider router={router} />
       </Provider>
     </ErrorBoundary>

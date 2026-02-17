@@ -39,7 +39,7 @@ export const useAuthGuard = () => {
       } else if (isNetworkError(error) || !navigator.onLine) {
         return
       } else {
-        navigate('/error-500')
+        navigate('/server-error')
       }
     }
   }, [navigate, error, isLoading])
