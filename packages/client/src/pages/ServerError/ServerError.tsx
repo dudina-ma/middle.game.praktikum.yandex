@@ -1,8 +1,9 @@
 import { Button, Result } from 'antd'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styles from './ServerError.module.css'
 
 const ServerError = () => {
+  const navigate = useNavigate()
   return (
     <section className={styles.root}>
       <Result
@@ -10,9 +11,9 @@ const ServerError = () => {
         title="500"
         subTitle="На сервере произошла ошибка. Попробуйте обновить страницу чуть позже."
         extra={
-          <Link to="/">
-            <Button type="primary">На главную</Button>
-          </Link>
+          <Button type="primary" onClick={() => navigate('/')}>
+            На главную
+          </Button>
         }
       />
     </section>

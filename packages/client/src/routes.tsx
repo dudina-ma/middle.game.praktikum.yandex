@@ -5,8 +5,7 @@ import SignIn from './pages/SignIn/SignIn'
 import { initProfilePage, Profile } from './pages/Profile/Profile'
 import Game from './pages/Game/Game'
 import Leaderboard from './pages/Leaderboard/Leaderboard'
-import Forum from './pages/Forum/Forum'
-import ForumTopic from './pages/ForumTopic/ForumTopic'
+import ForumPage from './pages/ForumPage'
 import NotFound from './pages/NotFound/NotFound'
 import ServerError from './pages/ServerError/ServerError'
 import SignUp from './pages/SignUp/SignUp'
@@ -91,13 +90,8 @@ export const routes = [
       },
       {
         path: 'forum',
-        Component: Forum,
+        Component: ForumPage,
         fetchData: createStubFetchData('Forum'),
-      },
-      {
-        path: 'forum/:topicId',
-        Component: ForumTopic,
-        fetchData: createStubFetchData('ForumTopic'),
       },
     ],
     fetchData: createStubFetchData('Layout'),
