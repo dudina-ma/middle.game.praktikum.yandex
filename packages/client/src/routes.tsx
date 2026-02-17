@@ -24,7 +24,7 @@ export type PageInitArgs = {
   ctx: PageInitContext
 }
 
-// Общие заглушки
+// РћР±С‰РёРµ Р·Р°РіР»СѓС€РєРё
 export const createStubFetchData = (pageName: string) => {
   return async (_pageArgs: PageInitArgs): Promise<void> => {
     console.log(`Stub fetchData called for ${pageName} page`)
