@@ -45,13 +45,17 @@ self.addEventListener('fetch', event => {
                     return response;
                 })
                 .catch(() =>
-                    caches.match(event.request).then(cached =>
-                        cached || new Response(
+                    caches.match(event.request).then(cached => {
+                        if (cached) return cached;
+
+                        return caches.match(new URL('/', self.location.origin).href);
+                    }).then(cachedShell =>
+                        cachedShell || new Response(
                             '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Офлайн</title></head><body><p>Нет соединения с интернетом. Часть приложения доступна офлайн — откройте страницу снова, когда сеть будет доступна, чтобы подгрузить актуальные данные.</p></body></html>',
                             { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/html; charset=utf-8' } }
                         )
+                        )
                     )
-                )
         );
         return;
     }
