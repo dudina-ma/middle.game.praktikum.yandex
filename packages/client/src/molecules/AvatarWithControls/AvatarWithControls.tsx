@@ -1,6 +1,6 @@
 import { memo } from 'react'
-import { Avatar, Button, Upload } from 'antd'
 import type { UploadProps } from 'antd'
+import { Avatar, Button, Upload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import styles from './AvatarWithControls.module.css'
 
@@ -41,7 +41,9 @@ export const AvatarWithControls = memo(
 
     return (
       <div className={styles.container}>
-        <Avatar size={100} src={avatarUrl} />
+        <Avatar size={100} src={avatarUrl}>
+          {!avatarUrl && 'Нет аватара'}
+        </Avatar>
         <div className={styles.actions}>
           <Upload
             beforeUpload={() => false}
