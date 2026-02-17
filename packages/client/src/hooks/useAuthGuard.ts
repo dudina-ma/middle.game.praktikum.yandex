@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { isFetchBaseQueryError } from '../shared/redux/typeGuards'
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import type { SerializedError } from '@reduxjs/toolkit'
-import { RoutesEnum } from '../routes'
+import { RoutesEnum } from '../paths'
 
 export const isUnauthorized = (
   error: FetchBaseQueryError | SerializedError | undefined

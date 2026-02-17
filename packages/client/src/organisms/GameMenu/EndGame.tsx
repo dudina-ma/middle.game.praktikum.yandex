@@ -1,7 +1,7 @@
 import { Button, Flex, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import styles from './style.module.css'
-import { RoutesEnum } from '../../routes'
+import { RoutesEnum } from '../../paths'
 
 const { Title, Text } = Typography
 

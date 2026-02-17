@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound/NotFound'
 import RouterErrorAdapter from './organisms/ErrorBoundary/ErrorBoundary'
 
 import SignUp from './pages/SignUp/SignUp'
+import { RoutesEnum } from './paths'
 
 const createErrorElement = () => <RouterErrorAdapter />
 
@@ -36,17 +37,6 @@ export const emptyFetchData = async (
   _pageArgs: PageInitArgs
 ): Promise<void> => {
   return Promise.resolve()
-}
-
-export enum RoutesEnum {
-  Main = '/',
-  SignIn = '/login',
-  SignUp = '/register',
-  Profile = '/profile',
-  Game = '/game',
-  Leaderboard = '/leaderboard',
-  Forum = '/forum',
-  Error500 = '/error500',
 }
 
 export const routes = [

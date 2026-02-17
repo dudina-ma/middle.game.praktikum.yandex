@@ -8,7 +8,7 @@ import {
   phoneRules,
   secondNameRules,
 } from '../../shared/validation/rules'
-import { RoutesEnum } from '../../routes'
+import { RoutesEnum } from '../../paths'
 
 const { Link } = Typography
 
@@ -52,7 +52,7 @@ export const SignUpForm = () => {
       </Form.Item>
 
       <Form.Item style={{ textAlign: 'center' }}>
-        <Link href={RoutesEnum.SignIn}>Есть аккаунта?</Link>
+        <Link href={RoutesEnum.SignIn}>Есть аккаунт?</Link>
       </Form.Item>
     </Form>
   )

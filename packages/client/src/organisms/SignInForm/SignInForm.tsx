@@ -2,7 +2,7 @@ import { Button, Form, Input, Typography } from 'antd'
 import { SignInRequest } from '../../api/auth.schema'
 import { useSignInForm } from './useSignInForm'
 import { loginRules, passwordRules } from '../../shared/validation/rules'
-import { RoutesEnum } from '../../routes'
+import { RoutesEnum } from '../../paths'
 
 const { Link } = Typography
 
