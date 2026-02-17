@@ -8,9 +8,9 @@ import {
   selectIsLoadingFriends,
 } from '../slices/friendsSlice'
 import { selectUser } from '../slices/userSlice'
-import { useGetUserQuery } from '../api/authApi'
 import { PageInitArgs } from '../routes'
 import { usePage } from '../hooks/usePage'
+import { useGetUserQuery } from '../api/authApi'
 
 export const FriendsPage = () => {
   const friends = useSelector(selectFriends)

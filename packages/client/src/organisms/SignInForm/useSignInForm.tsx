@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { useSignInMutation } from '../../api/auth'
+import { useSignInMutation } from '../../api/authApi'
 import { FormProps, message } from 'antd'
 import { SignInRequest } from '../../api/auth.schema'
 import { getErrorMessage } from '../../utils/errorUtils'
