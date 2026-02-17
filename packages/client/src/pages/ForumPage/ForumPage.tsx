@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Col, Divider, Empty, Form, Row } from 'antd'
 
 import {
@@ -53,11 +53,24 @@ const ForumPage = () => {
     return result
   }, [searchValue, categoryValue, segmentValue])
 
+  useEffect(() => {
+    if (!filteredTopics.length) {
+      if (selectedTopicId !== null) {
+        setSelectedTopicId(null)
+      }
+      return
+    }
+
+    const hasSelectedTopic = filteredTopics.some(
+      topic => topic.id === selectedTopicId
+    )
+    if (!hasSelectedTopic) {
+      setSelectedTopicId(filteredTopics[0].id)
+    }
+  }, [filteredTopics, selectedTopicId])
+
   const selectedTopic =
-    topics.find(t => t.id === selectedTopicId) ??
-    filteredTopics[0] ??
-    topics[0] ??
-    null
+    filteredTopics.find(topic => topic.id === selectedTopicId) ?? null
 
   const handleOpenModal = () => setIsModalOpen(true)
 
