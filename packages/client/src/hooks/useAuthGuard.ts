@@ -1,11 +1,7 @@
 import { useGetUserQuery } from '../api/authApi'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
-import {
-  isFetchBaseQueryError,
-  isFetchError,
-  isTimeoutError,
-} from '../shared/redux/typeGuards'
+import { isFetchBaseQueryError, isFetchError } from '../shared/redux/typeGuards'
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import type { SerializedError } from '@reduxjs/toolkit'
 
@@ -18,10 +14,7 @@ export const isUnauthorized = (
 }
 
 const isNetworkError = (error: FetchBaseQueryError | SerializedError) => {
-  return (
-    isFetchBaseQueryError(error) &&
-    (isFetchError(error) || isTimeoutError(error))
-  )
+  return isFetchBaseQueryError(error) && isFetchError(error)
 }
 
 export const useAuthGuard = () => {
