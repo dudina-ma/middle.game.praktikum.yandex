@@ -1,5 +1,4 @@
 import { Avatar, Button, Empty, List, Space, Typography } from 'antd'
-import { LikeOutlined } from '@ant-design/icons'
 import { CommentItem } from '../../../model/types'
 import styles from './CommentsList.module.css'
 
@@ -55,9 +54,7 @@ const CommentsList = ({ comments, replyToId, onReply }: CommentsListProps) => {
                 description={<Paragraph>{comment.content}</Paragraph>}
               />
               <Space direction="vertical" align="end">
-                <Button type="text" icon={<LikeOutlined />}>
-                  Нравится
-                </Button>
+                <span className={styles.actionPlaceholder} aria-hidden />
                 <Button
                   type="text"
                   onClick={() => onReply(isReplyTarget ? null : comment.id)}>

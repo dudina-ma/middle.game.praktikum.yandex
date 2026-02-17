@@ -37,6 +37,12 @@
   gap: 6px;
 }
 
+.actionPlaceholder {
+  display: block;
+  width: 76px;
+  height: 32px;
+}
+
 .itemReply {
   padding-left: 32px;
 }
