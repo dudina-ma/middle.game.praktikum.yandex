@@ -1,16 +1,17 @@
 import { Button, Result } from 'antd'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const NotFound = () => {
+  const navigate = useNavigate()
   return (
     <Result
       status="404"
       title="404"
       subTitle="Страница не найдена"
       extra={
-        <Link to="/">
-          <Button type="primary">Вернуться на главную</Button>
-        </Link>
+        <Button type="primary" onClick={() => navigate('/')}>
+          Вернуться на главную
+        </Button>
       }
     />
   )
