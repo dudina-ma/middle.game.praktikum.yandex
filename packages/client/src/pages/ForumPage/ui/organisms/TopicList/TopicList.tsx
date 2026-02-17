@@ -6,7 +6,7 @@ const { Text } = Typography
 
 type TopicListProps = {
   topics: Topic[]
-  selectedTopicId: string
+  selectedTopicId: string | null
   onSelectTopic: (id: string) => void
 }
 

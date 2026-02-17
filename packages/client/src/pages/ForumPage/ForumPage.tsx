@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Col, Divider, Form, Row } from 'antd'
+import { Col, Divider, Empty, Form, Row } from 'antd'
 
 import {
   categories,
@@ -19,7 +19,9 @@ import {
 import styles from './ForumPage.module.css'
 
 const ForumPage = () => {
-  const [selectedTopicId, setSelectedTopicId] = useState(topics[0].id)
+  const [selectedTopicId, setSelectedTopicId] = useState<string | null>(
+    topics[0]?.id ?? null
+  )
   const [searchValue, setSearchValue] = useState('')
   const [categoryValue, setCategoryValue] = useState<string | undefined>()
   const [segmentValue, setSegmentValue] = useState<SegmentValue>('Все')
@@ -52,7 +54,10 @@ const ForumPage = () => {
   }, [searchValue, categoryValue, segmentValue])
 
   const selectedTopic =
-    topics.find(t => t.id === selectedTopicId) ?? filteredTopics[0] ?? topics[0]
+    topics.find(t => t.id === selectedTopicId) ??
+    filteredTopics[0] ??
+    topics[0] ??
+    null
 
   const handleOpenModal = () => setIsModalOpen(true)
 
@@ -70,12 +75,16 @@ const ForumPage = () => {
     setNewComment('')
   }
 
-  const comments = commentsByTopic[selectedTopic.id] ?? []
+  const comments = selectedTopic ? commentsByTopic[selectedTopic.id] ?? [] : []
   const replyToComment = replyToId
     ? comments.find(comment => comment.id === replyToId)
     : null
 
   const handleSendComment = () => {
+    if (!selectedTopic) {
+      return
+    }
+
     const trimmed = newComment.trim()
     if (!trimmed) {
       return
@@ -125,23 +134,27 @@ const ForumPage = () => {
         </Col>
 
         <Col xs={24} md={14} className={styles.rightCol}>
-          <TopicDetails topic={selectedTopic}>
-            <CommentsList
-              comments={comments}
-              replyToId={replyToId}
-              onReply={setReplyToId}
-            />
-            <Divider />
-            <CommentComposer
-              newComment={newComment}
-              onChange={setNewComment}
-              onSend={handleSendComment}
-              onEmojiInsert={handleEmojiInsert}
-              emojiSet={emojiSet}
-              replyToComment={replyToComment ?? null}
-              onCancelReply={handleCancelReply}
-            />
-          </TopicDetails>
+          {selectedTopic ? (
+            <TopicDetails topic={selectedTopic}>
+              <CommentsList
+                comments={comments}
+                replyToId={replyToId}
+                onReply={setReplyToId}
+              />
+              <Divider />
+              <CommentComposer
+                newComment={newComment}
+                onChange={setNewComment}
+                onSend={handleSendComment}
+                onEmojiInsert={handleEmojiInsert}
+                emojiSet={emojiSet}
+                replyToComment={replyToComment ?? null}
+                onCancelReply={handleCancelReply}
+              />
+            </TopicDetails>
+          ) : (
+            <Empty description="Выберите тему из списка" />
+          )}
         </Col>
       </Row>
 
