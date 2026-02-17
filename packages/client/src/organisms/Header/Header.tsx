@@ -1,60 +1,35 @@
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
-import { RoutesEnum } from '../../routes'
+import { useNavigate } from 'react-router-dom'
+import { RoutesEnum } from '../../paths'
+import { Menu } from 'antd'
+import { useCallback } from 'react'
+import { MenuItemType } from 'antd/es/menu/interface'
+import { MenuInfo } from '@rc-component/menu/lib/interface'
 
-const StyledHeader = styled.header`
-  background-color: cornsilk;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 3rem;
-`
+const links: Record<string, RoutesEnum> = {
+  Главная: RoutesEnum.Main,
+  Игра: RoutesEnum.Game,
+  Форум: RoutesEnum.Forum,
+  'Таблица лидеров': RoutesEnum.Leaderboard,
+  Профиль: RoutesEnum.Profile,
+}
 
-const NavList = styled.nav``
-
-const List = styled.ul`
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0;
-  margin: 0;
-`
-
-const ListItem = styled.li`
-  /* Можно добавить дополнительные стили для элементов списка */
-`
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: #333;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-
-  &:active {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-`
+const menu: MenuItemType[] = Object.entries(links).map(([name, path]) => ({
+  key: path,
+  label: name,
+}))
 
 const Header = () => {
-  return (
-    <StyledHeader>
-      <NavList>
-        <List>
-          {Object.entries(RoutesEnum).map(([name, path]) => (
-            <ListItem key={name}>
-              <StyledLink to={path}>{name}</StyledLink>
-            </ListItem>
-          ))}
-        </List>
-      </NavList>
-    </StyledHeader>
+  const navigate = useNavigate()
+
+  const onClick = useCallback(
+    (item: MenuInfo) => {
+      if (Object.values(links).includes(item.key as RoutesEnum))
+        navigate(item.key)
+    },
+    [navigate]
   )
+
+  return <Menu mode={'horizontal'} onClick={onClick} items={menu} />
 }
 
 export default Header
