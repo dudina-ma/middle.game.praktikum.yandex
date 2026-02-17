@@ -1,8 +1,9 @@
 import { Button, Result } from 'antd'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styles from './BadRequest.module.css'
 
 const BadRequest = () => {
+  const navigate = useNavigate()
   return (
     <section className={styles.root}>
       <Result
@@ -10,9 +11,9 @@ const BadRequest = () => {
         title="400"
         subTitle="Некорректный запрос. Проверьте введенные данные и попробуйте снова."
         extra={
-          <Link to="/">
-            <Button type="primary">На главную</Button>
-          </Link>
+          <Button type="primary" onClick={() => navigate('/')}>
+            На главную
+          </Button>
         }
       />
     </section>
