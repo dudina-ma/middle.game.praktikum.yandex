@@ -37,7 +37,10 @@ self.addEventListener('fetch', event => {
                 .then(response => {
                     if (response && response.status === 200) {
                         const clone = response.clone();
-                        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                            .then(cache => cache.put(event.request, clone))
+                        );
                     }
                     return response;
                 })
@@ -61,7 +64,10 @@ self.addEventListener('fetch', event => {
                     .then(response => {
                         if (response && response.status === 200) {
                             const clone = response.clone();
-                            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+                            event.waitUntil(
+                                caches.open(CACHE_NAME)
+                                .then(cache => cache.put(event.request, clone))
+                            );
                         }
                         return response;
                     })
