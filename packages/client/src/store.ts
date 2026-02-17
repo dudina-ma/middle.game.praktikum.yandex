@@ -12,7 +12,6 @@ import ssrReducer from './slices/ssrSlice'
 import gameReducer from './slices/gameSlice'
 import { userApi } from './api/userApi'
 import { authApi } from './api/authApi'
-import { authApiPracticum } from './api/auth'
 import { leaderboardApi } from './api/leaderboard'
 
 // Глобально декларируем в window наш ключик
@@ -29,7 +28,6 @@ export const reducer = combineReducers({
   game: gameReducer,
   [userApi.reducerPath]: userApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
-  [authApiPracticum.reducerPath]: authApiPracticum.reducer,
   [leaderboardApi.reducerPath]: leaderboardApi.reducer,
 })
 
@@ -39,7 +37,6 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       userApi.middleware,
       authApi.middleware,
-      authApiPracticum.middleware,
       leaderboardApi.middleware
     ),
   preloadedState:
