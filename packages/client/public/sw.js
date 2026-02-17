@@ -35,7 +35,7 @@ self.addEventListener('fetch', event => {
         event.respondWith(
             fetch(event.request)
                 .then(response => {
-                    if (response && response.status === 200) {
+                    if (response && response.ok && response.type === 'basic') {
                         const clone = response.clone();
                         event.waitUntil(
                             caches.open(CACHE_NAME)
@@ -66,7 +66,7 @@ self.addEventListener('fetch', event => {
                 if (response) return response;
                 return fetch(event.request)
                     .then(response => {
-                        if (response && response.status === 200) {
+                        if (response && response.ok && response.type === 'basic') {
                             const clone = response.clone();
                             event.waitUntil(
                                 caches.open(CACHE_NAME)
