@@ -6,6 +6,7 @@ interface GameState {
   phase: GamePhase
   score: number
 }
+type GameResult = 'win' | 'lose'
 
 const initialState: GameState = {
   phase: 'start',
@@ -22,7 +23,7 @@ const gameSlice = createSlice({
     },
     finishGame: (
       state,
-      action: PayloadAction<{ result: 'win' | 'lose'; score: number }>
+      action: PayloadAction<{ result: GameResult; score: number }>
     ) => {
       const { result, score } = action.payload
       state.phase = result === 'win' ? 'victory' : 'defeat'
