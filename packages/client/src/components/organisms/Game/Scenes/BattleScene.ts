@@ -1,3 +1,4 @@
+import { GAME_CONFIG } from './../GameConfig'
 import { IGameState, InputActions } from './../core/Types'
 import { Store } from '../core/Store'
 import { coordsType } from '../core/Types'
@@ -37,7 +38,7 @@ export class BattleScene extends abstractController {
     this.aiThinking = true
 
     await new Promise(res => {
-      this.timeout = setTimeout(res, 800)
+      this.timeout = setTimeout(res, GAME_CONFIG.AI_THINKING)
     })
     this.aiThinking = false
     const { x, y } = EnemyAI()
