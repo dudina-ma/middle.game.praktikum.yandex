@@ -1,4 +1,4 @@
-import { cellType, IGameStore, selectedShip } from '../../core/Types'
+import { cellType, IGameState, selectedShip } from '../../core/Types'
 import { GAME_CONFIG } from '../../GameConfig'
 import { validatePlacement } from '../../utils/ValidateShip'
 import { AbstractElement, IAbstractElement } from './shared/AbstractElement'
@@ -9,8 +9,6 @@ type TBoardType = 'player' | 'enemy'
 
 interface BoardProps extends IAbstractElement {
   boardType: TBoardType
-  // board: cellType[][]
-  // colors: Record<cellType, string>
 }
 
 export class Board extends AbstractElement {
@@ -34,7 +32,7 @@ export class Board extends AbstractElement {
     }
   }
 
-  public update = ({ enemyBoard, playerBoard, selectedShip }: IGameStore) => {
+  public update = ({ enemyBoard, playerBoard, selectedShip }: IGameState) => {
     this.board = this.boardType === 'enemy' ? enemyBoard : playerBoard
     this.selectedShip = selectedShip
   }

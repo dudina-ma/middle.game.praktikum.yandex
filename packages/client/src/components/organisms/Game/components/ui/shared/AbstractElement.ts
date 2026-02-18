@@ -1,11 +1,11 @@
-import { coordsType, IGameStore } from '../../../core/Types'
+import { coordsType, IGameState } from '../../../core/Types'
 import { GAME_CONFIG } from '../../../GameConfig'
 
 export interface IAbstractElement {
   position: coordsType
   ctx: CanvasRenderingContext2D
   size?: coordsType
-  store: IGameStore
+  store: IGameState
   config: typeof GAME_CONFIG
 }
 
@@ -18,7 +18,7 @@ export class AbstractElement {
     this.ctx = ctx
   }
 
-  update(_store: IGameStore): unknown {
+  update(_store: IGameState): unknown {
     return false
   }
 
