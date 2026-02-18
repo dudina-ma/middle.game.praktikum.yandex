@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Офлайн</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fafafa;
+        color: #333;
+      }
+      .offline {
+        max-width: 28rem;
+        padding: 1.5rem;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border-left: 4px solid #faad14;
+      }
+      .offline h1 { margin: 0 0 0.5rem; font-size: 1.25rem; }
+      .offline p { margin: 0; line-height: 1.5; color: #666; }
+    </style>
+  </head>
+  <body>
+    <div class="offline">
+      <h1>Нет соединения с интернетом</h1>
+      <p>Часть приложения доступна офлайн — откройте страницу снова, когда сеть будет доступна, чтобы подгрузить актуальные данные.</p>
+    </div>
+  </body>
+</html>
