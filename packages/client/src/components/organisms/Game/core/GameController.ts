@@ -23,7 +23,7 @@ export class GameController extends abstractController {
     this.inputManager = new InputManager(canvas, this.inputCallback, config)
     this.state = this.store.getState()
     this.gamePhase = this.state.phase
-    this.curentScene = new ScenesScheme[this.gamePhase](store)
+    this.curentScene = new ScenesScheme[this.gamePhase](this.store)
     this.store.on('update', this.update)
   }
 
@@ -61,10 +61,10 @@ export class GameController extends abstractController {
   private checkWinner(playerBoard: cellType[][], enemyBoard: cellType[][]) {
     const { score } = this.state
     if (!CheckShipsOnBoard(playerBoard)) {
-      this.finishGame!({ result: 'lose', score: 999 })
+      if (this.finishGame) this.finishGame({ result: 'lose', score: 0 })
     }
     if (!CheckShipsOnBoard(enemyBoard)) {
-      this.finishGame!({ result: 'win', score })
+      if (this.finishGame) this.finishGame({ result: 'win', score })
     }
   }
 }

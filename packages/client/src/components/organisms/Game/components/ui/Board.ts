@@ -9,8 +9,6 @@ type TBoardType = 'player' | 'enemy'
 
 interface BoardProps extends IAbstractElement {
   boardType: TBoardType
-  // board: cellType[][]
-  // colors: Record<cellType, string>
 }
 
 export class Board extends AbstractElement {

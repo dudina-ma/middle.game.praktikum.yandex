@@ -16,7 +16,7 @@ export class InputManager {
   private handleMouseDown = (e: MouseEvent) => {
     if (e.button === 2) {
       e.preventDefault()
-      this.callback!({ type: 'RIGHT_CLICK' })
+      if (this.callback) this.callback({ type: 'RIGHT_CLICK' })
       return
     }
 
@@ -28,7 +28,8 @@ export class InputManager {
 
     const { x, y, targetBoard } = res
 
-    this.callback!({ type: 'LEFT_CLICK', x, y, target: targetBoard })
+    if (this.callback)
+      this.callback({ type: 'LEFT_CLICK', x, y, target: targetBoard })
   }
 
   private handleMouseMove = (e: MouseEvent) => {
@@ -38,18 +39,18 @@ export class InputManager {
         { x: e.offsetX, y: e.offsetY },
         PLAYER_BOARD_POSITION
       )
-      this.callback!({ type: 'MOUSE_MOVE', x, y })
+      if (this.callback) this.callback({ type: 'MOUSE_MOVE', x, y })
     }
   }
 
-  private contextmenuHandler(e: Event) {
+  private contextmenuHandler = (e: Event) => {
     e.preventDefault()
   }
 
   public destroy() {
     this.canvas.removeEventListener('mousedown', this.handleMouseDown)
     this.canvas.removeEventListener('mousemove', this.handleMouseMove)
-    this.canvas.addEventListener('contextmenu', this.contextmenuHandler)
+    this.canvas.removeEventListener('contextmenu', this.contextmenuHandler)
     this.callback = null
   }
 }

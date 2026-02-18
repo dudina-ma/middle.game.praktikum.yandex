@@ -24,7 +24,7 @@ export class Store extends EventBus<TEventBus> {
     selectedShip: { coords: { x: 0, y: 0 }, direction: 'row', length: 4 },
     currentTurn: 'PLAYER',
     message: `Поставьте корабль длинной 4 на поле`,
-    score: 0,
+    score: 100,
   }
 
   getState() {
@@ -36,11 +36,4 @@ export class Store extends EventBus<TEventBus> {
 
     this.emit('update', this.getState())
   }
-
-  // setStore(data: Partial<IGameState>) {
-  //   Object.assign(this.state, data)
-  //   this.emit('update', this.getStore())
-  // }
 }
-
-// export const store = new Store()

@@ -28,14 +28,20 @@ const handleFireShot = (
 
   const { board, result } = fireShot({ x, y }, newBoard)
   let nextTurn = state.currentTurn
+  let score = state.score
   if (result !== 'hit') {
     nextTurn = nextTurn === 'ENEMY' ? 'PLAYER' : 'ENEMY'
   }
+  if (action.target === 'ENEMY') {
+    score = score - 1
+  }
+
   return {
     ...state,
     [boardKey]: board,
     currentTurn: nextTurn,
     message: nextTurn === 'ENEMY' ? 'Ход противника' : 'Ваш ход',
+    score,
   }
 }
 
@@ -45,6 +51,7 @@ const handlePlaceShip = (
 ): IGameState => {
   const { x, y } = action
   const { shipsToPlace, playerBoard, selectedShip } = state
+  if (!shipsToPlace.length) return state
   const currentShipLen = shipsToPlace[0]
   const direction = selectedShip?.direction || 'row'
 
@@ -105,11 +112,9 @@ export function gameReducer(state: IGameState, action: Action): IGameState {
         },
       }
     case 'INCREMENT_SCORE':
-      console.log(state.score + 1)
-
       return {
         ...state,
-        score: state.score + 1,
+        score: state.score - 1,
       }
 
     default:

@@ -5,9 +5,11 @@ import { coordsType } from '../core/Types'
 import { EnemyAI } from '../utils/EnemyAI'
 import { abstractController } from '../components/ui/shared/AbstractController'
 
+type Timer = ReturnType<typeof setTimeout>
+
 export class BattleScene extends abstractController {
   private aiThinking = false
-  private timeout: NodeJS.Timeout | null = null
+  private timeout: Timer | null = null
   private state: IGameState
   private isDestroyed = false
   constructor(private store: Store) {
@@ -40,17 +42,16 @@ export class BattleScene extends abstractController {
     await new Promise(res => {
       this.timeout = setTimeout(res, GAME_CONFIG.AI_THINKING)
     })
+    if (this.isDestroyed) return
     this.aiThinking = false
     const { x, y } = EnemyAI()
     this.store.dispatch({ type: 'FIRE_SHOT', target: 'PLAYER', x, y })
-    this.aiThinking = false
   }
 
   private async handlePlayerTurn(coords: coordsType) {
     if (this.state.currentTurn === 'PLAYER') {
       const { x, y } = coords
       this.store.dispatch({ type: 'FIRE_SHOT', target: 'ENEMY', x, y })
-      this.store.dispatch({ type: 'INCREMENT_SCORE' })
     }
   }
 
