@@ -1,15 +1,19 @@
 import { Button, Flex, Typography } from 'antd'
 import { useState } from 'react'
+import { useDispatch } from '../../store'
+import { startGame } from '../../slices/gameSlice'
 
 import styles from './style.module.css'
 
 const { Title, Text } = Typography
 
 const StartGame = () => {
+  const dispatch = useDispatch()
+
   const [showTips, setShowTips] = useState(false)
 
   const handleStart = () => {
-    // тут логика для старта игры
+    dispatch(startGame())
   }
 
   const handleShowTips = () => {

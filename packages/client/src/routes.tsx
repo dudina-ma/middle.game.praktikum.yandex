@@ -10,7 +10,7 @@ import NotFound from './pages/NotFound/NotFound'
 import ServerError from './pages/ServerError/ServerError'
 import SignUp from './pages/SignUp/SignUp'
 import BadRequest from './pages/BadRequest/BadRequest'
-import { RouterErrorAdapter } from './organisms/ErrorBoundary/RouterErrorAdapter'
+import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
 
 const createErrorElement = () => <RouterErrorAdapter />
 
