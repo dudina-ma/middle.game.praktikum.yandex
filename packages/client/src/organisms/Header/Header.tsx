@@ -1,74 +1,92 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
-
-const StyledHeader = styled.header`
-  background-color: cornsilk;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 3rem;
-`
-
-const NavList = styled.nav``
-
-const List = styled.ul`
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0;
-  margin: 0;
-`
-
-const ListItem = styled.li`
-  /* Можно добавить дополнительные стили для элементов списка */
-`
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: #333;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-
-  &:active {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-`
+import { Button } from 'antd'
+import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons'
+import {
+  toggleFullscreen as toggleFs,
+  getFullscreenElement,
+} from '../../utils/fullscreen'
+import styles from './style.module.css'
 
 const Header = () => {
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!getFullscreenElement())
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange)
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange)
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange)
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+      document.removeEventListener(
+        'webkitfullscreenchange',
+        handleFullscreenChange
+      )
+      document.removeEventListener(
+        'mozfullscreenchange',
+        handleFullscreenChange
+      )
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange)
+    }
+  }, [])
+
   return (
-    <StyledHeader>
-      <NavList>
-        <List>
-          <ListItem>
-            <StyledLink to="/">Main</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/login">Login</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/sign-in">SignIn</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/profile">Profile</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/game">Game</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/leaderboard">Leaderboard</StyledLink>
-          </ListItem>
-          <ListItem>
-            <StyledLink to="/forum">Forum</StyledLink>
-          </ListItem>
-        </List>
-      </NavList>
-    </StyledHeader>
+    <header className={styles.header}>
+      <nav>
+        <ul className={styles.list}>
+          <li>
+            <Link to="/" className={styles.link}>
+              Main
+            </Link>
+          </li>
+          <li>
+            <Link to="/login" className={styles.link}>
+              Login
+            </Link>
+          </li>
+          <li>
+            <Link to="/register" className={styles.link}>
+              SignIn
+            </Link>
+          </li>
+          <li>
+            <Link to="/profile" className={styles.link}>
+              Profile
+            </Link>
+          </li>
+          <li>
+            <Link to="/game" className={styles.link}>
+              Game
+            </Link>
+          </li>
+          <li>
+            <Link to="/leaderboard" className={styles.link}>
+              Leaderboard
+            </Link>
+          </li>
+          <li>
+            <Link to="/forum" className={styles.link}>
+              Forum
+            </Link>
+          </li>
+        </ul>
+      </nav>
+      <Button
+        type="primary"
+        size="large"
+        className={styles.fullscreenButton}
+        icon={
+          isFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />
+        }
+        onClick={toggleFs}>
+        {isFullscreen ? 'Свернуть' : 'На весь экран'}
+      </Button>
+    </header>
   )
 }
 

@@ -1,0 +1,38 @@
+.header {
+  background-color: cornsilk;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3rem;
+  position: relative;
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+}
+
+.link {
+  text-decoration: none;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.link:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.link:active {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.fullscreenButton {
+  position: absolute;
+  right: 1rem;
+}
