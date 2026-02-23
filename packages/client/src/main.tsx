@@ -4,7 +4,10 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import { routes } from './routes'
 import './index.css'
-import ErrorBoundary from './organisms/ErrorBoundary/ErrorBoundary'
+
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
+
+import { OfflineBanner } from './organisms/OfflineBanner/OfflineBanner'
 
 const router = createBrowserRouter(routes)
 
@@ -24,6 +27,7 @@ if (hasSSRContent && hasInitialState) {
     rootElement,
     <ErrorBoundary>
       <Provider store={store}>
+        <OfflineBanner />
         <RouterProvider router={router} />
       </Provider>
     </ErrorBoundary>
@@ -35,8 +39,29 @@ if (hasSSRContent && hasInitialState) {
   root.render(
     <ErrorBoundary>
       <Provider store={store}>
+        <OfflineBanner />
         <RouterProvider router={router} />
       </Provider>
     </ErrorBoundary>
   )
 }
+
+function startServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then(registration => {
+          console.log(
+            'ServiceWorker registration successful with scope: ',
+            registration.scope
+          )
+        })
+        .catch((error: Error) => {
+          console.log('ServiceWorker registration failed: ', error)
+        })
+    })
+  }
+}
+
+startServiceWorker()

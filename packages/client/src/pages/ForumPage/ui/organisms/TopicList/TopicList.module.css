@@ -1,0 +1,83 @@
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.card :global(.ant-card-body) {
+  flex: 1;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.list {
+  --topic-row-height: 120px;
+  flex: 1;
+  min-height: 0;
+  max-height: calc(var(--topic-row-height) * 5);
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.list :global(.ant-spin-nested-loading),
+.list :global(.ant-spin-container),
+.list :global(.ant-list-items) {
+  height: 100%;
+}
+
+.list :global(.ant-list-items) {
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  cursor: pointer;
+  padding: 10px !important;
+  min-height: var(--topic-row-height);
+  background: transparent;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.itemSelected {
+  background: #e6f4ff;
+}
+
+.itemContent {
+  width: 100%;
+}
+
+.itemHeader {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.meta {
+  margin-top: 1px;
+}
+
+.tags {
+  margin-top: 4px;
+}
+
+.activity {
+  margin-top: 4px;
+}
+
+.title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.item:hover {
+  background: #f5f5f5;
+}
+
+.itemSelected:hover {
+  background: #e6f4ff;
+}

@@ -68,17 +68,17 @@ export const emailRules: Rule[] = [
 
 export const newPasswordNonMatchRule: Rule = ({ getFieldValue }) => ({
   message: 'Новый пароль должен отличаться от старого',
-  validator: (_: unknown, newPassword: string) => {
+  validator: async (_: unknown, newPassword: string) => {
     if (getFieldValue('oldPassword') == newPassword) {
       throw new Error()
     }
   },
 })
 
-export const confirmPasswordMarchRule: Rule = ({ getFieldValue }) => ({
+export const confirmPasswordMatchRule: Rule = ({ getFieldValue }) => ({
   message: 'Пароли не совпадают',
-  validator: (_: unknown, confirmPassword: string) => {
-    if (getFieldValue('newPassword') == confirmPassword) {
+  validator: async (_: unknown, confirmPassword: string) => {
+    if (getFieldValue('newPassword') !== confirmPassword) {
       throw new Error()
     }
   },
@@ -109,7 +109,7 @@ export const oldPasswordRules: Rule[] = [
 
 export const confirmPasswordRules: Rule[] = [
   ...passwordRules,
-  confirmPasswordMarchRule,
+  confirmPasswordMatchRule,
 ]
 
 export const newPasswordRules: Rule[] = [
@@ -119,7 +119,7 @@ export const newPasswordRules: Rule[] = [
 
 export const correctPhoneRule: Rule = () => ({
   message: 'Телефон должен быть от 10 до 15 цифр и может начинаться с +',
-  validator: (_: unknown, value: string) => {
+  validator: async (_: unknown, value: string) => {
     if (!value) {
       return
     }

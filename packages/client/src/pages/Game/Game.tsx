@@ -1,17 +1,28 @@
 import EndGame from '../../organisms/GameMenu/EndGame'
 import StartGame from '../../organisms/GameMenu/StartGame'
-import { Flex } from 'antd'
 import { GameBoard } from '../../components/organisms/GameBoard/ui/GameBoard'
-import { useState } from 'react'
+import { Flex } from 'antd'
+import { useSelector } from '../../store'
+import { ComponentType } from 'react'
+import type { GamePhase } from '../../slices/gameSlice'
+
+const GAME_CONTENT_CONFIG: Record<GamePhase, ComponentType> = {
+  start: StartGame,
+  game: GameBoard,
+  victory: EndGame,
+  defeat: EndGame,
+}
+
 const Game = () => {
-  const [gameOver] = useState(false)
-  const [runGame] = useState(false)
+  const { phase } = useSelector(state => state.game)
+
+  const GameContent = GAME_CONTENT_CONFIG[phase]
+
   return (
     <Flex justify="center">
-      {!gameOver && !runGame && <StartGame />}
-      {!gameOver && runGame && <GameBoard />}
-      {gameOver && !runGame && <EndGame />}
+      <GameContent />
     </Flex>
   )
 }
+
 export default Game
