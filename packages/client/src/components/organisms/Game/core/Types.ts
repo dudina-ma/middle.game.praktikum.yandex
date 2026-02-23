@@ -22,7 +22,7 @@ export type positionType = {
   h: number
 }
 
-export type PlayersType = 'PLAYER' | 'ENEMY'
+export type PlayersType = 'player' | 'enemy'
 
 export interface IGameState {
   phase: GamePhase
@@ -34,6 +34,7 @@ export interface IGameState {
   message: string
   score: number
 }
+
 export type onFinishData = {
   result: 'win' | 'lose'
   score: number

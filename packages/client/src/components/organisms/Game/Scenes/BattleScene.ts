@@ -12,6 +12,7 @@ export class BattleScene extends abstractController {
   private timeout: Timer | null = null
   private state: IGameState
   private isDestroyed = false
+
   constructor(private store: Store) {
     super()
     this.state = store.getState()
@@ -21,7 +22,7 @@ export class BattleScene extends abstractController {
   private update = (state: IGameState) => {
     this.state = state
     if (
-      state.currentTurn === 'ENEMY' &&
+      state.currentTurn === 'enemy' &&
       !this.aiThinking &&
       !this.isDestroyed
     ) {
@@ -45,13 +46,13 @@ export class BattleScene extends abstractController {
     if (this.isDestroyed) return
     this.aiThinking = false
     const { x, y } = EnemyAI()
-    this.store.dispatch({ type: 'FIRE_SHOT', target: 'PLAYER', x, y })
+    this.store.dispatch({ type: 'FIRE_SHOT', target: 'player', x, y })
   }
 
   private async handlePlayerTurn(coords: coordsType) {
-    if (this.state.currentTurn === 'PLAYER') {
+    if (this.state.currentTurn === 'player') {
       const { x, y } = coords
-      this.store.dispatch({ type: 'FIRE_SHOT', target: 'ENEMY', x, y })
+      this.store.dispatch({ type: 'FIRE_SHOT', target: 'enemy', x, y })
     }
   }
 

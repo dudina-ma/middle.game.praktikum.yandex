@@ -22,7 +22,7 @@ export class Store extends EventBus<TEventBus> {
       .map(() => Array(10).fill('empty')),
     enemyBoard: createEnemyShips(shipsToPlace),
     selectedShip: { coords: { x: 0, y: 0 }, direction: 'row', length: 4 },
-    currentTurn: 'PLAYER',
+    currentTurn: 'player',
     message: `Поставьте корабль длинной 4 на поле`,
     score: 100,
   }
