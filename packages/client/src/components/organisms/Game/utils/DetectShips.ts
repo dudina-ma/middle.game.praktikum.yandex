@@ -9,35 +9,46 @@ export type DetectedShip = {
 
 const isShipCell = (cell: cellType) => cell === 'ship' || cell === 'hited'
 
+const isShipHeadCell = (board: cellType[][], col: number, row: number) => {
+  return (
+    (col === 0 || !isShipCell(board[row][col - 1])) &&
+    (row === 0 || !isShipCell(board[row - 1][col]))
+  )
+}
+
 export const detectShips = (board: cellType[][]): DetectedShip[] => {
   const ships: DetectedShip[] = []
   const rows = board.length
-  const cols = rows > 0 ? board[0].length : 0
+  const cols = board[0].length ?? 0
 
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
-      if (!isShipCell(board[row][col])) continue
+      const cell = board[row]?.[col]
+      if (!isShipCell(cell)) continue
 
-      const isHead =
-        (col === 0 || !isShipCell(board[row][col - 1])) &&
-        (row === 0 || !isShipCell(board[row - 1][col]))
-
+      const isHead = isShipHeadCell(board, col, row)
       if (!isHead) continue
 
       let length = 1
       let direction: 'row' | 'column' = 'row'
 
-      // проверяем горизонталь
+      let dx = 0
+      let dy = 0
+
       if (col + 1 < cols && isShipCell(board[row][col + 1])) {
+        dx = 1
         direction = 'row'
-        while (col + length < cols && isShipCell(board[row][col + length])) {
-          length++
-        }
-      }
-      // иначе проверяем вертикаль
-      else if (row + 1 < rows && isShipCell(board[row + length][col])) {
+      } else if (row + 1 < rows && isShipCell(board[row + 1][col])) {
+        dy = 1
         direction = 'column'
-        while (row + length < rows && isShipCell(board[row + length][col])) {
+      }
+
+      if (dx || dy) {
+        while (
+          row + dy * length < rows &&
+          col + dx * length < cols &&
+          isShipCell(board[row + dy * length][col + dx * length])
+        ) {
           length++
         }
       }

@@ -19,6 +19,7 @@ export class Board extends AbstractElement {
   private selectedShip: selectedShip | null = null
   private boardType: TBoardType
   private isActive = false
+  private ships: DetectedShip[] = []
 
   constructor({ position, ctx, size, boardType, config, store }: BoardProps) {
     super({ position, ctx, size, config, store })
@@ -26,6 +27,13 @@ export class Board extends AbstractElement {
     this.board = boardType === 'enemy' ? store?.enemyBoard : store?.playerBoard
     this.boardType = boardType
     this.size = this.calculateSize()
+  }
+
+  private _getDrawPosition = (cellX: number, cellY: number) => {
+    return {
+      drawX: this.position.x + (DIVIDER_W + CELL_SIZE.x) * cellX,
+      drawY: this.position.y + (DIVIDER_W + CELL_SIZE.y) * cellY,
+    }
   }
 
   private calculateSize() {
@@ -43,8 +51,8 @@ export class Board extends AbstractElement {
     phase,
   }: IGameState) => {
     this.board = this.boardType === 'enemy' ? enemyBoard : playerBoard
-    this.isActive =
-      phase == 'BATTLE' && currentTurn !== this.boardType.toUpperCase()
+    this.isActive = phase === 'BATTLE' && currentTurn !== this.boardType
+    console.log(phase, currentTurn, this.boardType)
     this.selectedShip = selectedShip
   }
 
@@ -71,8 +79,8 @@ export class Board extends AbstractElement {
       this.ctx.strokeStyle = isValid
         ? 'rgba(0, 255, 0, 0.8)'
         : 'rgba(255, 21, 0, 0.8)'
-      const drawX = this.position.x + (DIVIDER_W + CELL_SIZE.x) * cellX
-      const drawY = this.position.y + (DIVIDER_W + CELL_SIZE.y) * cellY
+
+      const { drawX, drawY } = this._getDrawPosition(cellX, cellY)
       const w =
         direction === 'row'
           ? CELL_SIZE.x * length + DIVIDER_W * (length - 1)
@@ -95,9 +103,9 @@ export class Board extends AbstractElement {
       for (let i = 0; i < length; i++) {
         const currentX = direction === 'row' ? cellX + i : cellX
         const currentY = direction === 'column' ? cellY + i : cellY
-        if (currentX < 10 && currentY < 10) {
-          const drawX = this.position.x + (DIVIDER_W + CELL_SIZE.x) * currentX
-          const drawY = this.position.y + (DIVIDER_W + CELL_SIZE.y) * currentY
+
+        if (currentX < this.size.x && currentY < this.size.y) {
+          const { drawX, drawY } = this._getDrawPosition(currentX, currentY)
           this.ctx.fillRect(drawX, drawY, CELL_SIZE.x, CELL_SIZE.y)
           this.ctx.strokeRect(drawX, drawY, CELL_SIZE.x, CELL_SIZE.y)
         }
@@ -108,27 +116,18 @@ export class Board extends AbstractElement {
   private drawBoard() {
     this.board.forEach((el, row) => {
       el.forEach((cell, column) => {
-        this.ctx.fillStyle = this.colors[cell]
-        if (
-          (this.boardType === 'enemy' || this.boardType === 'player') &&
-          cell === 'ship'
-        ) {
-          this.ctx.fillStyle = this.colors.empty
-        }
-        this.ctx.fillRect(
-          this.position.x + (DIVIDER_W + CELL_SIZE.x) * column,
-          this.position.y + (DIVIDER_W + CELL_SIZE.y) * row,
-          CELL_SIZE.x,
-          CELL_SIZE.y
-        )
+        this.ctx.fillStyle =
+          cell === 'ship' ? this.colors.empty : this.colors[cell]
+
+        const { drawX, drawY } = this._getDrawPosition(column, row)
+        this.ctx.fillRect(drawX, drawY, CELL_SIZE.x, CELL_SIZE.y)
       })
     })
   }
 
   private drawHitSprite(cellX: number, cellY: number) {
     const hitImg = getHitImage()
-    const drawX = this.position.x + (DIVIDER_W + CELL_SIZE.x) * cellX
-    const drawY = this.position.y + (DIVIDER_W + CELL_SIZE.y) * cellY
+    const { drawX, drawY } = this._getDrawPosition(cellX, cellY)
     if (hitImg?.complete) {
       this.ctx.drawImage(
         hitImg,
@@ -154,9 +153,7 @@ export class Board extends AbstractElement {
     length: number,
     direction: 'row' | 'column'
   ) {
-    const drawX = this.position.x + (DIVIDER_W + CELL_SIZE.x) * shipX
-    const drawY = this.position.y + (DIVIDER_W + CELL_SIZE.y) * shipY
-
+    const { drawX, drawY } = this._getDrawPosition(shipX, shipY)
     const width =
       direction === 'row'
         ? CELL_SIZE.x * length + DIVIDER_W * (length - 1)
@@ -167,6 +164,7 @@ export class Board extends AbstractElement {
         : CELL_SIZE.y
 
     this.ctx.save()
+    this.ctx.fillStyle = this.colors.busy
 
     if (direction === 'row') {
       this.ctx.drawImage(
@@ -180,10 +178,8 @@ export class Board extends AbstractElement {
         width,
         height
       )
-      this.ctx.fillStyle = this.colors.busy
       this.ctx.fillRect(drawX, drawY, width, height)
     } else {
-      this.ctx.fillStyle = this.colors.busy
       this.ctx.fillRect(drawX, drawY, width, height)
       this.ctx.translate(drawX + width / 2, drawY + height / 2)
       this.ctx.rotate(Math.PI / 2)
@@ -229,9 +225,11 @@ export class Board extends AbstractElement {
   private drawShipSprites() {
     if (this.boardType !== 'player') return
 
-    const ships = detectShips(this.board)
+    if (this.ships.length < GAME_CONFIG.SHIPS_TO_PLACE.length) {
+      this.ships = detectShips(this.board)
+    }
 
-    ships.forEach(ship => {
+    this.ships.forEach(ship => {
       const img = getShipImage(ship.length)
 
       if (img && img.complete) {
