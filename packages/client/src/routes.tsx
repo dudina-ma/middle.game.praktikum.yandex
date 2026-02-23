@@ -53,19 +53,19 @@ export const routes = [
     fetchData: createStubFetchData('SignUp'),
   },
   {
-    path: '/server-error',
+    path: RoutesEnum.ServerError,
     Component: ServerError,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('ServerError'),
   },
   {
-    path: '/bad-request',
+    path: RoutesEnum.BadRequest,
     Component: BadRequest,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('BadRequest'),
   },
   {
-    path: '/',
+    path: RoutesEnum.Main,
     Component: Layout,
     errorElement: createErrorElement(),
     children: [
@@ -90,7 +90,7 @@ export const routes = [
         fetchData: createStubFetchData('Leaderboard'),
       },
       {
-        path: 'forum',
+        path: RoutesEnum.Forum,
         Component: ForumPage,
         fetchData: createStubFetchData('Forum'),
       },

@@ -28,13 +28,12 @@ export const useAuthGuard = () => {
     }
 
     if (error) {
-      navigate(isUnauthorized(error) ? RoutesEnum.SignIn : RoutesEnum.Error500)
       if (isUnauthorized(error)) {
-        navigate('/login')
+        navigate(RoutesEnum.SignIn)
       } else if (isNetworkError(error) || !navigator.onLine) {
         return
       } else {
-        navigate('/server-error')
+        navigate(RoutesEnum.ServerError)
       }
     }
   }, [navigate, error, isLoading])

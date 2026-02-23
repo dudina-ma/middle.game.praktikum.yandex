@@ -20,7 +20,7 @@ const EndGame = () => {
 
   const handleMainMenu = () => {
     dispatch(resetGame())
-    navigate('/')
+    navigate(RoutesEnum.Main)
   }
 
   return (
