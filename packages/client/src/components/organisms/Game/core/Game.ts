@@ -1,6 +1,7 @@
 import { Messages } from '../components/ui/Messages'
 import { Board } from '../components/ui/Board'
 import type { GAME_CONFIG } from '../GameConfig'
+import { preloadShipImages } from '../utils/PreloadShipImages'
 import { Store } from './Store'
 import { AbstractElement } from '../components/ui/shared/AbstractElement'
 import { IGameState, onFinishData } from './Types'
@@ -57,6 +58,7 @@ export class Game {
     ]
 
     this.store.on('update', this.update)
+    preloadShipImages(config.shipSprites, config.hitSprite)
 
     this.gameController = new GameController(
       this.store,

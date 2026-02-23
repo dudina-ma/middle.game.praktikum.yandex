@@ -1,7 +1,7 @@
 import { fireShot } from './../utils/FireShot'
 /* eslint-disable no-case-declarations */
 import { validatePlacement } from '../utils/ValidateShip'
-import { Action, IGameState, cellType } from './Types'
+import { Action, cellType, IGameState } from './Types'
 
 const cloneBoard = (board: cellType[][]): cellType[][] =>
   board.map(row => [...row])
@@ -22,7 +22,7 @@ const handleFireShot = (
   state: IGameState,
   action: Extract<Action, { type: 'FIRE_SHOT' }>
 ): IGameState => {
-  const boardKey = action.target === 'PLAYER' ? 'playerBoard' : 'enemyBoard'
+  const boardKey = action.target === 'player' ? 'playerBoard' : 'enemyBoard'
   const newBoard = cloneBoard(state[boardKey])
   const { x, y } = action
 
@@ -30,9 +30,9 @@ const handleFireShot = (
   let nextTurn = state.currentTurn
   let score = state.score
   if (result !== 'hit') {
-    nextTurn = nextTurn === 'ENEMY' ? 'PLAYER' : 'ENEMY'
+    nextTurn = nextTurn === 'enemy' ? 'player' : 'enemy'
   }
-  if (action.target === 'ENEMY') {
+  if (action.target === 'enemy') {
     score = score - 1
   }
 
@@ -40,7 +40,7 @@ const handleFireShot = (
     ...state,
     [boardKey]: board,
     currentTurn: nextTurn,
-    message: nextTurn === 'ENEMY' ? 'Ход противника' : 'Ваш ход',
+    message: nextTurn === 'enemy' ? 'Ход противника' : 'Ваш ход',
     score,
   }
 }

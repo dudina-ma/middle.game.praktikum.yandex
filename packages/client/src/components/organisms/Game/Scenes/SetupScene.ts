@@ -5,6 +5,7 @@ import { abstractController } from '../components/ui/shared/AbstractController'
 
 export class SetupScene extends abstractController {
   private state: IGameState
+
   constructor(private store: Store) {
     super()
     this.state = store.getState()
@@ -16,7 +17,7 @@ export class SetupScene extends abstractController {
   }
 
   inputHandler(action: InputActions) {
-    if (action.type === 'LEFT_CLICK' && action.target === 'PLAYER') {
+    if (action.type === 'LEFT_CLICK' && action.target === 'player') {
       const { x, y } = action
       this.store.dispatch({ type: 'PLACE_SHIP', x, y })
     } else if (action.type === 'RIGHT_CLICK') {
@@ -30,6 +31,7 @@ export class SetupScene extends abstractController {
     const { x, y } = coords
     this.store.dispatch({ type: 'UPDATE_SELECTED_SHIP', x, y })
   }
+
   destroy(): void {
     this.store.off('update', this.update)
   }
