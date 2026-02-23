@@ -7,3 +7,16 @@ globalForTests.__EXTERNAL_SERVER_URL__ = 'http://localhost:3001'
 globalForTests.__INTERNAL_SERVER_URL__ = 'http://localhost:3001'
 
 export {}
+
+class ResizeObserver {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  observe() {}
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  unobserve() {}
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  disconnect() {}
+}
+
+global.ResizeObserver = ResizeObserver
