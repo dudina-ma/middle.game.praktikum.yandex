@@ -34,10 +34,10 @@ export function checkBoardCell(
   const coords = { x: e.offsetX, y: e.offsetY }
   if (checkClick(coords, ENEMY_BOARD_POSITION)) {
     const { x, y } = coordsToCell(coords, ENEMY_BOARD_POSITION)
-    return { x, y, targetBoard: 'ENEMY' as PlayersType }
+    return { x, y, targetBoard: 'enemy' as PlayersType }
   } else if (checkClick(coords, PLAYER_BOARD_POSITION)) {
     const { x, y } = coordsToCell(coords, PLAYER_BOARD_POSITION)
-    return { x, y, targetBoard: 'PLAYER' as PlayersType }
+    return { x, y, targetBoard: 'player' as PlayersType }
   } else {
     return
   }

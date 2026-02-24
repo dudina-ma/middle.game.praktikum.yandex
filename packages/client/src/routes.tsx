@@ -2,13 +2,14 @@ import { AppDispatch, RootState } from './store'
 import Layout from './organisms/Layout/Layout'
 import Main from './pages/Main/Main'
 import SignIn from './pages/SignIn/SignIn'
-import { initProfilePage, Profile } from './pages/Profile/Profile'
+import { Profile } from './pages/Profile/Profile'
 import Game from './pages/Game/Game'
 import Leaderboard from './pages/Leaderboard/Leaderboard'
 import ForumPage from './pages/ForumPage'
 import NotFound from './pages/NotFound/NotFound'
 import ServerError from './pages/ServerError/ServerError'
 import SignUp from './pages/SignUp/SignUp'
+import { RoutesEnum } from './paths'
 import BadRequest from './pages/BadRequest/BadRequest'
 import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
 
@@ -40,31 +41,31 @@ export const emptyFetchData = async (
 
 export const routes = [
   {
-    path: '/login',
+    path: RoutesEnum.SignIn,
     Component: SignIn,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('Login'),
   },
   {
-    path: '/register',
+    path: RoutesEnum.SignUp,
     Component: SignUp,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('SignUp'),
   },
   {
-    path: '/server-error',
+    path: RoutesEnum.ServerError,
     Component: ServerError,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('ServerError'),
   },
   {
-    path: '/bad-request',
+    path: RoutesEnum.BadRequest,
     Component: BadRequest,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('BadRequest'),
   },
   {
-    path: '/',
+    path: RoutesEnum.Main,
     Component: Layout,
     errorElement: createErrorElement(),
     children: [
@@ -74,38 +75,32 @@ export const routes = [
         fetchData: createStubFetchData('Main'),
       },
       {
-        path: 'profile',
+        path: RoutesEnum.Profile,
         Component: Profile,
         fetchData: createStubFetchData('Profile'),
       },
       {
-        path: 'game',
+        path: RoutesEnum.Game,
         Component: Game,
         fetchData: createStubFetchData('Game'),
       },
       {
-        path: 'leaderboard',
+        path: RoutesEnum.Leaderboard,
         Component: Leaderboard,
         fetchData: createStubFetchData('Leaderboard'),
       },
       {
-        path: 'forum',
+        path: RoutesEnum.Forum,
         Component: ForumPage,
         fetchData: createStubFetchData('Forum'),
       },
     ],
     fetchData: createStubFetchData('Layout'),
   },
-
   {
     path: '*',
     Component: NotFound,
     errorElement: createErrorElement(),
     fetchData: emptyFetchData,
-  },
-  {
-    path: '/profile',
-    Component: Profile,
-    fetchData: initProfilePage,
   },
 ]

@@ -1,6 +1,7 @@
 import { Button, Flex, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import styles from './style.module.css'
+import { RoutesEnum } from '../../paths'
 
 const { Title, Paragraph } = Typography
 
@@ -24,28 +25,28 @@ const Main = () => {
           <div className={styles.buttonsContainer}>
             <Button
               type="primary"
-              onClick={() => navigate('/game')}
+              onClick={() => navigate(RoutesEnum.Game)}
               size="large"
               className={styles.gameButton}>
               🎮 Game
             </Button>
 
             <Button
-              onClick={() => navigate('/leaderboard')}
+              onClick={() => navigate(RoutesEnum.Leaderboard)}
               size="large"
               className={styles.menuButton}>
               🏆 Leaderboard
             </Button>
 
             <Button
-              onClick={() => navigate('/forum')}
+              onClick={() => navigate(RoutesEnum.Forum)}
               size="large"
               className={styles.menuButton}>
               💬 Forum
             </Button>
 
             <Button
-              onClick={() => navigate('/profile')}
+              onClick={() => navigate(RoutesEnum.Profile)}
               size="large"
               className={styles.menuButton}>
               👤 Profile

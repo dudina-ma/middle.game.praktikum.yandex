@@ -2,6 +2,7 @@ import { Button, Form, Input, Typography } from 'antd'
 import { SignInRequest } from '../../api/auth.schema'
 import { useSignInForm } from './useSignInForm'
 import { loginRules, passwordRules } from '../../shared/validation/rules'
+import { RoutesEnum } from '../../paths'
 
 const { Link } = Typography
 
@@ -25,7 +26,7 @@ export const SignInForm = () => {
       </Form.Item>
 
       <Form.Item style={{ textAlign: 'center' }}>
-        <Link href="/register">Нет аккаунта?</Link>
+        <Link href={RoutesEnum.SignUp}>Нет аккаунта?</Link>
       </Form.Item>
     </Form>
   )

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from '../../store'
 import { resetGame } from '../../slices/gameSlice'
 import styles from './style.module.css'
+import { RoutesEnum } from '../../paths'
 
 const { Title, Text } = Typography
 
@@ -19,7 +20,7 @@ const EndGame = () => {
 
   const handleMainMenu = () => {
     dispatch(resetGame())
-    navigate('/')
+    navigate(RoutesEnum.Main)
   }
 
   return (

@@ -14,7 +14,15 @@ export const GAME_CONFIG = {
   },
 
   SHIPS_TO_PLACE: [4, 3, 3, 2, 2, 2, 1, 1, 1, 1],
+  shipSprites: {
+    1: '/assets/ships/ship-1.png',
+    2: '/assets/ships/ship-2.png',
+    3: '/assets/ships/ship-3.png',
+    4: '/assets/ships/ship-4.png',
+  } as const,
+  hitSprite: '/assets/hit.png',
   colors: {
+    busy: 'rgba(0, 0, 0, 0)',
     empty: 'rgba(51, 37, 206, 0.5)',
     hited: 'rgba(255, 0, 0, 0.5)',
     ship: 'rgba(0, 0, 0, 0.5)',
