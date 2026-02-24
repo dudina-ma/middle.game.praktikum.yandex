@@ -4,13 +4,6 @@ import { MemoryRouter } from 'react-router-dom'
 import Header from './Header'
 import { RoutesEnum } from '../../paths'
 
-const mockedNavigate = jest.fn()
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockedNavigate,
-}))
-
 describe('Header UI', () => {
   test('renders main navigation link', () => {
     render(
@@ -19,7 +12,7 @@ describe('Header UI', () => {
       </MemoryRouter>
     )
 
-    expect(screen.getByRole('menuitem', { name: 'Главная' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Главная' })).toBeTruthy()
   })
 
   test('handles click on Game link', () => {
@@ -29,8 +22,8 @@ describe('Header UI', () => {
       </MemoryRouter>
     )
 
-    const gameLink = screen.getByRole('menuitem', { name: 'Игра' })
+    const gameLink = screen.getByRole('link', { name: 'Игра' })
     fireEvent.click(gameLink)
-    expect(mockedNavigate).toHaveBeenCalledWith(RoutesEnum.Game)
+    expect(gameLink.getAttribute('href')).toBe(RoutesEnum.Game)
   })
 })
