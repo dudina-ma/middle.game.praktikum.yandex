@@ -2,7 +2,7 @@ import { coordsType } from '../../../core/Types'
 import { AbstractElement, IAbstractElement } from './AbstractElement'
 
 export interface ISprite extends IAbstractElement {
-  imageSrc?: string
+  imageSrc: string
 }
 
 export class Sprite extends AbstractElement {
@@ -11,7 +11,7 @@ export class Sprite extends AbstractElement {
   constructor(props: ISprite) {
     super(props)
     const { imageSrc } = props
-    this.image.src = imageSrc || '/assets/Placeholder.png'
+    this.image.src = imageSrc
   }
 
   render() {

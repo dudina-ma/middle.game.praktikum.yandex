@@ -52,7 +52,6 @@ export class Board extends AbstractElement {
   }: IGameState) => {
     this.board = this.boardType === 'enemy' ? enemyBoard : playerBoard
     this.isActive = phase === 'BATTLE' && currentTurn !== this.boardType
-    console.log(phase, currentTurn, this.boardType)
     this.selectedShip = selectedShip
   }
 
