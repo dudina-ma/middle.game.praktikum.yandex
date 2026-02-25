@@ -1,3 +1,4 @@
+import { Background } from './../components/ui/Background'
 import { Messages } from '../components/ui/Messages'
 import { Board } from '../components/ui/Board'
 import type { GAME_CONFIG } from '../GameConfig'
@@ -34,6 +35,12 @@ export class Game {
     this.canvas.height = config.CANVAS_SIZE.y
     this.state = this.store.getState()
     this.rendered = [
+      new Background({
+        position: { x: 0, y: 0 },
+        config,
+        store: this.state,
+        ctx: this.ctx,
+      }),
       new Messages({
         ctx: this.ctx,
         position: config.MESSAGES_POSITION,
