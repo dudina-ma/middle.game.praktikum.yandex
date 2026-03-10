@@ -8,4 +8,5 @@ export enum RoutesEnum {
   Forum = '/forum',
   BadRequest = '/bad-request',
   ServerError = '/server-error',
+  OAuth = '/oauth',
 }
