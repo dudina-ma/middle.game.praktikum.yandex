@@ -1,0 +1,6 @@
+export { default as CommentComposer } from './CommentComposer'
+export { default as CommentsList } from './CommentsList'
+export { default as CreateTopicModal } from './CreateTopicModal'
+export { default as ForumToolbar } from './ForumToolbar'
+export { default as TopicDetails } from './TopicDetails'
+export { default as TopicList } from './TopicList'

@@ -1,7 +1,7 @@
 import {
+  TypedUseSelectorHook,
   useDispatch as useDispatchBase,
   useSelector as useSelectorBase,
-  TypedUseSelectorHook,
   useStore as useStoreBase,
 } from 'react-redux'
 import { combineReducers } from 'redux'
@@ -9,7 +9,10 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import friendsReducer from './slices/friendsSlice'
 import ssrReducer from './slices/ssrSlice'
-import userReducer from './slices/userSlice'
+import gameReducer from './slices/gameSlice'
+import { userApi } from './api/userApi'
+import { authApi } from './api/authApi'
+import { leaderboardApi } from './api/leaderboard'
 
 // Глобально декларируем в window наш ключик
 // и задаем ему тип такой же как у стейта в сторе
@@ -22,11 +25,20 @@ declare global {
 export const reducer = combineReducers({
   friends: friendsReducer,
   ssr: ssrReducer,
-  user: userReducer,
+  game: gameReducer,
+  [userApi.reducerPath]: userApi.reducer,
+  [authApi.reducerPath]: authApi.reducer,
+  [leaderboardApi.reducerPath]: leaderboardApi.reducer,
 })
 
 export const store = configureStore({
   reducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(
+      userApi.middleware,
+      authApi.middleware,
+      leaderboardApi.middleware
+    ),
   preloadedState:
     typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
 })

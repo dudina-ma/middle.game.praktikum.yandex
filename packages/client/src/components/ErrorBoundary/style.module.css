@@ -1,0 +1,20 @@
+.errorDetails {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  text-align: left;
+  font-size: 12px;
+  font-family: monospace;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.errorTitle {
+  font-weight: bold;
+}
+
+.errorPre {
+  margin: 8px 0 0 0;
+  white-space: pre-wrap;
+}
