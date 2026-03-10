@@ -48,7 +48,8 @@ if (hasSSRContent && hasInitialState) {
 
 function startServiceWorker() {
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
+    const onLoad = () => {
+      window.removeEventListener('load', onLoad)
       navigator.serviceWorker
         .register('/sw.js')
         .then(registration => {
@@ -60,7 +61,8 @@ function startServiceWorker() {
         .catch((error: Error) => {
           console.log('ServiceWorker registration failed: ', error)
         })
-    })
+    }
+    window.addEventListener('load', onLoad)
   }
 }
 
