@@ -69,7 +69,7 @@ export const routes = [
     path: RoutesEnum.OAuth,
     Component: OAuth,
     errorElement: createErrorElement(),
-    // fetchData: createStubFetchData('BadRequest'),
+    fetchData: createStubFetchData('OAuth'),
   },
   {
     path: RoutesEnum.Main,

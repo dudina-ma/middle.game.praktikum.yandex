@@ -1,6 +1,6 @@
 import { Button } from 'antd'
-import { REDIRECT_URI, useGetServiceIdQuery } from '../../api/oauthYandex'
-// import { useEffect } from "react"
+import { REDIRECT_URI } from '../../api/consts'
+import { useGetServiceIdQuery } from '../../api/oauthYandex'
 
 export const OAuthYandexButton = () => {
   const { data, isLoading } = useGetServiceIdQuery()

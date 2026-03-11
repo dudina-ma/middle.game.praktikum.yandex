@@ -1,12 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { OAUTHYANDEX_URL } from './consts'
+import { OAUTHYANDEX_URL, REDIRECT_URI } from './consts'
 
 type OauthData = {
   code: string
   redirect_uri: string
 }
-
-export const REDIRECT_URI = 'http://localhost:3000/oauth'
 
 export const oauthYandexApi = createApi({
   reducerPath: 'oauthYandexApi',
@@ -27,6 +25,7 @@ export const oauthYandexApi = createApi({
         url: `${OAUTHYANDEX_URL}`,
         method: 'POST',
         body,
+        responseHandler: response => response.text(),
       }),
     }),
   }),
