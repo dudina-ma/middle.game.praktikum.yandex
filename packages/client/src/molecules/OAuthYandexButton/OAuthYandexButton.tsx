@@ -13,7 +13,7 @@ export const OAuthYandexButton = () => {
 
   return (
     <Button disabled={isLoading} loading={isLoading} onClick={onClickHandler}>
-      Авторизация через Yandex
+      Авторизация через Yandex ID
     </Button>
   )
 }
