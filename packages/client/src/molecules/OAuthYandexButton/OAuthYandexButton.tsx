@@ -1,5 +1,5 @@
 import { Button } from 'antd'
-import { REDIRECT_URI } from '../../api/consts'
+import { GET_YANDEX_AUTH_URL } from '../../api/consts'
 import { useGetServiceIdQuery } from '../../api/oauthYandex'
 
 export const OAuthYandexButton = () => {
@@ -7,7 +7,7 @@ export const OAuthYandexButton = () => {
 
   const onClickHandler = () => {
     if (data?.service_id) {
-      window.location.href = `https://oauth.yandex.ru/authorize?response_type=code&client_id=${data?.service_id}&redirect_uri=${REDIRECT_URI}`
+      window.location.href = GET_YANDEX_AUTH_URL(data.service_id)
     }
   }
 

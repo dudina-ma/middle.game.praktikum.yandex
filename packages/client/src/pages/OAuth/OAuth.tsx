@@ -13,6 +13,11 @@ export const OAuth = () => {
 
   const [signInYandex] = useSignInYandexMutation()
 
+  const errorHandler = () => {
+    message.error('Ошибка авторизации')
+    navigate(RoutesEnum.SignIn)
+  }
+
   useEffect(() => {
     if (code) {
       signInYandex({ code, redirect_uri })
@@ -22,13 +27,12 @@ export const OAuth = () => {
           message.success('Авторизация прошла успешно')
         })
         .catch(() => {
-          message.error('Ошибка авторизации')
-          navigate(RoutesEnum.SignIn)
+          errorHandler()
         })
     } else {
-      navigate(RoutesEnum.Main)
+      errorHandler()
     }
-  }, [code, navigate, signInYandex])
+  }, [code, navigate, signInYandex, errorHandler])
 
   return (
     <AuthPageContainer>
