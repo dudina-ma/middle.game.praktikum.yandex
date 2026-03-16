@@ -7,26 +7,13 @@ import {
   FetchLeaderboardResponse,
   LeaderboardEntry,
 } from './leaderboard.types'
-import { API_URL } from './consts'
+import { API_URL, LEADERBOARD_TEAM_NAME } from './consts'
 
-export const LEADERBOARD_TEAM_NAME = 'middle-game-praktikum-yandex'
-export const LEADERBOARD_RATING_FIELD = 'score'
+const FALLBACK_STORAGE_KEY = `${LEADERBOARD_TEAM_NAME}:leaderboard`
 
-const FALLBACK_STORAGE_KEY = 'middle-game-praktikum-yandex:leaderboard'
-
-const MOCK_LEADERBOARD: LeaderboardEntry[] = Array.from({ length: 15 }, (_, i) => ({
-  data: {
-    user_id: i + 1,
-    display_name: `Игрок ${i + 1}`,
-    score: 2500 - i * 125,
-    game_time_seconds: 75 + i * 3,
-    total_shots: 22 + i,
-    ships_sunk: 10 - (i % 5),
-    date: Date.now() - i * 60_000,
-  },
-}))
-
-const isFetchBaseQueryError = (error: unknown): error is FetchBaseQueryError => {
+const isFetchBaseQueryError = (
+  error: unknown
+): error is FetchBaseQueryError => {
   return typeof error === 'object' && error !== null && 'status' in error
 }
 
@@ -34,7 +21,20 @@ const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === 'object' && value !== null
 }
 
-const isFallbackError = (error: unknown): boolean => {
+const isGameResultData = (
+  value: unknown
+): value is LeaderboardEntry['data'] => {
+  return (
+    isRecord(value) &&
+    typeof value.user_id === 'number' &&
+    typeof value.score === 'number' &&
+    typeof value.date === 'number' &&
+    (typeof value.display_name === 'undefined' ||
+      typeof value.display_name === 'string')
+  )
+}
+
+const isLocalSaveFallbackError = (error: unknown): boolean => {
   if (!isFetchBaseQueryError(error)) {
     return false
   }
@@ -44,24 +44,10 @@ const isFallbackError = (error: unknown): boolean => {
   }
 
   return (
-    error.status === 'FETCH_ERROR'
-    || (error.status === 'PARSING_ERROR'
-      && 'originalStatus' in error
-      && [401, 403].includes(Number(error.originalStatus)))
-  )
-}
-
-const getSortValue = (entry: LeaderboardEntry, ratingFieldName: string): number => {
-  const value = entry.data[ratingFieldName]
-  return typeof value === 'number' ? value : 0
-}
-
-const sortLeaderboard = (
-  data: LeaderboardEntry[],
-  ratingFieldName: string
-): LeaderboardEntry[] => {
-  return [...data].sort(
-    (a, b) => getSortValue(b, ratingFieldName) - getSortValue(a, ratingFieldName)
+    error.status === 'FETCH_ERROR' ||
+    (error.status === 'PARSING_ERROR' &&
+      'originalStatus' in error &&
+      [401, 403].includes(Number(error.originalStatus)))
   )
 }
 
@@ -105,7 +91,7 @@ const writeFallbackLeaderboard = (entries: LeaderboardEntry[]): void => {
 const upsertFallbackLeaderboard = (request: AddGameResultRequest): void => {
   const currentEntries = readFallbackLeaderboard()
   const playerId = request.data.user_id
-  const currentValue = request.data[request.ratingFieldName]
+  const currentValue = request.data.score
 
   if (typeof currentValue !== 'number') {
     return
@@ -125,7 +111,7 @@ const upsertFallbackLeaderboard = (request: AddGameResultRequest): void => {
     return
   }
 
-  const existingValue = currentEntries[existingIndex].data[request.ratingFieldName]
+  const existingValue = currentEntries[existingIndex].data.score
 
   if (typeof existingValue === 'number' && existingValue >= currentValue) {
     return
@@ -136,17 +122,6 @@ const upsertFallbackLeaderboard = (request: AddGameResultRequest): void => {
   writeFallbackLeaderboard(updated)
 }
 
-const getFallbackPage = (
-  cursor: number,
-  limit: number,
-  ratingFieldName: string
-): FetchLeaderboardResponse => {
-  const saved = readFallbackLeaderboard()
-  const source = saved.length > 0 ? saved : MOCK_LEADERBOARD
-  const sorted = sortLeaderboard(source, ratingFieldName)
-  return sorted.slice(cursor, cursor + limit)
-}
-
 const normalizeLeaderboardEntry = (item: unknown): LeaderboardEntry | null => {
   if (!isRecord(item)) {
     return null
@@ -154,25 +129,27 @@ const normalizeLeaderboardEntry = (item: unknown): LeaderboardEntry | null => {
 
   const payload = 'data' in item ? item.data : item
 
-  if (!isRecord(payload)) {
+  if (!isGameResultData(payload)) {
     return null
   }
 
   return {
-    data: payload as LeaderboardEntry['data'],
+    data: payload,
   }
 }
 
-const normalizeLeaderboardResponse = (data: unknown): FetchLeaderboardResponse => {
+const normalizeLeaderboardResponse = (
+  data: unknown
+): FetchLeaderboardResponse => {
   const rawEntries = Array.isArray(data)
     ? data
     : isRecord(data) && Array.isArray(data.items)
-      ? data.items
-      : isRecord(data) && Array.isArray(data.leaderboard)
-        ? data.leaderboard
-        : isRecord(data) && Array.isArray(data.data)
-          ? data.data
-          : []
+    ? data.items
+    : isRecord(data) && Array.isArray(data.leaderboard)
+    ? data.leaderboard
+    : isRecord(data) && Array.isArray(data.data)
+    ? data.data
+    : []
 
   return rawEntries.reduce<FetchLeaderboardResponse>((acc, item) => {
     const normalizedItem = normalizeLeaderboardEntry(item)
@@ -207,11 +184,10 @@ export const leaderboardApi = createApi({
         })
 
         if (!result.error) {
-          upsertFallbackLeaderboard(body)
           return { data: undefined }
         }
 
-        if (isFallbackError(result.error)) {
+        if (isLocalSaveFallbackError(result.error)) {
           upsertFallbackLeaderboard(body)
           return { data: undefined }
         }
@@ -246,12 +222,6 @@ export const leaderboardApi = createApi({
           }
         }
 
-        if (isFallbackError(result.error)) {
-          return {
-            data: getFallbackPage(cursor, limit, ratingFieldName),
-          }
-        }
-
         if (result.error) {
           return {
             error: result.error,
@@ -269,6 +239,3 @@ export const leaderboardApi = createApi({
 
 export const { useAddGameResultMutation, useGetLeaderboardQuery } =
   leaderboardApi
-
-
-

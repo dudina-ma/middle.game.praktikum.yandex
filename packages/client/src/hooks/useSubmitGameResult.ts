@@ -1,8 +1,5 @@
-import {
-  LEADERBOARD_RATING_FIELD,
-  LEADERBOARD_TEAM_NAME,
-  useAddGameResultMutation,
-} from '../api/leaderboard'
+import { useAddGameResultMutation } from '../api/leaderboard'
+import { LEADERBOARD_RATING_FIELD, LEADERBOARD_TEAM_NAME } from '../api/consts'
 import { GameResultData, AddGameResultRequest } from '../api/leaderboard.types'
 
 const createLeaderboardRequest = (

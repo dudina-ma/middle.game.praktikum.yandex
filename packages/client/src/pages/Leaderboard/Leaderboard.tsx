@@ -1,11 +1,11 @@
 ﻿import { useState, useMemo, useEffect } from 'react'
 import { Table, Spin, Typography, Button, Result } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
+import { useGetLeaderboardQuery } from '../../api/leaderboard'
 import {
   LEADERBOARD_RATING_FIELD,
   LEADERBOARD_TEAM_NAME,
-  useGetLeaderboardQuery,
-} from '../../api/leaderboard'
+} from '../../api/consts'
 import { LeaderboardEntry } from '../../api/leaderboard.types'
 import { getErrorMessage } from '../../utils/errorUtils'
 
@@ -28,9 +28,13 @@ const columns: ColumnsType<TableRow> = [
   {
     title: 'Имя',
     key: 'display_name',
-    render: (_, record) => record.data.display_name || `Игрок #${record.data.user_id}`,
+    render: (_, record) =>
+      record.data.display_name || `Игрок #${record.data.user_id}`,
     sorter: (a, b) =>
-      (a.data.display_name || '').localeCompare(b.data.display_name || '', 'ru'),
+      (a.data.display_name || '').localeCompare(
+        b.data.display_name || '',
+        'ru'
+      ),
   },
   {
     title: 'Счёт',
@@ -86,7 +90,9 @@ const Leaderboard = () => {
   }
 
   const tableData = useMemo(() => {
-    const sortedEntries = [...allEntries].sort((a, b) => b.data.score - a.data.score)
+    const sortedEntries = [...allEntries].sort(
+      (a, b) => b.data.score - a.data.score
+    )
 
     return sortedEntries.map((entry, index) => ({
       ...entry,
@@ -144,4 +150,3 @@ const Leaderboard = () => {
 }
 
 export default Leaderboard
-

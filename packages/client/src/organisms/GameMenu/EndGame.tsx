@@ -37,10 +37,13 @@ const EndGame = () => {
     submittedResultRef.current = submitKey
 
     const displayName =
-      user?.display_name || `${user?.first_name ?? ''} ${user?.second_name ?? ''}`.trim() || user?.login || 'Гость'
+      user?.display_name ||
+      `${user?.first_name ?? ''} ${user?.second_name ?? ''}`.trim() ||
+      user?.login ||
+      'Гость'
 
     void submitGameResult({
-      user_id: user?.id ?? 0,
+      user_id: user.id,
       display_name: displayName,
       score,
       date: Date.now(),
@@ -64,14 +67,18 @@ const EndGame = () => {
             {isWin ? '🏆🎉' : '💥😔'}
           </div>
 
-          <Title level={1} className={isWin ? styles.winTitle : styles.loseTitle}>
+          <Title
+            level={1}
+            className={isWin ? styles.winTitle : styles.loseTitle}>
             {isWin ? 'Победа!' : 'Поражение'}
           </Title>
 
           <Text className={styles.scoreText}>Ваш счет: {score}</Text>
 
           <Text className={isWin ? styles.winText : styles.loseText}>
-            {isWin ? 'Вы одержали великолепную победу!' : 'Ваш флот был потоплен...'}
+            {isWin
+              ? 'Вы одержали великолепную победу!'
+              : 'Ваш флот был потоплен...'}
           </Text>
 
           <Text className={styles.description}>
@@ -89,7 +96,10 @@ const EndGame = () => {
               🔄 Сыграть еще
             </Button>
 
-            <Button onClick={handleMainMenu} size="large" className={styles.menuButton}>
+            <Button
+              onClick={handleMainMenu}
+              size="large"
+              className={styles.menuButton}>
               🏠 В главное меню
             </Button>
           </div>
