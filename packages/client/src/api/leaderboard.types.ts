@@ -1,10 +1,12 @@
 export interface GameResultData {
   user_id: number
+  display_name?: string
   score: number
-  game_time_seconds: number
-  total_shots: number
-  ships_sunk: number
-  date: number // timestamp
+  game_time_seconds?: number
+  total_shots?: number
+  ships_sunk?: number
+  date: number
+  [key: string]: string | number | boolean | undefined
 }
 
 export interface AddGameResultRequest {
@@ -23,17 +25,7 @@ export interface FetchLeaderboardRequest {
 }
 
 export interface LeaderboardEntry {
-  data: {
-    user_id: number
-    display_name: string
-    score: number
-    game_time_seconds?: number
-    total_shots?: number
-    ships_sunk?: number
-    date?: number
-  }
+  data: GameResultData
 }
 
-export interface FetchLeaderboardResponse {
-  data: LeaderboardEntry[]
-}
+export type FetchLeaderboardResponse = LeaderboardEntry[]
