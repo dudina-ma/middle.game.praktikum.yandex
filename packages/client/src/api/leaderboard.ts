@@ -222,6 +222,20 @@ export const leaderboardApi = createApi({
           }
         }
 
+        if (result.error && isLocalSaveFallbackError(result.error)) {
+          const fallbackData = readFallbackLeaderboard()
+
+          if (fallbackData.length > 0) {
+            return {
+              data: fallbackData,
+            }
+          }
+
+          return {
+            error: result.error,
+          }
+        }
+
         if (result.error) {
           return {
             error: result.error,

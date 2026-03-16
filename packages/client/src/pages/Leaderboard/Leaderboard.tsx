@@ -6,7 +6,10 @@ import {
   LEADERBOARD_RATING_FIELD,
   LEADERBOARD_TEAM_NAME,
 } from '../../api/consts'
-import { LeaderboardEntry } from '../../api/leaderboard.types'
+import {
+  FetchLeaderboardRequest,
+  LeaderboardEntry,
+} from '../../api/leaderboard.types'
 import { getErrorMessage } from '../../utils/errorUtils'
 
 const { Title } = Typography
@@ -51,13 +54,15 @@ const LIMIT = 10
 const Leaderboard = () => {
   const [cursor, setCursor] = useState(0)
   const [allEntries, setAllEntries] = useState<LeaderboardEntry[]>([])
-
-  const { data, isLoading, error, isError, refetch } = useGetLeaderboardQuery({
+  const queryArgs: FetchLeaderboardRequest = {
     teamName: LEADERBOARD_TEAM_NAME,
     ratingFieldName: LEADERBOARD_RATING_FIELD,
     cursor,
     limit: LIMIT,
-  })
+  }
+
+  const { data, isLoading, error, isError, refetch } =
+    useGetLeaderboardQuery(queryArgs)
 
   useEffect(() => {
     if (!data) {
