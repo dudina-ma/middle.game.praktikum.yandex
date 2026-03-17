@@ -1,8 +1,15 @@
-import { useState, useMemo, useEffect } from 'react'
+﻿import { useState, useMemo, useEffect } from 'react'
 import { Table, Spin, Typography, Button, Result } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useGetLeaderboardQuery } from '../../api/leaderboard'
-import { LeaderboardEntry } from '../../api/leaderboard.types'
+import {
+  LEADERBOARD_RATING_FIELD,
+  LEADERBOARD_TEAM_NAME,
+} from '../../api/consts'
+import {
+  FetchLeaderboardRequest,
+  LeaderboardEntry,
+} from '../../api/leaderboard.types'
 import { getErrorMessage } from '../../utils/errorUtils'
 
 const { Title } = Typography
@@ -24,12 +31,16 @@ const columns: ColumnsType<TableRow> = [
   {
     title: 'Имя',
     key: 'display_name',
-    render: (_, record) => record.data.display_name,
+    render: (_, record) =>
+      record.data.display_name || `Игрок #${record.data.user_id}`,
     sorter: (a, b) =>
-      a.data.display_name.localeCompare(b.data.display_name, 'ru'),
+      (a.data.display_name || '').localeCompare(
+        b.data.display_name || '',
+        'ru'
+      ),
   },
   {
-    title: 'Счет',
+    title: 'Счёт',
     key: 'score',
     width: 150,
     align: 'right',
@@ -38,35 +49,39 @@ const columns: ColumnsType<TableRow> = [
   },
 ]
 
-const TEAM_NAME = 'Battleship'
 const LIMIT = 10
 
 const Leaderboard = () => {
   const [cursor, setCursor] = useState(0)
   const [allEntries, setAllEntries] = useState<LeaderboardEntry[]>([])
-
-  const { data, isLoading, error, isError, refetch } = useGetLeaderboardQuery({
-    teamName: TEAM_NAME,
-    ratingFieldName: 'score',
+  const queryArgs: FetchLeaderboardRequest = {
+    teamName: LEADERBOARD_TEAM_NAME,
+    ratingFieldName: LEADERBOARD_RATING_FIELD,
     cursor,
     limit: LIMIT,
-  })
+  }
+
+  const { data, isLoading, error, isError, refetch } =
+    useGetLeaderboardQuery(queryArgs)
 
   useEffect(() => {
-    if (!data?.data) return
+    if (!data) {
+      return
+    }
 
     if (cursor === 0) {
-      setAllEntries(data.data)
-    } else {
-      setAllEntries(prev => {
-        const existingUserIds = new Set(prev.map(entry => entry.data.user_id))
-        const newEntries = data.data.filter(
-          entry => !existingUserIds.has(entry.data.user_id)
-        )
-
-        return newEntries.length > 0 ? [...prev, ...newEntries] : prev
-      })
+      setAllEntries(data)
+      return
     }
+
+    setAllEntries(prev => {
+      const existingUserIds = new Set(prev.map(entry => entry.data.user_id))
+      const newEntries = data.filter(
+        entry => !existingUserIds.has(entry.data.user_id)
+      )
+
+      return newEntries.length > 0 ? [...prev, ...newEntries] : prev
+    })
   }, [data, cursor])
 
   const handleLoadMore = () => {
@@ -91,7 +106,7 @@ const Leaderboard = () => {
     }))
   }, [allEntries])
 
-  const hasMore = data?.data && data.data.length === LIMIT
+  const hasMore = Boolean(data && data.length === LIMIT)
 
   if (isError && allEntries.length === 0) {
     return (
