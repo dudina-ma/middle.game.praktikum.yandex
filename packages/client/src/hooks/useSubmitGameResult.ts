@@ -1,4 +1,5 @@
 import { useAddGameResultMutation } from '../api/leaderboard'
+import { LEADERBOARD_RATING_FIELD, LEADERBOARD_TEAM_NAME } from '../api/consts'
 import { GameResultData, AddGameResultRequest } from '../api/leaderboard.types'
 
 const createLeaderboardRequest = (
@@ -6,8 +7,8 @@ const createLeaderboardRequest = (
 ): AddGameResultRequest => {
   return {
     data: gameData,
-    ratingFieldName: 'score',
-    teamName: 'Battleship',
+    ratingFieldName: LEADERBOARD_RATING_FIELD,
+    teamName: LEADERBOARD_TEAM_NAME,
   }
 }
 

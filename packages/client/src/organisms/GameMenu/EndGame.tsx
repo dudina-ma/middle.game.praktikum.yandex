@@ -1,9 +1,12 @@
-import { Button, Flex, Typography } from 'antd'
+﻿import { Button, Flex, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from '../../store'
 import { resetGame } from '../../slices/gameSlice'
 import styles from './style.module.css'
 import { RoutesEnum } from '../../paths'
+import { useGetUserQuery } from '../../api/authApi'
+import { useSubmitGameResult } from '../../hooks/useSubmitGameResult'
 
 const { Title, Text } = Typography
 
@@ -11,8 +14,41 @@ const EndGame = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { phase, score } = useSelector(state => state.game)
+  const { data: user } = useGetUserQuery()
+  const { submitGameResult } = useSubmitGameResult()
+  const submittedResultRef = useRef<string | null>(null)
 
   const isWin = phase === 'victory'
+
+  useEffect(() => {
+    if (phase !== 'victory' && phase !== 'defeat') {
+      return
+    }
+
+    if (!user?.id) {
+      return
+    }
+
+    const submitKey = `${user.id}:${phase}:${score}`
+    if (submittedResultRef.current === submitKey) {
+      return
+    }
+
+    submittedResultRef.current = submitKey
+
+    const displayName =
+      user?.display_name ||
+      `${user?.first_name ?? ''} ${user?.second_name ?? ''}`.trim() ||
+      user?.login ||
+      'Гость'
+
+    void submitGameResult({
+      user_id: user.id,
+      display_name: displayName,
+      score,
+      date: Date.now(),
+    })
+  }, [phase, score, submitGameResult, user])
 
   const handlePlayAgain = () => {
     dispatch(resetGame())
@@ -37,7 +73,7 @@ const EndGame = () => {
             {isWin ? 'Победа!' : 'Поражение'}
           </Title>
 
-          <Text className={styles.scoreText}>Ваш счёт: {score}</Text>
+          <Text className={styles.scoreText}>Ваш счет: {score}</Text>
 
           <Text className={isWin ? styles.winText : styles.loseText}>
             {isWin
@@ -47,7 +83,7 @@ const EndGame = () => {
 
           <Text className={styles.description}>
             {isWin
-              ? 'Вы успешно уничтожили все корабли противника и доказали своё мастерство в морской стратегии!'
+              ? 'Вы успешно уничтожили все корабли противника и доказали свое мастерство в морской стратегии!'
               : 'Не отчаивайтесь! Каждое поражение - это урок, который сделает вас сильнее в следующей битве.'}
           </Text>
 
@@ -57,14 +93,14 @@ const EndGame = () => {
               onClick={handlePlayAgain}
               size="large"
               className={styles.restartButton}>
-              🔄 Play again
+              🔄 Сыграть еще
             </Button>
 
             <Button
               onClick={handleMainMenu}
               size="large"
               className={styles.menuButton}>
-              🏠 Main menu
+              🏠 В главное меню
             </Button>
           </div>
 
