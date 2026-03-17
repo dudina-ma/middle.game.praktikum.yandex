@@ -12,6 +12,7 @@ import SignUp from './pages/SignUp/SignUp'
 import { RoutesEnum } from './paths'
 import BadRequest from './pages/BadRequest/BadRequest'
 import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
+import { OAuth } from './pages/OAuth/OAuth'
 
 const createErrorElement = () => <RouterErrorAdapter />
 
@@ -63,6 +64,12 @@ export const routes = [
     Component: BadRequest,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('BadRequest'),
+  },
+  {
+    path: RoutesEnum.OAuth,
+    Component: OAuth,
+    errorElement: createErrorElement(),
+    fetchData: createStubFetchData('OAuth'),
   },
   {
     path: RoutesEnum.Main,

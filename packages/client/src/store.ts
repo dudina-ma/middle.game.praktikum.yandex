@@ -13,6 +13,7 @@ import gameReducer from './slices/gameSlice'
 import { userApi } from './api/userApi'
 import { authApi } from './api/authApi'
 import { leaderboardApi } from './api/leaderboard'
+import { oauthYandexApi } from './api/oauthYandex'
 
 // Глобально декларируем в window наш ключик
 // и задаем ему тип такой же как у стейта в сторе
@@ -29,6 +30,7 @@ export const reducer = combineReducers({
   [userApi.reducerPath]: userApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [leaderboardApi.reducerPath]: leaderboardApi.reducer,
+  [oauthYandexApi.reducerPath]: oauthYandexApi.reducer,
 })
 
 export const store = configureStore({
@@ -37,7 +39,8 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       userApi.middleware,
       authApi.middleware,
-      leaderboardApi.middleware
+      leaderboardApi.middleware,
+      oauthYandexApi.middleware
     ),
   preloadedState:
     typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
