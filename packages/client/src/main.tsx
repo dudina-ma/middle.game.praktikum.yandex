@@ -10,41 +10,17 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import { OfflineBanner } from './organisms/OfflineBanner/OfflineBanner'
 
 const router = createBrowserRouter(routes)
-
 const rootElement = document.getElementById('root') as HTMLElement
 
-// Проверяем, есть ли SSR контент для гидрации
-const hasSSRContent =
-  rootElement.children.length > 0 || rootElement.innerHTML.trim() !== ''
-
-// Проверяем наличие initial state от SSR
-const hasInitialState = window.APP_INITIAL_STATE !== undefined
-
-if (hasSSRContent && hasInitialState) {
-  // SSR режим - используем hydrateRoot
-
-  ReactDOM.hydrateRoot(
-    rootElement,
-    <ErrorBoundary>
-      <Provider store={store}>
-        <OfflineBanner />
-        <RouterProvider router={router} />
-      </Provider>
-    </ErrorBoundary>
-  )
-} else {
-  // SPA режим - используем createRoot
-
-  const root = ReactDOM.createRoot(rootElement)
-  root.render(
-    <ErrorBoundary>
-      <Provider store={store}>
-        <OfflineBanner />
-        <RouterProvider router={router} />
-      </Provider>
-    </ErrorBoundary>
-  )
-}
+ReactDOM.hydrateRoot(
+  rootElement,
+  <ErrorBoundary>
+    <Provider store={store}>
+      <OfflineBanner />
+      <RouterProvider router={router} />
+    </Provider>
+  </ErrorBoundary>
+)
 
 function startServiceWorker() {
   if ('serviceWorker' in navigator) {
