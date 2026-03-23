@@ -1,13 +1,12 @@
 import path from 'path'
-
 import { HelmetData } from 'react-helmet'
 import express, {
   NextFunction,
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express'
-
 import fs from 'fs/promises'
+import { existsSync } from 'fs'
 import { createServer as createViteServer, ViteDevServer } from 'vite'
 import serialize from 'serialize-javascript'
 import cookieParser from 'cookie-parser'
@@ -40,9 +39,7 @@ async function requestHandler(vite?: ViteDevServer) {
           path.resolve(clientPath, 'index.html'),
           'utf-8'
         )
-
         template = await vite.transformIndexHtml(url, template)
-
         render = (
           await vite.ssrLoadModule(
             path.join(clientPath, 'src/entry-server.tsx')
@@ -53,12 +50,10 @@ async function requestHandler(vite?: ViteDevServer) {
           path.join(clientPath, 'dist/client/index.html'),
           'utf-8'
         )
-
         const pathToServer = path.join(
           clientPath,
           'dist/server/entry-server.js'
         )
-
         render = (await import(pathToServer)).render
       }
 
@@ -84,7 +79,7 @@ async function requestHandler(vite?: ViteDevServer) {
       </script>`
 
       const html = template
-        .replace('<!--ssr-styles-->', styleTags)
+        .replace(`<!--ssr-styles-->`, styleTags)
         .replace(`<!--ssr-helmet-->`, helmetTags)
         .replace(`<!--ssr-outlet-->`, appHtml)
         .replace(`<!--ssr-initial-state-->`, initialStateScript)
@@ -112,9 +107,8 @@ async function createServer() {
       root: clientPath,
       appType: 'custom',
     })
-
     app.use(vite.middlewares)
-  } else {
+  } else if (existsSync(staticPath)) {
     app.use(express.static(staticPath, { index: false }))
   }
 
