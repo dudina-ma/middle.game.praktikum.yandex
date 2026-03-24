@@ -13,6 +13,7 @@ RUN yarn lerna bootstrap
 RUN yarn build --scope=server
 
 FROM node:$NODE_VERSION-buster-slim as production
+ARG SERVER_PORT
 WORKDIR /app
 COPY --from=builder /app/packages/server/dist/ /app/
 COPY --from=builder /app/packages/server/package.json /app/package.json
