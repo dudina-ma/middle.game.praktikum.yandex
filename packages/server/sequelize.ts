@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript'
 import { Topic } from './models/Topic'
+import { Comment } from './models/Comment'
 
 const {
   POSTGRES_USER,
@@ -17,7 +18,7 @@ export const sequelize = new Sequelize({
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
   logging: false,
-  models: [Topic],
+  models: [Topic, Comment],
 })
 
 export const testSequelizeConnection = async (): Promise<void> => {

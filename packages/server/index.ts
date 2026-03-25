@@ -5,6 +5,7 @@ dotenv.config()
 
 import express from 'express'
 import { syncSequelizeModels, testSequelizeConnection } from './sequelize'
+import commentsRouter from './routes/commentsRouter'
 import topicsRouter from './routes/topicsRouter'
 
 const app = express()
@@ -12,6 +13,7 @@ app.use(cors())
 app.use(express.json({ limit: '1mb' }))
 const port = Number(process.env.SERVER_PORT) || 3001
 
+app.use('/api', commentsRouter)
 app.use('/api/topics', topicsRouter)
 
 app.get('/friends', (_, res) => {

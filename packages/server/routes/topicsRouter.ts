@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import { Topic } from '../models/Topic'
+import { sanitizeText } from '../utils/sanitizeText'
+import { parsePositiveInt } from '../utils/parsePositiveInt'
 
 const router = Router()
 
@@ -15,21 +17,6 @@ const TITLE_MAX = 255
 const CONTENT_MAX = 50_000
 const TAGS_MAX = 20
 
-function sanitizeText(input: unknown, maxLen: number): string | null {
-  if (typeof input !== 'string') {
-    return null
-  }
-  const trimmed = input.trim()
-  if (!trimmed) {
-    return null
-  }
-  const sliced = trimmed.slice(0, maxLen)
-  return sliced.replace(
-    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-    ''
-  )
-}
-
 router.get('/', async (_req, res, next) => {
   try {
     const topics = await Topic.findAll({ order: [['createdAt', 'DESC']] })
@@ -41,8 +28,8 @@ router.get('/', async (_req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const id = Number(req.params.id)
-    if (!Number.isInteger(id) || id < 1) {
+    const id = parsePositiveInt(req.params.id)
+    if (!id) {
       res.status(400).json({ message: 'Некорректный id' })
       return
     }
@@ -114,8 +101,8 @@ router.post('/', async (req, res, next) => {
 
 router.delete('/:id', async (req, res, next) => {
   try {
-    const id = Number(req.params.id)
-    if (!Number.isInteger(id) || id < 1) {
+    const id = parsePositiveInt(req.params.id)
+    if (!id) {
       res.status(400).json({ message: 'Некорректный id' })
       return
     }
