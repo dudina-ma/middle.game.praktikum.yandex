@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { Comment } from '../models/Comment'
+import { Reaction } from '../models/Reaction'
 import { sanitizeText } from '../utils/sanitizeText'
 import { parsePositiveInt } from '../utils/parsePositiveInt'
 
@@ -85,6 +86,10 @@ router.delete('/comments/:id', async (req, res, next) => {
       res.status(400).json({ message: 'Некорректный id' })
       return
     }
+
+    await Reaction.destroy({
+      where: { targetType: 'comment', targetId: id },
+    })
 
     const deleted = await Comment.destroy({ where: { id } })
     if (deleted === 0) {

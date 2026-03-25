@@ -8,6 +8,7 @@ import { syncSequelizeModels, testSequelizeConnection } from './sequelize'
 import commentsRouter from './routes/commentsRouter'
 import repliesRouter from './routes/repliesRouter'
 import topicsRouter from './routes/topicsRouter'
+import reactionsRouter from './routes/reactionsRouter'
 
 const app = express()
 app.use(cors())
@@ -16,6 +17,7 @@ const port = Number(process.env.SERVER_PORT) || 3001
 
 app.use('/api', commentsRouter)
 app.use('/api', repliesRouter)
+app.use('/api', reactionsRouter)
 app.use('/api/topics', topicsRouter)
 
 app.get('/friends', (_, res) => {
