@@ -14,17 +14,8 @@ const authorInclude = {
   attributes: ['id', 'firstName', 'secondName', 'displayName'],
 }
 
-const CATEGORY_NAME_TO_ID: Record<string, number> = {
-  Тактика: 1,
-  Баг: 2,
-  Идеи: 3,
-  Турнир: 4,
-  UI: 5,
-}
-
 const TITLE_MAX = 255
 const CONTENT_MAX = 50_000
-const TAGS_MAX = 20
 
 router.get('/', isAuth, async (_req, res, next) => {
   try {
@@ -72,37 +63,10 @@ router.post('/', isAuth, async (req, res, next) => {
       return
     }
 
-    let categoryId: number | null = null
-    if (req.body?.categoryId != null) {
-      const cid = Number(req.body.categoryId)
-      if (Number.isInteger(cid) && cid > 0) {
-        categoryId = cid
-      }
-    } else if (typeof req.body?.category === 'string') {
-      const mapped = CATEGORY_NAME_TO_ID[req.body.category.trim()]
-      if (mapped !== undefined) {
-        categoryId = mapped
-      }
-    }
-
-    let tags: string | null = null
-    if (Array.isArray(req.body?.tags)) {
-      const parts = req.body.tags
-        .filter((t: unknown): t is string => typeof t === 'string')
-        .map((t: string) => t.trim())
-        .filter(Boolean)
-        .slice(0, TAGS_MAX)
-      if (parts.length > 0) {
-        tags = JSON.stringify(parts)
-      }
-    }
-
     const topic = await Topic.create({
       title,
       content,
       authorId,
-      categoryId,
-      tags,
     })
     await topic.reload({ include: [authorInclude] })
     res.status(201).json(topic)
