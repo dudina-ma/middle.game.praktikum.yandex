@@ -116,7 +116,8 @@ curl -sS -X DELETE "http://localhost:3001/api/comments/1" -i
 ## Ответы
 
 ### GET `/api/comments/:commentId/replies`
-Возвращает ответы на комментарий (сначала новые) с `author`.
+Возвращает дерево ответов для комментария с `author`.
+Корневые ответы идут верхним уровнем, дочерние ответы лежат в массиве `children`.
 
 ```bash
 curl -sS "http://localhost:3001/api/comments/1/replies"
@@ -135,6 +136,7 @@ curl -sS "http://localhost:3001/api/replies/1"
 Тело запроса:
 
 - `text` (строка, 1..50000)
+- `parentReplyId` (опционально, положительное число) — если передан, ответ будет создан как дочерний к указанному reply
 
 ```bash
 curl -sS -X POST "http://localhost:3001/api/comments/1/replies" \

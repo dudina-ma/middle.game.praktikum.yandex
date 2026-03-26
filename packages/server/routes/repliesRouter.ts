@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { Op } from 'sequelize'
 import { Reply } from '../models/Reply'
 import { Reaction } from '../models/Reaction'
 import { User } from '../models/User'
@@ -17,6 +18,18 @@ const authorInclude = {
   attributes: ['id', 'firstName', 'secondName', 'displayName'],
 }
 
+type ReplyWithChildren = {
+  id: number
+  authorId: number
+  commentId: number
+  parentReplyId: number | null
+  text: string
+  createdAt: string
+  updatedAt: string
+  author?: User
+  children: ReplyWithChildren[]
+}
+
 router.get('/comments/:commentId/replies', isAuth, async (req, res, next) => {
   try {
     const commentId = parsePositiveInt(req.params.commentId)
@@ -28,10 +41,29 @@ router.get('/comments/:commentId/replies', isAuth, async (req, res, next) => {
     const replies = await Reply.findAll({
       where: { commentId },
       include: [authorInclude],
-      order: [['createdAt', 'DESC']],
+      order: [['createdAt', 'ASC']],
     })
 
-    res.json(replies)
+    const nodesById = new Map<number, ReplyWithChildren>()
+    const roots: ReplyWithChildren[] = []
+
+    for (const reply of replies) {
+      const plain = reply.get({ plain: true }) as Omit<
+        ReplyWithChildren,
+        'children'
+      >
+      nodesById.set(plain.id, { ...plain, children: [] })
+    }
+
+    for (const node of nodesById.values()) {
+      if (node.parentReplyId && nodesById.has(node.parentReplyId)) {
+        nodesById.get(node.parentReplyId)?.children.push(node)
+      } else {
+        roots.push(node)
+      }
+    }
+
+    res.json(roots)
   } catch (err) {
     next(err)
   }
@@ -77,9 +109,28 @@ router.post('/comments/:commentId/replies', isAuth, async (req, res, next) => {
       return
     }
 
+    let parentReplyId: number | null = null
+    if (req.body?.parentReplyId != null) {
+      const parsedParentReplyId = parsePositiveInt(req.body.parentReplyId)
+      if (!parsedParentReplyId) {
+        res.status(400).json({ message: 'Некорректный parentReplyId' })
+        return
+      }
+
+      const parentReply = await Reply.findOne({
+        where: { id: parsedParentReplyId, commentId },
+      })
+      if (!parentReply) {
+        res.status(404).json({ message: 'Родительский ответ не найден' })
+        return
+      }
+      parentReplyId = parsedParentReplyId
+    }
+
     const reply = await Reply.create({
       commentId,
       authorId,
+      parentReplyId,
       text,
     })
 
@@ -98,15 +149,41 @@ router.delete('/replies/:id', isAuth, async (req, res, next) => {
       return
     }
 
-    await Reaction.destroy({
-      where: { targetType: 'reply', targetId: id },
-    })
-
-    const deleted = await Reply.destroy({ where: { id } })
-    if (deleted === 0) {
+    const rootReply = await Reply.findByPk(id)
+    if (!rootReply) {
       res.status(404).json({ message: 'Ответ не найден' })
       return
     }
+
+    const subtreeIds: number[] = [rootReply.id]
+    let frontier: number[] = [rootReply.id]
+
+    while (frontier.length > 0) {
+      const children = await Reply.findAll({
+        where: {
+          commentId: rootReply.commentId,
+          parentReplyId: { [Op.in]: frontier },
+        },
+        attributes: ['id'],
+      })
+
+      const childIds = children.map(child => child.id)
+      if (childIds.length === 0) {
+        break
+      }
+
+      subtreeIds.push(...childIds)
+      frontier = childIds
+    }
+
+    await Reaction.destroy({
+      where: {
+        targetType: 'reply',
+        targetId: { [Op.in]: subtreeIds },
+      },
+    })
+
+    await Reply.destroy({ where: { id: { [Op.in]: subtreeIds } } })
 
     res.status(204).send()
   } catch (err) {
