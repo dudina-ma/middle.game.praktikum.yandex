@@ -2,6 +2,8 @@ import { Router } from 'express'
 import { Topic } from '../models/Topic'
 import { sanitizeText } from '../utils/sanitizeText'
 import { parsePositiveInt } from '../utils/parsePositiveInt'
+import { isAuth } from '../middleware/isAuth'
+import type { AuthedRequest } from '../types/authedRequest'
 
 const router = Router()
 
@@ -17,7 +19,7 @@ const TITLE_MAX = 255
 const CONTENT_MAX = 50_000
 const TAGS_MAX = 20
 
-router.get('/', async (_req, res, next) => {
+router.get('/', isAuth, async (_req, res, next) => {
   try {
     const topics = await Topic.findAll({ order: [['createdAt', 'DESC']] })
     res.json(topics)
@@ -26,7 +28,7 @@ router.get('/', async (_req, res, next) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', isAuth, async (req, res, next) => {
   try {
     const id = parsePositiveInt(req.params.id)
     if (!id) {
@@ -44,20 +46,19 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', isAuth, async (req, res, next) => {
   try {
     const title = sanitizeText(req.body?.title, TITLE_MAX)
     const content = sanitizeText(req.body?.content, CONTENT_MAX)
-    const authorId = Number(req.body?.authorId)
 
     if (!title || !content) {
       res.status(400).json({ message: 'Нужны непустые title и content' })
       return
     }
-    if (!Number.isInteger(authorId) || authorId < 1) {
-      res
-        .status(400)
-        .json({ message: 'Нужен положительный целочисленный authorId' })
+
+    const authorId = parsePositiveInt((req as AuthedRequest).user?.id)
+    if (!authorId) {
+      res.status(401).json({ message: 'Нужно авторизоваться' })
       return
     }
 
@@ -99,7 +100,7 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', isAuth, async (req, res, next) => {
   try {
     const id = parsePositiveInt(req.params.id)
     if (!id) {

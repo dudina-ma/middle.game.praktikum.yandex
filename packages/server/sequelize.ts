@@ -3,6 +3,7 @@ import { Topic } from './models/Topic'
 import { Comment } from './models/Comment'
 import { Reply } from './models/Reply'
 import { Reaction } from './models/Reaction'
+import { User } from './models/User'
 
 const {
   POSTGRES_USER,
@@ -20,7 +21,7 @@ export const sequelize = new Sequelize({
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB,
   logging: false,
-  models: [Topic, Comment, Reply, Reaction],
+  models: [Topic, Comment, Reply, Reaction, User],
 })
 
 export const testSequelizeConnection = async (): Promise<void> => {

@@ -7,6 +7,8 @@ import {
   isAllowedReactionEmoji,
   isReactionTargetType,
 } from '../utils/reactionEmojis'
+import { isAuth } from '../middleware/isAuth'
+import type { AuthedRequest } from '../types/authedRequest'
 
 const router = Router()
 
@@ -22,11 +24,11 @@ async function assertTargetExists(
   return row !== null
 }
 
-router.post('/reactions', async (req, res, next) => {
+router.post('/reactions', isAuth, async (req, res, next) => {
   try {
-    const userId = parsePositiveInt(req.body?.userId)
+    const userId = parsePositiveInt((req as AuthedRequest).user?.id)
     if (!userId) {
-      res.status(400).json({ message: 'Нужен положительный userId' })
+      res.status(401).json({ message: 'Нужно авторизоваться' })
       return
     }
 
@@ -79,11 +81,11 @@ router.post('/reactions', async (req, res, next) => {
   }
 })
 
-router.delete('/reactions', async (req, res, next) => {
+router.delete('/reactions', isAuth, async (req, res, next) => {
   try {
-    const userId = parsePositiveInt(req.body?.userId)
+    const userId = parsePositiveInt((req as AuthedRequest).user?.id)
     if (!userId) {
-      res.status(400).json({ message: 'Нужен положительный userId' })
+      res.status(401).json({ message: 'Нужно авторизоваться' })
       return
     }
 
@@ -114,7 +116,7 @@ router.delete('/reactions', async (req, res, next) => {
   }
 })
 
-router.get('/reactions', async (req, res, next) => {
+router.get('/reactions', isAuth, async (req, res, next) => {
   try {
     const targetType = req.query.targetType
     if (!isReactionTargetType(targetType)) {

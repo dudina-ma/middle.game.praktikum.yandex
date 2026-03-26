@@ -3,12 +3,14 @@ import { Comment } from '../models/Comment'
 import { Reaction } from '../models/Reaction'
 import { sanitizeText } from '../utils/sanitizeText'
 import { parsePositiveInt } from '../utils/parsePositiveInt'
+import { isAuth } from '../middleware/isAuth'
+import type { AuthedRequest } from '../types/authedRequest'
 
 const router = Router()
 
 const TEXT_MAX = 50_000
 
-router.get('/topics/:topicId/comments', async (req, res, next) => {
+router.get('/topics/:topicId/comments', isAuth, async (req, res, next) => {
   try {
     const topicId = parsePositiveInt(req.params.topicId)
     if (!topicId) {
@@ -27,7 +29,7 @@ router.get('/topics/:topicId/comments', async (req, res, next) => {
   }
 })
 
-router.get('/comments/:id', async (req, res, next) => {
+router.get('/comments/:id', isAuth, async (req, res, next) => {
   try {
     const id = parsePositiveInt(req.params.id)
     if (!id) {
@@ -47,7 +49,7 @@ router.get('/comments/:id', async (req, res, next) => {
   }
 })
 
-router.post('/topics/:topicId/comments', async (req, res, next) => {
+router.post('/topics/:topicId/comments', isAuth, async (req, res, next) => {
   try {
     const topicId = parsePositiveInt(req.params.topicId)
     if (!topicId) {
@@ -55,9 +57,9 @@ router.post('/topics/:topicId/comments', async (req, res, next) => {
       return
     }
 
-    const authorId = parsePositiveInt(req.body?.authorId)
+    const authorId = parsePositiveInt((req as AuthedRequest).user?.id)
     if (!authorId) {
-      res.status(400).json({ message: 'Нужен положительный authorId' })
+      res.status(401).json({ message: 'Нужно авторизоваться' })
       return
     }
 
@@ -79,7 +81,7 @@ router.post('/topics/:topicId/comments', async (req, res, next) => {
   }
 })
 
-router.delete('/comments/:id', async (req, res, next) => {
+router.delete('/comments/:id', isAuth, async (req, res, next) => {
   try {
     const id = parsePositiveInt(req.params.id)
     if (!id) {
