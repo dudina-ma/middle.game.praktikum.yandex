@@ -67,7 +67,7 @@ router.post('/comments/:commentId/replies', isAuth, async (req, res, next) => {
 
     const authorId = parsePositiveInt((req as AuthedRequest).user?.id)
     if (!authorId) {
-      res.status(401).json({ message: 'Нужно авторизоваться' })
+      res.status(403).json({ message: 'Нужно авторизоваться' })
       return
     }
 

@@ -35,7 +35,7 @@ router.post('/reactions', isAuth, async (req, res, next) => {
   try {
     const userId = parsePositiveInt((req as AuthedRequest).user?.id)
     if (!userId) {
-      res.status(401).json({ message: 'Нужно авторизоваться' })
+      res.status(403).json({ message: 'Нужно авторизоваться' })
       return
     }
 
@@ -95,7 +95,7 @@ router.delete('/reactions', isAuth, async (req, res, next) => {
   try {
     const userId = parsePositiveInt((req as AuthedRequest).user?.id)
     if (!userId) {
-      res.status(401).json({ message: 'Нужно авторизоваться' })
+      res.status(403).json({ message: 'Нужно авторизоваться' })
       return
     }
 
