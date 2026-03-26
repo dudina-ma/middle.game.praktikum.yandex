@@ -8,6 +8,7 @@ import {
   AutoIncrement,
   ForeignKey,
   BelongsTo,
+  Length,
 } from 'sequelize-typescript'
 import { User } from './User'
 
@@ -21,10 +22,12 @@ export class Topic extends Model {
   @Column(DataType.INTEGER)
   declare id: number
 
-  @Column(DataType.STRING)
+  @Length({ min: 1, max: 255 })
+  @Column({ type: DataType.STRING(255), allowNull: false })
   declare title: string
 
-  @Column(DataType.TEXT)
+  @Length({ min: 1, max: 50_000 })
+  @Column({ type: DataType.TEXT, allowNull: false })
   declare content: string
 
   @Column({ type: DataType.INTEGER, allowNull: true })

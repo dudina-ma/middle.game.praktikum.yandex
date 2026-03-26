@@ -8,6 +8,7 @@ import {
   AutoIncrement,
   ForeignKey,
   BelongsTo,
+  Length,
 } from 'sequelize-typescript'
 import { User } from './User'
 
@@ -45,6 +46,7 @@ export class Reaction extends Model {
   @Column({ type: DataType.INTEGER, allowNull: false })
   declare targetId: number
 
+  @Length({ min: 1, max: 16 })
   @Column({ type: DataType.STRING(16), allowNull: false })
   declare emoji: string
 }

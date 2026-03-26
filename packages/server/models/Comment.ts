@@ -8,6 +8,7 @@ import {
   AutoIncrement,
   ForeignKey,
   BelongsTo,
+  Length,
 } from 'sequelize-typescript'
 import { User } from './User'
 
@@ -31,6 +32,7 @@ export class Comment extends Model {
   @Column({ type: DataType.INTEGER, allowNull: false })
   declare topicId: number
 
+  @Length({ min: 1, max: 50_000 })
   @Column(DataType.TEXT)
   declare text: string
 }

@@ -4,6 +4,7 @@ import cors from 'cors'
 dotenv.config()
 
 import express from 'express'
+import { ValidationError } from 'sequelize'
 import { syncSequelizeModels, testSequelizeConnection } from './sequelize'
 import commentsRouter from './routes/commentsRouter'
 import repliesRouter from './routes/repliesRouter'
@@ -32,6 +33,17 @@ app.use(
     _next: express.NextFunction
   ) => {
     console.error(err)
+    if (err instanceof ValidationError) {
+      res.status(400).json({
+        message: 'Некорректные данные',
+        errors: err.errors.map(e => ({
+          message: e.message,
+          path: e.path,
+          value: e.value,
+        })),
+      })
+      return
+    }
     res.status(500).json({ message: 'Внутренняя ошибка сервера' })
   }
 )

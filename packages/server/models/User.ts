@@ -5,6 +5,7 @@ import {
   Model,
   DataType,
   PrimaryKey,
+  Length,
 } from 'sequelize-typescript'
 
 @Table({
@@ -16,12 +17,15 @@ export class User extends Model {
   @Column({ type: DataType.INTEGER, allowNull: false })
   declare id: number
 
+  @Length({ min: 1, max: 255 })
   @Column({ type: DataType.STRING, allowNull: false, field: 'first_name' })
   declare firstName: string
 
+  @Length({ min: 1, max: 255 })
   @Column({ type: DataType.STRING, allowNull: false, field: 'second_name' })
   declare secondName: string
 
+  @Length({ min: 1, max: 255 })
   @Column({ type: DataType.STRING, allowNull: false, field: 'display_name' })
   declare displayName: string
 }
