@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { Comment } from '../models/Comment'
 import { Reaction } from '../models/Reaction'
+import { User } from '../models/User'
 import { sanitizeText } from '../utils/sanitizeText'
 import { parsePositiveInt } from '../utils/parsePositiveInt'
 import { isAuth } from '../middleware/isAuth'
@@ -9,6 +10,12 @@ import type { AuthedRequest } from '../types/authedRequest'
 const router = Router()
 
 const TEXT_MAX = 50_000
+
+const authorInclude = {
+  model: User,
+  as: 'author',
+  attributes: ['id', 'firstName', 'secondName', 'displayName'],
+}
 
 router.get('/topics/:topicId/comments', isAuth, async (req, res, next) => {
   try {
@@ -20,6 +27,7 @@ router.get('/topics/:topicId/comments', isAuth, async (req, res, next) => {
 
     const comments = await Comment.findAll({
       where: { topicId },
+      include: [authorInclude],
       order: [['createdAt', 'DESC']],
     })
 
@@ -37,7 +45,7 @@ router.get('/comments/:id', isAuth, async (req, res, next) => {
       return
     }
 
-    const comment = await Comment.findByPk(id)
+    const comment = await Comment.findByPk(id, { include: [authorInclude] })
     if (!comment) {
       res.status(404).json({ message: 'Комментарий не найден' })
       return
@@ -75,6 +83,7 @@ router.post('/topics/:topicId/comments', isAuth, async (req, res, next) => {
       text,
     })
 
+    await comment.reload({ include: [authorInclude] })
     res.status(201).json(comment)
   } catch (err) {
     next(err)

@@ -6,7 +6,10 @@ import {
   DataType,
   PrimaryKey,
   AutoIncrement,
+  ForeignKey,
+  BelongsTo,
 } from 'sequelize-typescript'
+import { User } from './User'
 
 @Table({
   tableName: 'topics',
@@ -27,8 +30,12 @@ export class Topic extends Model {
   @Column({ type: DataType.INTEGER, allowNull: true })
   declare categoryId: number | null
 
+  @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER, allowNull: false })
   declare authorId: number
+
+  @BelongsTo(() => User, { foreignKey: 'authorId', as: 'author' })
+  declare author?: User
 
   @Column({ type: DataType.TEXT, allowNull: true })
   declare tags: string | null

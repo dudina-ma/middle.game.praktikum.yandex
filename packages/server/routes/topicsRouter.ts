@@ -1,11 +1,18 @@
 import { Router } from 'express'
 import { Topic } from '../models/Topic'
+import { User } from '../models/User'
 import { sanitizeText } from '../utils/sanitizeText'
 import { parsePositiveInt } from '../utils/parsePositiveInt'
 import { isAuth } from '../middleware/isAuth'
 import type { AuthedRequest } from '../types/authedRequest'
 
 const router = Router()
+
+const authorInclude = {
+  model: User,
+  as: 'author',
+  attributes: ['id', 'firstName', 'secondName', 'displayName'],
+}
 
 const CATEGORY_NAME_TO_ID: Record<string, number> = {
   Тактика: 1,
@@ -21,7 +28,10 @@ const TAGS_MAX = 20
 
 router.get('/', isAuth, async (_req, res, next) => {
   try {
-    const topics = await Topic.findAll({ order: [['createdAt', 'DESC']] })
+    const topics = await Topic.findAll({
+      include: [authorInclude],
+      order: [['createdAt', 'DESC']],
+    })
     res.json(topics)
   } catch (err) {
     next(err)
@@ -35,7 +45,7 @@ router.get('/:id', isAuth, async (req, res, next) => {
       res.status(400).json({ message: 'Некорректный id' })
       return
     }
-    const topic = await Topic.findByPk(id)
+    const topic = await Topic.findByPk(id, { include: [authorInclude] })
     if (!topic) {
       res.status(404).json({ message: 'Топик не найден' })
       return
@@ -94,6 +104,7 @@ router.post('/', isAuth, async (req, res, next) => {
       categoryId,
       tags,
     })
+    await topic.reload({ include: [authorInclude] })
     res.status(201).json(topic)
   } catch (err) {
     next(err)

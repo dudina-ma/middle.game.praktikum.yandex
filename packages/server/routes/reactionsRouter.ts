@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { Comment } from '../models/Comment'
 import { Reply } from '../models/Reply'
 import { Reaction } from '../models/Reaction'
+import { User } from '../models/User'
 import { parsePositiveInt } from '../utils/parsePositiveInt'
 import {
   isAllowedReactionEmoji,
@@ -11,6 +12,12 @@ import { isAuth } from '../middleware/isAuth'
 import type { AuthedRequest } from '../types/authedRequest'
 
 const router = Router()
+
+const userInclude = {
+  model: User,
+  as: 'user',
+  attributes: ['id', 'firstName', 'secondName', 'displayName'],
+}
 
 async function assertTargetExists(
   targetType: 'comment' | 'reply',
@@ -60,10 +67,12 @@ router.post('/reactions', isAuth, async (req, res, next) => {
 
     const existing = await Reaction.findOne({
       where: { userId, targetType, targetId },
+      include: [userInclude],
     })
 
     if (existing) {
       await existing.update({ emoji })
+      await existing.reload({ include: [userInclude] })
       res.status(200).json(existing)
       return
     }
@@ -75,6 +84,7 @@ router.post('/reactions', isAuth, async (req, res, next) => {
       emoji,
     })
 
+    await reaction.reload({ include: [userInclude] })
     res.status(201).json(reaction)
   } catch (err) {
     next(err)
@@ -132,6 +142,7 @@ router.get('/reactions', isAuth, async (req, res, next) => {
 
     const reactions = await Reaction.findAll({
       where: { targetType, targetId },
+      include: [userInclude],
       order: [['createdAt', 'ASC']],
     })
 

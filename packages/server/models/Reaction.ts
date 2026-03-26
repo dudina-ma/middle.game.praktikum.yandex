@@ -6,7 +6,10 @@ import {
   DataType,
   PrimaryKey,
   AutoIncrement,
+  ForeignKey,
+  BelongsTo,
 } from 'sequelize-typescript'
+import { User } from './User'
 
 @Table({
   tableName: 'reactions',
@@ -29,8 +32,12 @@ export class Reaction extends Model {
   @Column(DataType.INTEGER)
   declare id: number
 
+  @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER, allowNull: false })
   declare userId: number
+
+  @BelongsTo(() => User, { foreignKey: 'userId', as: 'user' })
+  declare user?: User
 
   @Column({ type: DataType.ENUM('comment', 'reply'), allowNull: false })
   declare targetType: 'comment' | 'reply'
