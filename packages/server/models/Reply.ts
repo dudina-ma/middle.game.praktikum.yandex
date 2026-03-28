@@ -12,6 +12,7 @@ import {
   Length,
 } from 'sequelize-typescript'
 import { User } from './User'
+import { TEXT_CONTENT_MAX_LENGTH } from '../constants/validationLimits'
 
 @Table({
   tableName: 'replies',
@@ -43,7 +44,7 @@ export class Reply extends Model {
   @HasMany(() => Reply, { foreignKey: 'parentReplyId', as: 'childReplies' })
   declare childReplies?: Reply[]
 
-  @Length({ min: 1, max: 50_000 })
+  @Length({ min: 1, max: TEXT_CONTENT_MAX_LENGTH })
   @Column(DataType.TEXT)
   declare text: string
 }

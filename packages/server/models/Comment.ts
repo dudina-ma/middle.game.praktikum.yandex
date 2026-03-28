@@ -11,6 +11,7 @@ import {
   Length,
 } from 'sequelize-typescript'
 import { User } from './User'
+import { TEXT_CONTENT_MAX_LENGTH } from '../constants/validationLimits'
 
 @Table({
   tableName: 'comments',
@@ -32,7 +33,7 @@ export class Comment extends Model {
   @Column({ type: DataType.INTEGER, allowNull: false })
   declare topicId: number
 
-  @Length({ min: 1, max: 50_000 })
+  @Length({ min: 1, max: TEXT_CONTENT_MAX_LENGTH })
   @Column(DataType.TEXT)
   declare text: string
 }

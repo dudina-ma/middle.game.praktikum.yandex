@@ -5,6 +5,10 @@ import { sanitizeText } from '../utils/sanitizeText'
 import { parsePositiveInt } from '../utils/parsePositiveInt'
 import { isAuth } from '../middleware/isAuth'
 import type { AuthedRequest } from '../types/authedRequest'
+import {
+  TEXT_CONTENT_MAX_LENGTH,
+  TOPIC_TITLE_MAX_LENGTH,
+} from '../constants/validationLimits'
 
 const router = Router()
 
@@ -13,9 +17,6 @@ const authorInclude = {
   as: 'author',
   attributes: ['id', 'firstName', 'secondName', 'displayName'],
 }
-
-const TITLE_MAX = 255
-const CONTENT_MAX = 50_000
 
 router.get('/', isAuth, async (_req, res, next) => {
   try {
@@ -49,8 +50,8 @@ router.get('/:id', isAuth, async (req, res, next) => {
 
 router.post('/', isAuth, async (req, res, next) => {
   try {
-    const title = sanitizeText(req.body?.title, TITLE_MAX)
-    const content = sanitizeText(req.body?.content, CONTENT_MAX)
+    const title = sanitizeText(req.body?.title, TOPIC_TITLE_MAX_LENGTH)
+    const content = sanitizeText(req.body?.content, TEXT_CONTENT_MAX_LENGTH)
 
     if (!title || !content) {
       res.status(400).json({ message: 'Нужны непустые title и content' })

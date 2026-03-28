@@ -7,10 +7,9 @@ import { sanitizeText } from '../utils/sanitizeText'
 import { parsePositiveInt } from '../utils/parsePositiveInt'
 import { isAuth } from '../middleware/isAuth'
 import type { AuthedRequest } from '../types/authedRequest'
+import { TEXT_CONTENT_MAX_LENGTH } from '../constants/validationLimits'
 
 const router = Router()
-
-const TEXT_MAX = 50_000
 
 const authorInclude = {
   model: User,
@@ -103,7 +102,7 @@ router.post('/comments/:commentId/replies', isAuth, async (req, res, next) => {
       return
     }
 
-    const text = sanitizeText(req.body?.text, TEXT_MAX)
+    const text = sanitizeText(req.body?.text, TEXT_CONTENT_MAX_LENGTH)
     if (!text) {
       res.status(400).json({ message: 'Нужен непустой text' })
       return

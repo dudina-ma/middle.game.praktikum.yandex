@@ -11,6 +11,10 @@ import {
   Length,
 } from 'sequelize-typescript'
 import { User } from './User'
+import {
+  TEXT_CONTENT_MAX_LENGTH,
+  TOPIC_TITLE_MAX_LENGTH,
+} from '../constants/validationLimits'
 
 @Table({
   tableName: 'topics',
@@ -22,11 +26,11 @@ export class Topic extends Model {
   @Column(DataType.INTEGER)
   declare id: number
 
-  @Length({ min: 1, max: 255 })
-  @Column({ type: DataType.STRING(255), allowNull: false })
+  @Length({ min: 1, max: TOPIC_TITLE_MAX_LENGTH })
+  @Column({ type: DataType.STRING(TOPIC_TITLE_MAX_LENGTH), allowNull: false })
   declare title: string
 
-  @Length({ min: 1, max: 50_000 })
+  @Length({ min: 1, max: TEXT_CONTENT_MAX_LENGTH })
   @Column({ type: DataType.TEXT, allowNull: false })
   declare content: string
 
