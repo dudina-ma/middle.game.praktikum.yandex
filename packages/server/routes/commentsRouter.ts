@@ -97,16 +97,27 @@ router.delete('/comments/:id', isAuth, async (req, res, next) => {
       return
     }
 
+    const authorId = parsePositiveInt((req as AuthedRequest).user?.id)
+    if (!authorId) {
+      res.status(403).json({ message: 'Нужно авторизоваться' })
+      return
+    }
+
+    const comment = await Comment.findByPk(id)
+    if (!comment) {
+      res.status(404).json({ message: 'Комментарий не найден' })
+      return
+    }
+    if (comment.authorId !== authorId) {
+      res.status(403).json({ message: 'Нет прав на удаление' })
+      return
+    }
+
     await Reaction.destroy({
       where: { targetType: 'comment', targetId: id },
     })
 
-    const deleted = await Comment.destroy({ where: { id } })
-    if (deleted === 0) {
-      res.status(404).json({ message: 'Комментарий не найден' })
-      return
-    }
-
+    await comment.destroy()
     res.status(204).send()
   } catch (err) {
     next(err)

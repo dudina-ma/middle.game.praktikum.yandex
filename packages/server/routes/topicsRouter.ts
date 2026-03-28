@@ -83,11 +83,24 @@ router.delete('/:id', isAuth, async (req, res, next) => {
       res.status(400).json({ message: 'Некорректный id' })
       return
     }
-    const deleted = await Topic.destroy({ where: { id } })
-    if (deleted === 0) {
+
+    const authorId = parsePositiveInt((req as AuthedRequest).user?.id)
+    if (!authorId) {
+      res.status(403).json({ message: 'Нужно авторизоваться' })
+      return
+    }
+
+    const topic = await Topic.findByPk(id)
+    if (!topic) {
       res.status(404).json({ message: 'Топик не найден' })
       return
     }
+    if (topic.authorId !== authorId) {
+      res.status(403).json({ message: 'Нет прав на удаление' })
+      return
+    }
+
+    await topic.destroy()
     res.status(204).send()
   } catch (err) {
     next(err)

@@ -148,9 +148,19 @@ router.delete('/replies/:id', isAuth, async (req, res, next) => {
       return
     }
 
+    const authorId = parsePositiveInt((req as AuthedRequest).user?.id)
+    if (!authorId) {
+      res.status(403).json({ message: 'Нужно авторизоваться' })
+      return
+    }
+
     const rootReply = await Reply.findByPk(id)
     if (!rootReply) {
       res.status(404).json({ message: 'Ответ не найден' })
+      return
+    }
+    if (rootReply.authorId !== authorId) {
+      res.status(403).json({ message: 'Нет прав на удаление' })
       return
     }
 
