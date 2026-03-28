@@ -3,6 +3,7 @@ import { Op } from 'sequelize'
 import { Reply } from '../models/Reply'
 import { Reaction } from '../models/Reaction'
 import { User } from '../models/User'
+import { sequelize } from '../sequelize'
 import { sanitizeText } from '../utils/sanitizeText'
 import { parsePositiveInt } from '../utils/parsePositiveInt'
 import { isAuth } from '../middleware/isAuth'
@@ -185,14 +186,19 @@ router.delete('/replies/:id', isAuth, async (req, res, next) => {
       frontier = childIds
     }
 
-    await Reaction.destroy({
-      where: {
-        targetType: 'reply',
-        targetId: { [Op.in]: subtreeIds },
-      },
+    await sequelize.transaction(async transaction => {
+      await Reaction.destroy({
+        where: {
+          targetType: 'reply',
+          targetId: { [Op.in]: subtreeIds },
+        },
+        transaction,
+      })
+      await Reply.destroy({
+        where: { id: { [Op.in]: subtreeIds } },
+        transaction,
+      })
     })
-
-    await Reply.destroy({ where: { id: { [Op.in]: subtreeIds } } })
 
     res.status(204).send()
   } catch (err) {

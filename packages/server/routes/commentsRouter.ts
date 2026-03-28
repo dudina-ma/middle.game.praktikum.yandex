@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { Comment } from '../models/Comment'
 import { Reaction } from '../models/Reaction'
 import { User } from '../models/User'
+import { sequelize } from '../sequelize'
 import { sanitizeText } from '../utils/sanitizeText'
 import {
   parseNonNegativeInt,
@@ -146,11 +147,14 @@ router.delete('/comments/:id', isAuth, async (req, res, next) => {
       return
     }
 
-    await Reaction.destroy({
-      where: { targetType: 'comment', targetId: id },
+    await sequelize.transaction(async transaction => {
+      await Reaction.destroy({
+        where: { targetType: 'comment', targetId: id },
+        transaction,
+      })
+      await comment.destroy({ transaction })
     })
 
-    await comment.destroy()
     res.status(204).send()
   } catch (err) {
     next(err)
