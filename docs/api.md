@@ -81,10 +81,18 @@ curl -sS -X DELETE "http://localhost:3001/api/topics/1" -i
 ## Comments
 
 ### GET `/api/topics/:topicId/comments`
-Возвращает комментарии топика (сначала новые) с `author`.
+Возвращает страницу комментариев топика (сначала новые) с `author`.
+
+Query (опционально):
+
+- `limit` — размер страницы, по умолчанию `20`, максимум `100`
+- `offset` — смещение от начала выборки, по умолчанию `0` (неотрицательное целое)
+
+Тело ответа: `{ items, total, limit, offset }`, где `total` — число комментариев по топику, `items` — массив записей.
 
 ```bash
 curl -sS "http://localhost:3001/api/topics/1/comments"
+curl -sS "http://localhost:3001/api/topics/1/comments?limit=10&offset=0"
 ```
 
 ### GET `/api/comments/:id`

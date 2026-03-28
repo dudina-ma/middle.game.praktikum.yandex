@@ -3,7 +3,10 @@ import { Comment } from '../models/Comment'
 import { Reaction } from '../models/Reaction'
 import { User } from '../models/User'
 import { sanitizeText } from '../utils/sanitizeText'
-import { parsePositiveInt } from '../utils/parsePositiveInt'
+import {
+  parseNonNegativeInt,
+  parsePositiveInt,
+} from '../utils/parsePositiveInt'
 import { isAuth } from '../middleware/isAuth'
 import type { AuthedRequest } from '../types/authedRequest'
 import { TEXT_CONTENT_MAX_LENGTH } from '../constants/validationLimits'
@@ -16,6 +19,9 @@ const authorInclude = {
   attributes: ['id', 'firstName', 'secondName', 'displayName'],
 }
 
+const COMMENTS_LIST_DEFAULT_LIMIT = 20
+const COMMENTS_LIST_MAX_LIMIT = 100
+
 router.get('/topics/:topicId/comments', isAuth, async (req, res, next) => {
   try {
     const topicId = parsePositiveInt(req.params.topicId)
@@ -24,13 +30,40 @@ router.get('/topics/:topicId/comments', isAuth, async (req, res, next) => {
       return
     }
 
-    const comments = await Comment.findAll({
+    let limit = COMMENTS_LIST_DEFAULT_LIMIT
+    const limitRaw = req.query.limit
+    if (limitRaw !== undefined && String(limitRaw) !== '') {
+      const parsedLimit = parsePositiveInt(limitRaw)
+      if (!parsedLimit || parsedLimit > COMMENTS_LIST_MAX_LIMIT) {
+        res.status(400).json({
+          message: `Некорректный limit (1..${COMMENTS_LIST_MAX_LIMIT})`,
+        })
+        return
+      }
+      limit = parsedLimit
+    }
+
+    let offset = 0
+    const offsetRaw = req.query.offset
+    if (offsetRaw !== undefined && String(offsetRaw) !== '') {
+      const parsedOffset = parseNonNegativeInt(offsetRaw)
+      if (parsedOffset === null) {
+        res.status(400).json({ message: 'Некорректный offset' })
+        return
+      }
+      offset = parsedOffset
+    }
+
+    const { rows: items, count: total } = await Comment.findAndCountAll({
       where: { topicId },
       include: [authorInclude],
       order: [['createdAt', 'DESC']],
+      limit,
+      offset,
+      distinct: true,
     })
 
-    res.json(comments)
+    res.json({ items, total, limit, offset })
   } catch (err) {
     next(err)
   }
