@@ -71,8 +71,10 @@ router.post('/reactions', isAuth, async (req, res, next) => {
     })
 
     if (existing) {
-      await existing.update({ emoji })
-      await existing.reload({ include: [userInclude] })
+      if (existing.emoji !== emoji) {
+        await existing.update({ emoji })
+        await existing.reload({ include: [userInclude] })
+      }
       res.status(200).json(existing)
       return
     }
