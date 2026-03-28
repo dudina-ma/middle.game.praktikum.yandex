@@ -55,7 +55,7 @@ router.get('/comments/:commentId/replies', isAuth, async (req, res, next) => {
     }
 
     for (const node of nodesById.values()) {
-      if (node.parentReplyId && nodesById.has(node.parentReplyId)) {
+      if (node.parentReplyId !== null && nodesById.has(node.parentReplyId)) {
         nodesById.get(node.parentReplyId)?.children.push(node)
       } else {
         roots.push(node)
