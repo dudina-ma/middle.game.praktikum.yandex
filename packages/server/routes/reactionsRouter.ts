@@ -101,13 +101,13 @@ router.delete('/reactions', isAuth, async (req, res, next) => {
       return
     }
 
-    const targetType = req.body?.targetType
+    const targetType = req.query.targetType
     if (!isReactionTargetType(targetType)) {
       res.status(400).json({ message: 'Нужен targetType: comment или reply' })
       return
     }
 
-    const targetId = parsePositiveInt(req.body?.targetId)
+    const targetId = parsePositiveInt(String(req.query.targetId ?? ''))
     if (!targetId) {
       res.status(400).json({ message: 'Нужен положительный targetId' })
       return

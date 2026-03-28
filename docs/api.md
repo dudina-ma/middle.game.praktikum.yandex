@@ -174,17 +174,10 @@ curl -sS -X POST "http://localhost:3001/api/reactions" \
   -d '{"targetType":"comment","targetId":1,"emoji":"🔥"}'
 ```
 
-### DELETE `/api/reactions`
-Удаляет реакцию текущего пользователя для указанной сущности.
-
-Тело запроса:
-
-- `targetType`: `"comment"` или `"reply"`
-- `targetId`: положительное целое число
+### DELETE `/api/reactions?targetType=comment|reply&targetId=:id`
+Удаляет реакцию текущего пользователя для указанной сущности (те же параметры, что у GET).
 
 ```bash
-curl -sS -X DELETE "http://localhost:3001/api/reactions" \
-  -H "Content-Type: application/json" \
-  -d '{"targetType":"comment","targetId":1}' -i
+curl -sS -X DELETE "http://localhost:3001/api/reactions?targetType=comment&targetId=1" -i
 ```
 
