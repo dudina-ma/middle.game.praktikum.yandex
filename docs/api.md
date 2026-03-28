@@ -163,8 +163,16 @@ curl -sS -X DELETE "http://localhost:3001/api/replies/1" -i
 ### GET `/api/reactions?targetType=comment|reply&targetId=:id`
 Возвращает реакции для сущности (сначала старые) с вложенным `user`.
 
+Query (опционально, вместе с обязательными `targetType` и `targetId`):
+
+- `limit` — размер страницы, по умолчанию `20`, максимум `100`
+- `offset` — смещение, по умолчанию `0`
+
+Ответ: `{ items, total, limit, offset }`.
+
 ```bash
 curl -sS "http://localhost:3001/api/reactions?targetType=comment&targetId=1"
+curl -sS "http://localhost:3001/api/reactions?targetType=comment&targetId=1&limit=50&offset=0"
 ```
 
 ### POST `/api/reactions`

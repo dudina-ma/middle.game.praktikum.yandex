@@ -3,7 +3,10 @@ import { Comment } from '../models/Comment'
 import { Reply } from '../models/Reply'
 import { Reaction } from '../models/Reaction'
 import { User } from '../models/User'
-import { parsePositiveInt } from '../utils/parsePositiveInt'
+import {
+  parseNonNegativeInt,
+  parsePositiveInt,
+} from '../utils/parsePositiveInt'
 import {
   isAllowedReactionEmoji,
   isReactionTargetType,
@@ -18,6 +21,9 @@ const userInclude = {
   as: 'user',
   attributes: ['id', 'firstName', 'secondName', 'displayName'],
 }
+
+const REACTIONS_LIST_DEFAULT_LIMIT = 20
+const REACTIONS_LIST_MAX_LIMIT = 100
 
 async function assertTargetExists(
   targetType: 'comment' | 'reply',
@@ -142,13 +148,40 @@ router.get('/reactions', isAuth, async (req, res, next) => {
       return
     }
 
-    const reactions = await Reaction.findAll({
+    let limit = REACTIONS_LIST_DEFAULT_LIMIT
+    const limitRaw = req.query.limit
+    if (limitRaw !== undefined && String(limitRaw) !== '') {
+      const parsedLimit = parsePositiveInt(limitRaw)
+      if (!parsedLimit || parsedLimit > REACTIONS_LIST_MAX_LIMIT) {
+        res.status(400).json({
+          message: `Некорректный limit (1..${REACTIONS_LIST_MAX_LIMIT})`,
+        })
+        return
+      }
+      limit = parsedLimit
+    }
+
+    let offset = 0
+    const offsetRaw = req.query.offset
+    if (offsetRaw !== undefined && String(offsetRaw) !== '') {
+      const parsedOffset = parseNonNegativeInt(offsetRaw)
+      if (parsedOffset === null) {
+        res.status(400).json({ message: 'Некорректный offset' })
+        return
+      }
+      offset = parsedOffset
+    }
+
+    const { rows: items, count: total } = await Reaction.findAndCountAll({
       where: { targetType, targetId },
       include: [userInclude],
       order: [['createdAt', 'ASC']],
+      limit,
+      offset,
+      distinct: true,
     })
 
-    res.json(reactions)
+    res.json({ items, total, limit, offset })
   } catch (err) {
     next(err)
   }
