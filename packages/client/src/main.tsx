@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import { routes } from './routes'
 import './index.css'
+const isDev = process.env.NODE_ENV === 'development'
 
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 
@@ -41,4 +42,4 @@ function startServiceWorker() {
   }
 }
 
-startServiceWorker()
+if (!isDev) startServiceWorker()
