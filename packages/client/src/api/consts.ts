@@ -1,6 +1,8 @@
-export const APP_URL =
-  process.env.APP_URL || process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
+export const APP_URL = import.meta.env.VITE_APP_URL
+
+export const BACKEND_URL =
+  import.meta.env.VITE_BACKEND_URL || import.meta.env.MODE === 'development'
+    ? 'http://localhost:3001'
     : ''
 
 export const API_URL = 'https://ya-praktikum.tech/api/v2'
