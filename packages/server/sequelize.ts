@@ -24,12 +24,12 @@ export const sequelize = new Sequelize({
   models: [Topic, Comment, Reply, Reaction, User],
 })
 
-export const testSequelizeConnection = async (): Promise<void> => {
+export const connectDatabase = async (): Promise<void> => {
   await sequelize.authenticate()
   console.log('  ➜ 🎸 Sequelize connection is ready')
 }
 
-export const syncSequelizeModels = async (): Promise<void> => {
+export const syncDatabase = async (): Promise<void> => {
   await sequelize.sync()
   console.log('  ➜ 🎸 Sequelize models synced with database')
 }
