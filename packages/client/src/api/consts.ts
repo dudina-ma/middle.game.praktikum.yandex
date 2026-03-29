@@ -1,9 +1,5 @@
-export const APP_URL = import.meta.env.VITE_APP_URL
-
-export const BACKEND_URL =
-  import.meta.env.VITE_BACKEND_URL || import.meta.env.MODE === 'development'
-    ? 'http://localhost:3001'
-    : ''
+export const APP_URL = __CLIENT_URL__
+export const BACKEND_URL = __INTERNAL_SERVER_URL__
 
 export const API_URL = 'https://ya-praktikum.tech/api/v2'
 export const AUTH_URL = `${API_URL}/auth`
