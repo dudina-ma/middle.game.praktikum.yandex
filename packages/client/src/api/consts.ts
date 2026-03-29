@@ -1,6 +1,4 @@
 export const APP_URL = 'http://localhost:3000'
-//ya-praktikum.tech/api/v2
-//http://localhost:3000/api
 export const API_URL = 'http://localhost:3000/yandex'
 export const INTERNAL_API_URL = 'http://localhost:3000/api'
 export const AUTH_URL = `${API_URL}/auth`
