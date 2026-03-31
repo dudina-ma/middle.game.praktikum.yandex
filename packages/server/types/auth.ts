@@ -1,6 +1,6 @@
 export type AuthUser = {
   id: number
-  firstName: string
-  secondName: string
-  displayName: string
+  first_name: string
+  second_name: string
+  display_name: string
 }

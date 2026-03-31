@@ -10,6 +10,7 @@ import commentsRouter from './routes/commentsRouter'
 import repliesRouter from './routes/repliesRouter'
 import topicsRouter from './routes/topicsRouter'
 import reactionsRouter from './routes/reactionsRouter'
+import authRouter from './routes/authRouter'
 
 const app = express()
 app.use(cors())
@@ -20,6 +21,7 @@ app.use('/api', commentsRouter)
 app.use('/api', repliesRouter)
 app.use('/api', reactionsRouter)
 app.use('/api/topics', topicsRouter)
+app.use('/auth', authRouter)
 
 app.get('/health', (_, res) => {
   res.status(200).json({ status: 'ok' })
