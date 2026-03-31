@@ -32,7 +32,7 @@ export const OAuth = () => {
     } else {
       errorHandler()
     }
-  }, [code, navigate, signInYandex, errorHandler])
+  }, [])
 
   return (
     <AuthPageContainer>
