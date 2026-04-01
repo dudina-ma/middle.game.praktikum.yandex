@@ -1,13 +1,13 @@
 import { Card, Flex, List, Space, Typography } from 'antd'
 import styles from './TopicList.module.css'
 import { Topic } from '../../api/forum.schema'
-import { formatDistance, subDays } from 'date-fns'
+import { formatDistance } from 'date-fns'
 import { ru } from 'date-fns/locale'
 
 const { Text } = Typography
 
 const getFormatDate = (date: string) => {
-  return formatDistance(subDays(new Date(), 3), new Date(date), {
+  return formatDistance(new Date(date), new Date(), {
     addSuffix: true,
     locale: ru,
   })
