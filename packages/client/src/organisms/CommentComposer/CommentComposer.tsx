@@ -1,29 +1,26 @@
 import { Button, Input, Popover, Space, Typography } from 'antd'
 import { SendOutlined, SmileOutlined } from '@ant-design/icons'
-import { CommentItem } from '../../../model/types'
 import styles from './CommentComposer.module.css'
 
 const { TextArea } = Input
-const { Text, Title } = Typography
+const { Title } = Typography
 
 type CommentComposerProps = {
-  newComment: string
-  onChange: (value: string) => void
+  isDisable: boolean
+  comment: string
+  setComment: (v: string) => void
   onSend: () => void
   onEmojiInsert: (emoji: string) => void
   emojiSet: string[]
-  replyToComment: CommentItem | null
-  onCancelReply: () => void
 }
 
-const CommentComposer = ({
-  newComment,
-  onChange,
+export const CommentComposer = ({
+  isDisable,
   onSend,
   onEmojiInsert,
   emojiSet,
-  replyToComment,
-  onCancelReply,
+  setComment,
+  comment,
 }: CommentComposerProps) => {
   return (
     <div className={styles.composer}>
@@ -32,23 +29,12 @@ const CommentComposer = ({
       </Title>
 
       <div className={styles.field}>
-        {replyToComment && (
-          <div className={styles.replyBanner}>
-            <Text className={styles.replyText}>
-              Ответ пользователю: <b>{replyToComment.author}</b>
-            </Text>
-            <Button size="small" onClick={onCancelReply}>
-              Отменить
-            </Button>
-          </div>
-        )}
-
         <TextArea
-          className={replyToComment ? styles.textareaWithReply : undefined}
           rows={4}
           placeholder="Напишите комментарий..."
-          value={newComment}
-          onChange={event => onChange(event.target.value)}
+          onChange={e => setComment(e.target.value)}
+          value={comment}
+          disabled={isDisable}
         />
       </div>
 
@@ -60,6 +46,7 @@ const CommentComposer = ({
               {emojiSet.map(emoji => (
                 <Button
                   key={emoji}
+                  disabled={isDisable}
                   size="small"
                   onClick={() => onEmojiInsert(emoji)}>
                   {emoji}
@@ -67,19 +54,19 @@ const CommentComposer = ({
               ))}
             </Space>
           }>
-          <Button icon={<SmileOutlined />}>Эмодзи</Button>
+          <Button icon={<SmileOutlined />} disabled={isDisable}>
+            Эмодзи
+          </Button>
         </Popover>
 
         <Button
           type="primary"
           icon={<SendOutlined />}
-          disabled={!newComment.trim()}
-          onClick={onSend}>
+          onClick={onSend}
+          disabled={isDisable || !comment.trim()}>
           Отправить
         </Button>
       </Space>
     </div>
   )
 }
-
-export default CommentComposer
