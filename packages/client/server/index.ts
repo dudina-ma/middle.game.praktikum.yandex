@@ -11,7 +11,7 @@ import { createServer as createViteServer, ViteDevServer } from 'vite'
 import serialize from 'serialize-javascript'
 import cookieParser from 'cookie-parser'
 import { authGuard } from './services/authGuard'
-import { internalProxy, yandexProxy } from './services/proxy'
+// import { internalProxy, yandexProxy } from './services/proxy'
 
 const port = process.env.PORT || 3000
 const clientPath = path.join(__dirname, '..')
@@ -114,8 +114,8 @@ async function createServer() {
     app.use(express.static(staticPath, { index: false }))
   }
 
-  app.use('/yandex', yandexProxy)
-  app.use('/api', internalProxy)
+  // app.use('/yandex', yandexProxy)
+  // app.use('/api', internalProxy)
 
   app.get('*', authGuard, await requestHandler(vite))
 
