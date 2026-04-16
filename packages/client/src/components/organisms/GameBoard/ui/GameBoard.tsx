@@ -3,6 +3,7 @@ import { GAME_CONFIG } from '../../Game/GameConfig'
 import { Game, onFinishData } from '../../Game'
 import { useDispatch, useSelector } from '../../../../store'
 import { finishGame } from '../../../../slices/gameSlice'
+import { useGameStartNotification } from '../../../../hooks/useGameNotification'
 
 export const GameBoard: React.FC = () => {
   const dispatch = useDispatch()
@@ -10,6 +11,8 @@ export const GameBoard: React.FC = () => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const gameInstance = useRef<Game | null>(null)
+
+  const { notifyGameStart } = useGameStartNotification()
 
   const onFinish = (data: onFinishData) => {
     dispatch(
@@ -24,6 +27,8 @@ export const GameBoard: React.FC = () => {
     if (canvasRef.current && !gameInstance.current && phase === 'game') {
       gameInstance.current = new Game(canvasRef.current, GAME_CONFIG, onFinish)
       gameInstance.current.render()
+
+      notifyGameStart()
     }
 
     return () => {
@@ -32,7 +37,7 @@ export const GameBoard: React.FC = () => {
         gameInstance.current = null
       }
     }
-  }, [phase])
+  }, [phase, notifyGameStart])
 
   return (
     <div>

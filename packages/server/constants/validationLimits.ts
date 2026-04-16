@@ -1,0 +1,3 @@
+export const TEXT_CONTENT_MAX_LENGTH = 50_000
+
+export const TOPIC_TITLE_MAX_LENGTH = 255

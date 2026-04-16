@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dotenv from 'dotenv'
 import path from 'path'
+
 dotenv.config()
 
 // https://vitejs.dev/config/
@@ -13,6 +14,7 @@ export default defineConfig({
   define: {
     __EXTERNAL_SERVER_URL__: JSON.stringify(process.env.EXTERNAL_SERVER_URL),
     __INTERNAL_SERVER_URL__: JSON.stringify(process.env.INTERNAL_SERVER_URL),
+    __CLIENT_URL__: JSON.stringify(process.env.CLIENT_URL),
   },
   build: {
     outDir: path.join(__dirname, 'dist/client'),

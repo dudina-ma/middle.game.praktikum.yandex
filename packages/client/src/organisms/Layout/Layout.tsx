@@ -4,8 +4,6 @@ import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
 import styled from 'styled-components'
 
-import { useAuthGuard } from '../../hooks/useAuthGuard'
-
 const LayoutContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -20,7 +18,6 @@ const MainContent = styled.main`
 `
 
 const Layout: React.FC = () => {
-  useAuthGuard()
   return (
     <LayoutContainer>
       <Header />

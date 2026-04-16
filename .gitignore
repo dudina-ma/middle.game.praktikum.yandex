@@ -11,7 +11,8 @@ tmp
 *.tsbuildinfo
 
 # Client server runtime artifacts
-packages/client/server/
+packages/client/server/**/*.js
+packages/client/server/**/*.d.ts
 packages/client/tsconfig.server.tsbuildinfo
 
 # Logs

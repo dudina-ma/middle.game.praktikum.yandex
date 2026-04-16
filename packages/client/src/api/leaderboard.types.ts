@@ -1,15 +1,15 @@
+export type RatingFieldName = 'score'
+
 export interface GameResultData {
   user_id: number
+  display_name?: string
   score: number
-  game_time_seconds: number
-  total_shots: number
-  ships_sunk: number
-  date: number // timestamp
+  date: number
 }
 
 export interface AddGameResultRequest {
   data: GameResultData
-  ratingFieldName: string
+  ratingFieldName: RatingFieldName
   teamName: string
 }
 
@@ -17,23 +17,13 @@ export type AddGameResultResponse = void
 
 export interface FetchLeaderboardRequest {
   teamName: string
-  ratingFieldName: string
+  ratingFieldName: RatingFieldName
   cursor: number
   limit: number
 }
 
 export interface LeaderboardEntry {
-  data: {
-    user_id: number
-    display_name: string
-    score: number
-    game_time_seconds?: number
-    total_shots?: number
-    ships_sunk?: number
-    date?: number
-  }
+  data: GameResultData
 }
 
-export interface FetchLeaderboardResponse {
-  data: LeaderboardEntry[]
-}
+export type FetchLeaderboardResponse = LeaderboardEntry[]

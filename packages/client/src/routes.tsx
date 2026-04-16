@@ -5,13 +5,14 @@ import SignIn from './pages/SignIn/SignIn'
 import { Profile } from './pages/Profile/Profile'
 import Game from './pages/Game/Game'
 import Leaderboard from './pages/Leaderboard/Leaderboard'
-import ForumPage from './pages/ForumPage'
+import ForumPage from './pages/Forum'
 import NotFound from './pages/NotFound/NotFound'
 import ServerError from './pages/ServerError/ServerError'
 import SignUp from './pages/SignUp/SignUp'
 import { RoutesEnum } from './paths'
 import BadRequest from './pages/BadRequest/BadRequest'
 import { RouterErrorAdapter } from './components/ErrorBoundary/RouterErrorAdapter'
+import { OAuth } from './pages/OAuth/OAuth'
 
 const createErrorElement = () => <RouterErrorAdapter />
 
@@ -63,6 +64,12 @@ export const routes = [
     Component: BadRequest,
     errorElement: createErrorElement(),
     fetchData: createStubFetchData('BadRequest'),
+  },
+  {
+    path: RoutesEnum.OAuth,
+    Component: OAuth,
+    errorElement: createErrorElement(),
+    fetchData: createStubFetchData('OAuth'),
   },
   {
     path: RoutesEnum.Main,

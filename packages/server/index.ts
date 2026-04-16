@@ -1,32 +1,29 @@
+import 'reflect-metadata'
 import dotenv from 'dotenv'
-import cors from 'cors'
+import { connectDatabase, syncDatabase } from './sequelize'
+import * as process from 'node:process'
+import { app } from './app'
+
 dotenv.config()
 
-import express from 'express'
-import { createClientAndConnect } from './db'
-
-const app = express()
-app.use(cors())
 const port = Number(process.env.SERVER_PORT) || 3001
 
-createClientAndConnect()
+const onSyncError = (error: unknown) => {
+  console.error('Failed to sync database. Server will not start', error)
+}
 
-app.get('/friends', (_, res) => {
-  res.json([
-    { name: 'Саша', secondName: 'Панов' },
-    { name: 'Лёша', secondName: 'Садовников' },
-    { name: 'Серёжа', secondName: 'Иванов' },
-  ])
-})
+const onAuthError = (error: unknown) => {
+  console.error('Failed to connect to database. Server will not start', error)
+}
 
-app.get('/user', (_, res) => {
-  res.json({ name: '</script>Степа', secondName: 'Степанов' })
-})
-
-app.get('/', (_, res) => {
-  res.json('👋 Howdy from the server :)')
-})
-
-app.listen(port, () => {
+const onServerStart = () => {
   console.log(`  ➜ 🎸 Server is listening on port: ${port}`)
-})
+}
+
+connectDatabase()
+  .then(() => {
+    syncDatabase()
+      .then(() => app.listen(port, onServerStart))
+      .catch(onSyncError)
+  })
+  .catch(onAuthError)

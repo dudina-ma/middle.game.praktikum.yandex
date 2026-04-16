@@ -25,12 +25,11 @@ export const render = async (req: ExpressRequest) => {
   const { query, dataRoutes } = createStaticHandler(routes)
   const fetchRequest = createFetchRequest(req)
   const context = await query(fetchRequest)
+  const url = createUrl(req)
 
   if (context instanceof Response) {
     throw context
   }
-
-  const url = createUrl(req)
 
   const foundRoutes = matchRoutes(routes, url)
   if (!foundRoutes) {
@@ -57,6 +56,7 @@ export const render = async (req: ExpressRequest) => {
 
   const router = createStaticRouter(dataRoutes, context)
   const sheet = new ServerStyleSheet()
+
   try {
     const html = ReactDOM.renderToString(
       sheet.collectStyles(
@@ -65,8 +65,8 @@ export const render = async (req: ExpressRequest) => {
         </Provider>
       )
     )
-    const styleTags = sheet.getStyleTags()
 
+    const styleTags = sheet.getStyleTags()
     const helmet = Helmet.renderStatic()
 
     return {
