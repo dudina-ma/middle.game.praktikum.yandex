@@ -1,4 +1,4 @@
-export const APP_URL = 'http://localhost:3000'
+export const APP_URL = 'http://localhost'
 export const API_URL = `/yandex`
 export const INTERNAL_API_URL = `/api`
 export const AUTH_URL = `${API_URL}/auth`
