@@ -21,7 +21,7 @@
     "forceConsistentCasingInFileNames": true,
     "importsNotUsedAsValues": "error",
     "lib": ["es2019", "esnext.asynciterable", "ESNext", "dom"],
-    "types": ["node", "jest", "node-fetch"],
+    "types": ["node", "jest"],
     "baseUrl": ".",
     "paths": {
       "*": ["types/*"]
