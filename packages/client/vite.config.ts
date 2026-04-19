@@ -11,11 +11,6 @@ export default defineConfig({
     port: Number(process.env.CLIENT_PORT) || 3000,
     strictPort: true,
   },
-  define: {
-    __EXTERNAL_SERVER_URL__: JSON.stringify(process.env.EXTERNAL_SERVER_URL),
-    __INTERNAL_SERVER_URL__: JSON.stringify(process.env.INTERNAL_SERVER_URL),
-    __CLIENT_URL__: JSON.stringify(process.env.CLIENT_URL),
-  },
   build: {
     outDir: path.join(__dirname, 'dist/client'),
   },
