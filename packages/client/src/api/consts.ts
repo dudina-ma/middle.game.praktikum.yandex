@@ -1,4 +1,8 @@
-export const APP_URL = 'http://localhost'
+export const isDev = process.env.NODE_ENV === 'development'
+export const APP_URL = isDev
+  ? `http://localhost`
+  : `https://${import.meta.env.VITE_APP_DOMAIN}`
+
 export const API_URL = `/yandex`
 export const INTERNAL_API_URL = `/api`
 export const AUTH_URL = `${API_URL}/auth`
