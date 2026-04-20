@@ -1,28 +1,28 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Comment, Pagination, Reaction, Reply, Topic } from './forum.schema'
-import { BACKEND_URL } from './consts'
+import { INTERNAL_API_URL } from './consts'
 
 export const forumApi = createApi({
   reducerPath: 'forumApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: BACKEND_URL,
+    baseUrl: INTERNAL_API_URL,
     credentials: 'include',
   }),
   tagTypes: ['Topic', 'Comment', 'Reply', 'Reaction'],
   endpoints: builder => ({
     getTopics: builder.query<Topic[], void>({
-      query: () => '/api/topics',
+      query: () => '/topics',
       providesTags: ['Topic'],
     }),
 
     getTopicById: builder.query<Topic, number>({
-      query: id => `/api/topics/${id}`,
+      query: id => `/topics/${id}`,
       providesTags: (result, error, id) => [{ type: 'Topic', id }],
     }),
 
     createTopic: builder.mutation<Topic, { title: string; content: string }>({
       query: body => ({
-        url: '/api/topics',
+        url: '/topics',
         method: 'POST',
         body,
       }),
@@ -31,26 +31,26 @@ export const forumApi = createApi({
 
     deleteTopic: builder.mutation<void, number>({
       query: id => ({
-        url: `/api/topics/${id}`,
+        url: `/topics/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Topic'],
     }),
     getComments: builder.query<Pagination<Comment>, number>({
-      query: topicId => `/api/topics/${topicId}/comments`,
+      query: topicId => `/topics/${topicId}/comments`,
       providesTags: (result, error, topicId) => [
         { type: 'Comment', id: topicId },
       ],
     }),
 
     getCommentById: builder.query<Comment, number>({
-      query: id => `/api/comments/${id}`,
+      query: id => `/comments/${id}`,
       providesTags: (result, error, id) => [{ type: 'Comment', id }],
     }),
     createComment: builder.mutation<Comment, { topicId: number; text: string }>(
       {
         query: ({ topicId, text }) => ({
-          url: `/api/topics/${topicId}/comments`,
+          url: `/topics/${topicId}/comments`,
           method: 'POST',
           body: { text },
         }),
@@ -61,20 +61,20 @@ export const forumApi = createApi({
     ),
     deleteComment: builder.mutation<void, number>({
       query: id => ({
-        url: `/api/comments/${id}`,
+        url: `/comments/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Comment'],
     }),
     getReplies: builder.query<Pagination<Reply>, number>({
-      query: commentId => `/api/comments/${commentId}/replies`,
+      query: commentId => `/comments/${commentId}/replies`,
       providesTags: (result, error, commentId) => [
         { type: 'Reply', id: commentId },
       ],
     }),
 
     getReplyById: builder.query<Reply, number>({
-      query: id => `/api/replies/${id}`,
+      query: id => `/replies/${id}`,
       providesTags: (result, error, id) => [{ type: 'Reply', id }],
     }),
 
@@ -83,7 +83,7 @@ export const forumApi = createApi({
       { commentId: number; text: string; parentReplyId?: number }
     >({
       query: ({ commentId, ...body }) => ({
-        url: `/api/comments/${commentId}/replies`,
+        url: `/comments/${commentId}/replies`,
         method: 'POST',
         body,
       }),
@@ -94,7 +94,7 @@ export const forumApi = createApi({
 
     deleteReply: builder.mutation<void, number>({
       query: id => ({
-        url: `/api/replies/${id}`,
+        url: `/replies/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Reply'],
@@ -104,7 +104,7 @@ export const forumApi = createApi({
       { targetType: 'comment' | 'reply'; targetId: number }
     >({
       query: ({ targetType, targetId }) =>
-        `/api/reactions?targetType=${targetType}&targetId=${targetId}`,
+        `/reactions?targetType=${targetType}&targetId=${targetId}`,
       providesTags: (result, error, { targetId }) => [
         { type: 'Reaction', id: targetId },
       ],
@@ -114,7 +114,7 @@ export const forumApi = createApi({
       { targetType: 'comment' | 'reply'; targetId: number; emoji: string }
     >({
       query: body => ({
-        url: '/api/reactions',
+        url: '/reactions',
         method: 'POST',
         body,
       }),
@@ -127,7 +127,7 @@ export const forumApi = createApi({
       { targetType: 'comment' | 'reply'; targetId: number }
     >({
       query: body => ({
-        url: '/api/reactions',
+        url: '/reactions',
         method: 'DELETE',
         body,
       }),

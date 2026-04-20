@@ -6,7 +6,7 @@ export const authGuard = async (
   res: Response,
   next: NextFunction
 ) => {
-  const publicPaths = ['/login', '/register', '/api', '/oauth']
+  const publicPaths = ['/login', '/register', '/api', '/oauth', '/yandex']
 
   if (publicPaths.some(p => req.path.startsWith(p)) || req.path.includes('.')) {
     return next()
