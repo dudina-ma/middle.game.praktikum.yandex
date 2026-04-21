@@ -7,6 +7,10 @@ const fetchMock = jest.fn(() =>
   Promise.resolve({ json: () => Promise.resolve('hey') } as Response)
 )
 
+Object.defineProperty('import', 'meta', {
+  value: { env: { VITE_APP_DOMAIN: 'localhost' } },
+})
+
 globalThis.fetch = fetchMock as unknown as typeof fetch
 
 test('App renders without crashing', () => {
