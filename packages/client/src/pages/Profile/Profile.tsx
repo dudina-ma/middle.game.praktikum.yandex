@@ -15,6 +15,7 @@ import {
 } from '../../api/userApi'
 import { UpdateProfileRequest } from '../../api/user.schema'
 import { getErrorMessage } from '../../utils/errorUtils'
+import { getAvatarUrl } from '../../utils/avatarUrl'
 
 const onFinishFailed: FormProps<User>['onFinishFailed'] = errorInfo => {
   console.log('Failed:', errorInfo)
@@ -139,7 +140,10 @@ export const Profile = () => {
   return (
     <div className={styles.container}>
       <AvatarWithControls
-        avatarUrl={user.avatar}
+        avatarUrl={getAvatarUrl(user.avatar)}
+        fallbackText={(user.display_name || user.login || '?')
+          .slice(0, 1)
+          .toUpperCase()}
         onAvatarChange={onAvatarChange}
       />
 
