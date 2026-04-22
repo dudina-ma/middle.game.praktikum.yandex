@@ -12,10 +12,10 @@ import serialize from 'serialize-javascript'
 import cookieParser from 'cookie-parser'
 import { authGuard } from './services/authGuard'
 import { internalProxy, yandexProxy } from './services/proxy'
+import { isDev } from './api/consts'
 
 const port = process.env.PORT || 3000
 const clientPath = path.join(__dirname, '..')
-const isDev = process.env.NODE_ENV === 'development'
 
 export interface RenderArgs {
   html: string
@@ -113,6 +113,10 @@ async function createServer() {
   } else if (existsSync(staticPath)) {
     app.use(express.static(staticPath, { index: false }))
   }
+
+  app.get('/health', (_, res) => {
+    res.status(200).json({ status: 'ok' })
+  })
 
   app.use('/yandex', yandexProxy)
   app.use('/api', internalProxy)
