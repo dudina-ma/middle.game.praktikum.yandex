@@ -15,11 +15,16 @@ const ALLOWED_TYPES = [
 
 type AvatarWithControlsProps = {
   avatarUrl?: string
+  fallbackText?: string
   onAvatarChange?: (file: File) => void
 }
 
 export const AvatarWithControls = memo(
-  ({ avatarUrl, onAvatarChange }: AvatarWithControlsProps) => {
+  ({
+    avatarUrl,
+    fallbackText = 'Нет аватара',
+    onAvatarChange,
+  }: AvatarWithControlsProps) => {
     const handleChange: UploadProps['onChange'] = info => {
       const { file } = info
       const fileToUse = file instanceof File ? file : file.originFileObj
@@ -41,8 +46,13 @@ export const AvatarWithControls = memo(
 
     return (
       <div className={styles.container}>
-        <Avatar size={100} src={avatarUrl}>
-          {!avatarUrl && 'Нет аватара'}
+        <Avatar
+          size={100}
+          src={avatarUrl}
+          onError={() => {
+            return false
+          }}>
+          {fallbackText}
         </Avatar>
         <div className={styles.actions}>
           <Upload
