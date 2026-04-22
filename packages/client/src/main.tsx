@@ -4,11 +4,11 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import { routes } from './routes'
 import './index.css'
-const isDev = process.env.NODE_ENV === 'development'
 
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 
 import { OfflineBanner } from './organisms/OfflineBanner/OfflineBanner'
+import { isDev } from './api/consts'
 
 const router = createBrowserRouter(routes)
 const rootElement = document.getElementById('root') as HTMLElement

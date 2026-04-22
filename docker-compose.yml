@@ -10,11 +10,10 @@ services:
         EXTERNAL_SERVER_URL: ${EXTERNAL_SERVER_URL}
         INTERNAL_SERVER_URL: ${INTERNAL_SERVER_URL}
     restart: always
-    ports:
-      - '${CLIENT_PORT}:3000'
     environment:
       PORT: 3000
       NODE_ENV: production
+      VITE_APP_DOMAIN: ${APP_DOMAIN}
     networks:
       - app-network
     depends_on:
@@ -26,7 +25,7 @@ services:
           'CMD',
           'node',
           '-e',
-          "require('http').get('http://127.0.0.1:3000', (res) => process.exit(res.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))",
+          "require('http').get('http://127.0.0.1:3000/health', (res) => process.exit(res.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))",
         ]
       interval: 10s
       timeout: 5s
@@ -42,8 +41,6 @@ services:
       args:
         SERVER_PORT: ${SERVER_PORT}
     restart: always
-    ports:
-      - '${SERVER_PORT}:${SERVER_PORT}'
     environment:
       SERVER_PORT: ${SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -73,8 +70,6 @@ services:
   postgres:
     image: postgres:14
     container_name: prakticum-postgres
-    ports:
-      - '${POSTGRES_PORT}:5432'
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -89,6 +84,24 @@ services:
       timeout: 5s
       retries: 10
       start_period: 10s
+  nginx:
+    image: nginx:latest
+    container_name: prakticum-nginx
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN}
+    depends_on:
+      client:
+        condition: service_healthy
+      server:
+        condition: service_healthy
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certs:/etc/nginx/ssl/:ro
+    networks:
+      - app-network
 
 networks:
   app-network:

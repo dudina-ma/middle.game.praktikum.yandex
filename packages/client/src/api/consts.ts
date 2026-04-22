@@ -1,7 +1,10 @@
-export const APP_URL = 'http://localhost:3000'
-export const API_URL = 'http://localhost:3000/yandex'
-export const INTERNAL_API_URL = 'http://localhost:3000/api'
-export const BACKEND_URL = 'http://localhost:3001'
+export const isDev = process.env.NODE_ENV === 'development'
+export const APP_URL = isDev
+  ? `http://localhost`
+  : `https://${import.meta.env.VITE_APP_DOMAIN}`
+
+export const API_URL = `/yandex`
+export const INTERNAL_API_URL = `/api`
 export const AUTH_URL = `${API_URL}/auth`
 export const OAUTHYANDEX_URL = `${API_URL}/oauth/yandex`
 export const REDIRECT_URI = `${APP_URL}/oauth`
